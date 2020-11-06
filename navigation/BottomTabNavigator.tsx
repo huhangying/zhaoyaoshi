@@ -5,9 +5,12 @@ import * as React from 'react';
 
 import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
-import { BottomTabParamList, TabOneParamList, TabTwoParamList } from '../types';
+import TabConsultScreen from '../screens/TabConsultScreen';
+import TabSettingsScreen from '../screens/TabSettingsScreen';
+import TabManageScreen from '../screens/TabManageScreen';
+import TabFeedbackScreen from '../screens/TabFeedbackScreen';
+import { BottomTabParamList, TabConsultParamList, TabSettingsParamList, TabManageParamList, TabFeedbackParamList } from '../models/types';
+import ChatScreen from '../screens/consult/ChatScreen';
 
 const BottomTab = createBottomTabNavigator<BottomTabParamList>();
 
@@ -16,20 +19,39 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="consult"
       tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
       <BottomTab.Screen
-        name="TabOne"
-        component={TabOneNavigator}
+        name="consult"
+        component={TabConsultNavigator}
         options={{
+          title: '咨询',
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-chatbubbles" color={color} />,
+          tabBarBadge: 3,
+        }}
+      />
+      <BottomTab.Screen
+        name="feedback"
+        component={TabFeedbackNavigator}
+        options={{
+          title: '反馈',
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
       />
       <BottomTab.Screen
-        name="TabTwo"
-        component={TabTwoNavigator}
+        name="manage"
+        component={TabManageNavigator}
         options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          title: '管理',
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-cog" color={color} />,
+        }}
+      />
+      <BottomTab.Screen
+        name="settings"
+        component={TabSettingsNavigator}
+        options={{
+          title: '个人中心',
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-contact" color={color} />,
         }}
       />
     </BottomTab.Navigator>
@@ -44,30 +66,63 @@ function TabBarIcon(props: { name: string; color: string }) {
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabOneStack = createStackNavigator<TabOneParamList>();
+const TabConsultStack = createStackNavigator<TabConsultParamList>();
 
-function TabOneNavigator() {
+function TabConsultNavigator() {
   return (
-    <TabOneStack.Navigator>
-      <TabOneStack.Screen
-        name="TabOneScreen"
-        component={TabOneScreen}
-        options={{ headerTitle: 'Tab One Title' }}
+    <TabConsultStack.Navigator>
+      <TabConsultStack.Screen
+        name="TabConsultScreen"
+        component={TabConsultScreen}
+        options={{ headerTitle: '药师咨询' }}
       />
-    </TabOneStack.Navigator>
+      <TabConsultStack.Screen
+        name="ChatScreen"
+        component={ChatScreen}
+        options={{ headerTitle: '免费咨询' }}
+      />
+    </TabConsultStack.Navigator>
   );
 }
 
-const TabTwoStack = createStackNavigator<TabTwoParamList>();
+const TabFeedbackStack = createStackNavigator<TabFeedbackParamList>();
 
-function TabTwoNavigator() {
+function TabFeedbackNavigator() {
   return (
-    <TabTwoStack.Navigator>
-      <TabTwoStack.Screen
-        name="TabTwoScreen"
-        component={TabTwoScreen}
-        options={{ headerTitle: 'Tab Two Title' }}
+    <TabFeedbackStack.Navigator>
+      <TabFeedbackStack.Screen
+        name="TabFeedbackScreen"
+        component={TabFeedbackScreen}
+        options={{ headerTitle: '门诊反馈' }}
       />
-    </TabTwoStack.Navigator>
+    </TabFeedbackStack.Navigator>
+  );
+}
+
+const TabManageStack = createStackNavigator<TabManageParamList>();
+
+function TabManageNavigator() {
+  return (
+    <TabManageStack.Navigator>
+      <TabManageStack.Screen
+        name="TabManageScreen"
+        component={TabManageScreen}
+        options={{ headerTitle: '病患管理' }}
+      />
+    </TabManageStack.Navigator>
+  );
+}
+
+const TabSettingsStack = createStackNavigator<TabSettingsParamList>();
+
+function TabSettingsNavigator() {
+  return (
+    <TabSettingsStack.Navigator>
+      <TabSettingsStack.Screen
+        name="TabSettingsScreen"
+        component={TabSettingsScreen}
+        options={{ headerTitle: '个人中心' }}
+      />
+    </TabSettingsStack.Navigator>
   );
 }

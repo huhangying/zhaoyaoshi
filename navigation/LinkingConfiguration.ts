@@ -6,18 +6,25 @@ export default {
     screens: {
       Root: {
         screens: {
-          TabOne: {
+          TabConsult:  'consult',                      
+          TabFeedback: {
             screens: {
-              TabOneScreen: 'one',
+              TabFeedbackScreen: 'feedback',
             },
           },
-          TabTwo: {
+          TabManage: {
             screens: {
-              TabTwoScreen: 'two',
+              TabManageScreen: 'manage',
+            },
+          },
+          TabSettings: {
+            screens: {
+              TabSettingsScreen: 'settings',
             },
           },
         },
       },
+      SignIn: 'signin',
       NotFound: '*',
     },
   },

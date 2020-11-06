@@ -1,18 +1,20 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Button } from 'react-native-elements';
 
-import { RootStackParamList } from '../types';
+import { RootStackParamList } from '../models/types';
 
 export default function NotFoundScreen({
   navigation,
 }: StackScreenProps<RootStackParamList, 'NotFound'>) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>This screen doesn't exist.</Text>
+      <Text style={styles.title}>页面不存在。</Text>
       <TouchableOpacity onPress={() => navigation.replace('Root')} style={styles.link}>
-        <Text style={styles.linkText}>Go to home screen!</Text>
+        <Text style={styles.linkText}>回到首页!</Text>
       </TouchableOpacity>
+      <Button title="Login" onPress={() => navigation.navigate('SignIn')} />
     </View>
   );
 }
