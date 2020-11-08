@@ -6,6 +6,7 @@ import { Input, Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { doctorLogin } from '../services/doctor.service';
 import { setDoctor, setToken } from '../services/core/local.store';
+import { refreshPage } from '../services/core/auth';
 
 export default function SignInScreen() {
   const navigation = useNavigation();
@@ -14,6 +15,8 @@ export default function SignInScreen() {
   const [hasError, setHasError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
+  // const authContext = React.useMemo(authMethods, []);
+  // const AuthContext = React.createContext(authContext);
   // const { signIn } = React.useContext(AuthContext);
 
   const login = (username: string, password: string) => {
@@ -22,18 +25,20 @@ export default function SignInScreen() {
       setErrorMessage('请输入用户名和密码。');
       return;
     }
-    // 
+
     doctorLogin(username, password)
-      .then(result => {
+      .then(async result => {
         if (result?.return) {
           setHasError(true);
           setErrorMessage('用户名或者密码错误。');
           return;
         }
-        setToken(result.token);
+        await setToken(result.token);
         delete result.token;
-        setDoctor(result);
-        navigation.navigate('Root', { screen: 'TabConsultScreen' });
+        await setDoctor(result);
+        refreshPage();
+        // navigation.navigate('Root');
+        // navigation.navigate('NotFound');
       })
       .catch(err => {
         setHasError(true);

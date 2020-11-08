@@ -8,6 +8,7 @@ import { getDoctor } from '../../services/core/local.store';
 export default function ChatScreen() {
   const navigation = useNavigation();
   const doctor = getDoctor();
+  // const { signOut } = React.useContext(AuthContext); // test
 
   return (
     <View style={styles.container}>
@@ -25,9 +26,16 @@ export default function ChatScreen() {
 
       <Button
         title="Go feedback"
-        onPress={() => navigation.navigate('feedback', {screen: 'TabFeedbackScreen'})}
+        onPress={() => navigation.navigate('feedback', { screen: 'TabFeedbackScreen' })}
       />
+
+      {/* <Button
+        title="Logout"
+        onPress={() => signOut()}
+      /> */}
     </View>
+
+
   );
 }
 

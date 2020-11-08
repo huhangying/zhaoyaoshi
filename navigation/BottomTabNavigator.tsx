@@ -12,7 +12,7 @@ import TabFeedbackScreen from '../screens/TabFeedbackScreen';
 import { BottomTabParamList, TabConsultParamList, TabSettingsParamList, TabManageParamList, TabFeedbackParamList } from '../models/types';
 import ChatScreen from '../screens/consult/ChatScreen';
 
-const BottomTab = createBottomTabNavigator<BottomTabParamList>();
+const BottomTab = createBottomTabNavigator();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
@@ -66,13 +66,13 @@ function TabBarIcon(props: { name: string; color: string }) {
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
 // https://reactnavigation.org/docs/tab-based-navigation#a-stack-navigator-for-each-tab
-const TabConsultStack = createStackNavigator<TabConsultParamList>();
+const TabConsultStack = createStackNavigator();
 
 function TabConsultNavigator() {
   return (
     <TabConsultStack.Navigator>
       <TabConsultStack.Screen
-        name="TabConsultScreen"
+        name="TabConsult"
         component={TabConsultScreen}
         options={{ headerTitle: '药师咨询' }}
       />

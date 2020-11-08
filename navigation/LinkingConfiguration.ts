@@ -6,7 +6,11 @@ export default {
     screens: {
       Root: {
         screens: {
-          TabConsult:  'consult',                      
+          TabConsult:  {
+            screens: {
+              TabConsultScreen: 'consult',
+            },
+          },                      
           TabFeedback: {
             screens: {
               TabFeedbackScreen: 'feedback',
@@ -24,7 +28,7 @@ export default {
           },
         },
       },
-      SignIn: 'signin',
+      SignInScreen: 'signin',
       NotFound: '*',
     },
   },

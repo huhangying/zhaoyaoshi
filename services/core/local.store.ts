@@ -20,7 +20,7 @@ const setToken = async (token: string) => {
 const getDoctor = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem('@doctor')
-    return jsonValue != null ? (JSON.parse(jsonValue) as Doctor) : null;
+    return jsonValue != null ? (JSON.parse(jsonValue) as Doctor) : undefined;
   } catch(e) {
     // error reading value
   }
@@ -34,9 +34,9 @@ const getToken = async () => {
   }
 }
 
-const clearLocalStorage = () => {
+const clearLocalStorage = async () => {
   try {
-  AsyncStorage.clear();
+  return await AsyncStorage.clear();
 } catch(e) {
   // error reading value
 }
