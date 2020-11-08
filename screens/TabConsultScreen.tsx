@@ -5,14 +5,15 @@ import { Button, StyleSheet } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
-import { TabConsultParamList } from '../models/types';
+import { AuthContext } from '../services/core/auth';
 
 export default function TabConsultScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation();   
+  const auth = React.useContext(AuthContext);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab On三十一e</Text>
+      <Text style={styles.title}>{auth.doctor?.name}</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <EditScreenInfo path="/screens/consult/ChatScreen.js" />
       <Button title="go chat" onPress={() => {

@@ -6,13 +6,11 @@ import { View } from './components/Themed';
 
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Navigation from './navigation';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-  const AuthContext = createContext({ isSignIn: false });
 
   if (!isLoadingComplete) {
     // return null;

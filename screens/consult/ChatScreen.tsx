@@ -4,15 +4,15 @@ import { Text, View } from '../../components/Themed';
 import { Button } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { getDoctor } from '../../services/core/local.store';
+import { AuthContext } from '../../services/core/auth';
 
 export default function ChatScreen() {
   const navigation = useNavigation();
-  const doctor = getDoctor();
-  // const { signOut } = React.useContext(AuthContext); // test
+  const auth = React.useContext(AuthContext);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab On三十一e{doctor?.name}</Text>
+      <Text style={styles.title}>Tab On三十一e{auth.doctor?.name}</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
       <Button
         title="Go to ChatScreen... again"
@@ -28,14 +28,7 @@ export default function ChatScreen() {
         title="Go feedback"
         onPress={() => navigation.navigate('feedback', { screen: 'TabFeedbackScreen' })}
       />
-
-      {/* <Button
-        title="Logout"
-        onPress={() => signOut()}
-      /> */}
     </View>
-
-
   );
 }
 
