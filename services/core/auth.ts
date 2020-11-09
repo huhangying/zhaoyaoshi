@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Auth } from "../../models/auth.model";
-import { getDoctor, getToken } from "./local.store";
+import { clearLocalStorage, getDoctor, getToken } from "./local.store";
+import RNRestart from 'react-native-restart';
 
-
-export const getAuthState = ()  => {
+export const getAuthState = () => {
   // check if in local storage
   return Promise.all([
     getToken(),
@@ -21,11 +21,18 @@ export const getAuthState = ()  => {
       } as Auth;
     }
   })
-  .catch(err => ({isLoggedIn: false} as Auth));
+    .catch(err => ({ isLoggedIn: false } as Auth));
 }
 
 export const AuthContext = React.createContext({} as Auth);
 
 export const refreshPage = () => {
   window.location.reload();
+  // RNRestart.Restart();
+}
+
+export function logout() {
+  clearLocalStorage().then(() => {
+    refreshPage();
+  });
 }

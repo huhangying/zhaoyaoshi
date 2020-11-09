@@ -10,16 +10,16 @@ export default function NotFoundScreen() {
   React.useEffect(() => {
     setTimeout(() => {
       getAuthState().then(_ => {
-        console.log('->', _.isLoggedIn);
-        
+        // console.log('->', _.isLoggedIn);
+
         if (_.isLoggedIn) {
-          navigation.navigate('Root');
+          navigation.reset({index: 0, routes: [{ name: 'Root' }]});
         } else {
           navigation.navigate('SignIn');
         }
       })
     })
-    return () => {      
+    return () => {
     }
   }, [])
   return (

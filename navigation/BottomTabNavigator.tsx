@@ -11,6 +11,7 @@ import TabManageScreen from '../screens/TabManageScreen';
 import TabFeedbackScreen from '../screens/TabFeedbackScreen';
 import { BottomTabParamList, TabConsultParamList, TabSettingsParamList, TabManageParamList, TabFeedbackParamList } from '../models/types';
 import ChatScreen from '../screens/consult/ChatScreen';
+import ProfileScreen from '../screens/settings/ProfileScreen';
 
 const BottomTab = createBottomTabNavigator();
 
@@ -74,7 +75,7 @@ function TabConsultNavigator() {
       <TabConsultStack.Screen
         name="TabConsult"
         component={TabConsultScreen}
-        options={{ headerTitle: '药师咨询' }}
+        options={{ headerTitle: '药师咨询', headerShown: false }}
       />
       <TabConsultStack.Screen
         name="ChatScreen"
@@ -122,6 +123,11 @@ function TabSettingsNavigator() {
         name="TabSettingsScreen"
         component={TabSettingsScreen}
         options={{ headerTitle: '个人中心' }}
+      />
+      <TabConsultStack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{ headerTitle: '个人信息' }}
       />
     </TabSettingsStack.Navigator>
   );

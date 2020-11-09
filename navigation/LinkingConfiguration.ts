@@ -24,6 +24,7 @@ export default {
           TabSettings: {
             screens: {
               TabSettingsScreen: 'settings',
+              ProfileScreen: 'profile',
             },
           },
         },

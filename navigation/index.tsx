@@ -11,7 +11,6 @@ import { AuthContext, getAuthState } from '../services/core/auth';
 import { Auth } from '../models/auth.model';
 
 const Stack = createStackNavigator();
-
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
@@ -19,7 +18,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
   React.useEffect(() => {
     getAuthState().then(_ => {
-      console.log(_.isLoggedIn);
       setAuthData(_);
     })
     return () => {

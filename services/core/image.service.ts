@@ -1,0 +1,9 @@
+import * as Config from './../../constants/config';
+
+export const imgPath = (path?: string) => {
+  if (!path) {
+    return require('../../assets/images/noimage.jpg');
+  }
+  
+  return Config.default.imageServer + path;
+}

@@ -2,25 +2,41 @@ import { useNavigation } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { Button, StyleSheet } from 'react-native';
+import { Divider, Header } from 'react-native-elements';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { AuthContext } from '../services/core/auth';
 
 export default function TabConsultScreen() {
-  const navigation = useNavigation();   
+  const navigation = useNavigation();
   const auth = React.useContext(AuthContext);
 
   return (
+    <>
+      <Header
+        statusBarProps={{ barStyle: 'light-content' }}
+        barStyle="light-content" // or directly
+        leftComponent={{ icon: 'home', style: { color: '#fff' } }}
+        centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
+        containerStyle={{
+          backgroundColor: '#3D6DCC',
+          justifyContent: 'space-around',
+        }}
+      />
+      <Divider style={{ backgroundColor: 'lightgray' }} />
     <View style={styles.container}>
       <Text style={styles.title}>{auth.doctor?.name}</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+
+
       <EditScreenInfo path="/screens/consult/ChatScreen.js" />
       <Button title="go chat" onPress={() => {
         // navigation.setOptions
         navigation.navigate('ChatScreen');
       }} />
     </View>
+    </>
   );
 }
 

@@ -19,7 +19,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "zhaoyaoshi"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
