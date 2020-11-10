@@ -7,8 +7,8 @@ import { getApi, patchApi } from './core/api.service';
 //   return this.api.get<Doctor[]>('doctors/department/' + departmentId);
 // }
 
-export function getDoctorById(id: string) {
-  return getApi('doctor/' + id);
+export function getDoctorDetailsById(id: string) {
+  return getApi('doctor/brief/' + id);
 }
 
 
