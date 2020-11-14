@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { doctorLogin } from '../services/doctor.service';
 import { setDoctor, setToken } from '../services/core/local.store';
 import { refreshPage } from '../services/core/auth';
+import { tap } from 'rxjs/operators';
 
 export default function SignInScreen() {
   const navigation = useNavigation();
@@ -26,24 +27,36 @@ export default function SignInScreen() {
       return;
     }
 
-    doctorLogin(username, password)
-      .then(async result => {
-        if (result?.return) {
+    doctorLogin(username, password).pipe(
+      tap(async result => {
+        if (result.status !== 200) {
           setHasError(true);
           setErrorMessage('用户名或者密码错误。');
           return;
         }
-        await setToken(result.token);
-        delete result.token;
-        await setDoctor(result);
+        await setToken(result.data.token);
+        delete result.data.token;
+        await setDoctor(result.data);
         refreshPage();
-        // navigation.navigate('Root');
-        // navigation.navigate('NotFound');
       })
-      .catch(err => {
-        setHasError(true);
-        setErrorMessage('用户名或者密码错误。');
-      });
+    ).subscribe();
+    // .then(async result => {
+    //   if (result?.return) {
+    //     setHasError(true);
+    //     setErrorMessage('用户名或者密码错误。');
+    //     return;
+    //   }
+    //   await setToken(result.token);
+    //   delete result.token;
+    //   await setDoctor(result);
+    //   refreshPage();
+    //   // navigation.navigate('Root');
+    //   // navigation.navigate('NotFound');
+    // })
+    // .catch(err => {
+    //   setHasError(true);
+    //   setErrorMessage('用户名或者密码错误。');
+    // });
   }
 
   return (

@@ -9,7 +9,7 @@ const setDoctor = async (doctor: Doctor) => {
   }
 }
 
-const setToken = async (token: string) => {
+const setToken = async (token: string = '') => {
   try {
     await AsyncStorage.setItem('@token', token)
   } catch (e) {

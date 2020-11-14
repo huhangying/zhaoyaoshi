@@ -12,16 +12,15 @@ export default function ProfileScreen() {
   const navigation = useNavigation();
   const store = React.useContext(AppContext);
 
-  // useEffect(() => {
-  //   if (store.doctor?._id) {
-  //     getDoctorDetailsById(store.doctor._id).then(doc => {
-  //       store.updateDoctor(doc);
-  //     })
-  //   }
-  //   return () => {
-
-  //   }
-  // }, [store])
+  useEffect(() => {
+    if (store.doctor?._id) {
+      getDoctorDetailsById(store.doctor._id).subscribe(doc => {
+        store.updateDoctor(doc.data);
+      })
+    }
+    return () => {
+    }
+  }, [store])
 
   return (
     <ScrollView>

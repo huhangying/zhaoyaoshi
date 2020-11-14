@@ -1,6 +1,4 @@
 
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Doctor } from '../models/crm/doctor.model';
 import { getApi, patchApi } from './core/api.service';
 // getDoctorsByDepartment(departmentId: string) {
@@ -8,12 +6,12 @@ import { getApi, patchApi } from './core/api.service';
 // }
 
 export function getDoctorDetailsById(id: string) {
-  return getApi('doctor/brief/' + id);
+  return getApi<Doctor>('doctor/brief/' + id);
 }
 
 
 export function doctorLogin(user_id: string, password: string) {
-  return patchApi('login/doctor', {user_id, password, hid: 2});
+  return patchApi<Doctor>('login/doctor', {user_id, password, hid: 2});
 }
 
 
