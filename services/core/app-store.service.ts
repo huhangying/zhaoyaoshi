@@ -1,7 +1,8 @@
-import { AppState } from "../../models/app.state";
+import { AppState } from "../../models/app-state.model";
 import { Doctor } from "../../models/crm/doctor.model";
 import { clearLocalStorage, getDoctor, getToken, setDoctor, setToken } from "./local.store";
 import { Store } from "./store";
+import { Notification } from "../../models/io/notification.model";
 
 export class AppStoreService extends Store<AppState> {
 
@@ -43,71 +44,26 @@ export class AppStoreService extends Store<AppState> {
     });
   }
 
-  // updateChatNotifications(chatNotifications: Notification[]) {
-  //   this.setState({
-  //     ...this.state,
-  //     chatNotifications,
-  //   });
-  // }
+  updateChatNotifications(chatNotifications: Notification[]) {
+    this.setState({
+      ...this.state,
+      chatNotifications,
+    });
+  }
 
-  // updateFeedbackNotifications(feedbackNotifications: Notification[]) {
-  //   this.setState({
-  //     ...this.state,
-  //     feedbackNotifications,
-  //   });
-  // }
+  updateFeedbackNotifications(feedbackNotifications: Notification[]) {
+    this.setState({
+      ...this.state,
+      feedbackNotifications,
+    });
+  }
 
-  // updateBookingNotifications(bookingNotifications: Notification[]) {
-  //   this.setState({
-  //     ...this.state,
-  //     bookingNotifications,
-  //   });
-  // }
-
-  // updateCustomerServiceNotifications(csNotifications: Notification[]) {
-  //   this.setState({
-  //     ...this.state,
-  //     csNotifications,
-  //   });
-  // }
-
-  // updateConsultNotifications(consultNotifications: Notification[]) {
-  //   this.setState({
-  //     ...this.state,
-  //     consultNotifications,
-  //   });
-  // }
-
-  // updateCms(cms: boolean) {
-  //   this.setState({
-  //     ...this.state,
-  //     cms,
-  //   });
-  // }
-
-  // updateCurrentUrl(currentUrl: string) {
-  //   this.setState({
-  //     ...this.state,
-  //     currentUrl,
-  //   });
-  // }
-
-
-
-  // updateBreakpoint(breakpoint: NbMediaBreakpoint) {
-  //   this.setState({
-  //     ...this.state,
-  //     breakpoint,
-  //   });
-  // }
-
-  // updatePending(pending: Pending) {
-  //   this.setState({
-  //     ...this.state,
-  //     pending,
-  //   });
-  //   store2.set('pending', pending);
-  // }
+  updateConsultNotifications(consultNotifications: Notification[]) {
+    this.setState({
+      ...this.state,
+      consultNotifications,
+    });
+  }
 
   reset() {
     this.setState(new AppState());

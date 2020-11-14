@@ -24,11 +24,11 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
 
   React.useEffect(() => {
-    getAuthState().then(_ => {
-      setAuth(_);
-      if (_?.doctor) {
-        store.updateDoctor(_.doctor);
-        store.updateToken(_.token);
+    getAuthState().then(_auth => {
+      setAuth(_auth);
+      if (_auth?.doctor) {
+        store.updateDoctor(_auth.doctor);
+        store.updateToken(_auth.token);
         setStore(store);  
       }
     });
