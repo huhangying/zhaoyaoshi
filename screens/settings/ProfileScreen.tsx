@@ -3,44 +3,43 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { View } from '../../components/Themed';
 import { Avatar, Button, Card, Divider, Text } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { getDoctor } from '../../services/core/local.store';
-import { AuthContext } from '../../services/core/auth';
 import { imgPath } from '../../services/core/image.service';
 import { useEffect } from 'react';
 import { getDoctorDetailsById } from '../../services/doctor.service';
+import { AppContext } from '../../services/core/state.context';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const auth = React.useContext(AuthContext);
-  const [doctor, setDoctor] = React.useState(auth.doctor);
-  useEffect(() => {
-    if (auth.doctor?._id) {
-      getDoctorDetailsById(auth.doctor._id).then(doc => {
-        setDoctor(doc);
-      })
-    }
-    return () => {
+  const store = React.useContext(AppContext);
 
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (store.doctor?._id) {
+  //     getDoctorDetailsById(store.doctor._id).then(doc => {
+  //       store.updateDoctor(doc);
+  //     })
+  //   }
+  //   return () => {
+
+  //   }
+  // }, [store])
 
   return (
     <ScrollView>
-      <Card containerStyle={{ padding: 10, margin: 0, flex: 1, alignItems:'center' }} >
+      <Card containerStyle={{ padding: 10, margin: 0, flex: 1, alignItems: 'center' }} >
         <Avatar
           rounded size="large"
-          source={{ uri: imgPath(auth.doctor?.icon), }}
+          source={{ uri: imgPath(store.doctor?.icon), }}
         />
-        <Text h3>{auth.doctor?.name}{auth.doctor?.title}</Text>
-        <Text h4>{doctor?.department?.name}</Text>
+        <Text h3>{store.doctor?.name}{store.doctor?.title}</Text>
+        <Text h4>{store.doctor?.department?.name}</Text>
       </Card>
       <Divider></Divider>
       <Avatar
         size="xlarge"
-        source={{ uri: doctor?.qrcode }}
+        source={{ uri: store.doctor?.qrcode }}
       />
       <Text>
-        {JSON.stringify(doctor)}
+        {JSON.stringify(store.doctor)}
       </Text>
       <Button
         title="Go to ChatScreen... again"

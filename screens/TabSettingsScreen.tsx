@@ -3,19 +3,20 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Avatar, ListItem } from 'react-native-elements';
-import { AuthContext, logout } from '../services/core/auth';
+import { logout } from '../services/core/auth';
 import { imgPath } from '../services/core/image.service';
+import { AppContext } from '../services/core/state.context';
 
 export default function TabSettingsScreen() {
-  const {navigate} = useNavigation();
-  const auth = React.useContext(AuthContext);
+  const { navigate } = useNavigation();
+  const { doctor } = React.useContext(AppContext);
   return (
     <>
       <ListItem key={0} bottomDivider onPress={() => navigate('ProfileScreen')}>
-        <Avatar size="medium" source={{ uri: imgPath(auth.doctor?.icon) }} />
+        <Avatar size="medium" source={{ uri: imgPath(doctor?.icon) }} />
         <ListItem.Content>
-          <ListItem.Title>{auth.doctor?.name}{auth.doctor?.title}</ListItem.Title>
-          <ListItem.Subtitle>{auth.doctor?.department}</ListItem.Subtitle>
+          <ListItem.Title>{doctor?.name}{doctor?.title}</ListItem.Title>
+          <ListItem.Subtitle>{doctor?.department}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>

@@ -24,8 +24,6 @@ export const getAuthState = () => {
     .catch(err => ({ isLoggedIn: false } as Auth));
 }
 
-export const AuthContext = React.createContext({} as Auth);
-
 export const refreshPage = () => {
   window.location.reload();
   // RNRestart.Restart();
