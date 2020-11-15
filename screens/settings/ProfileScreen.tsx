@@ -29,8 +29,8 @@ export default function ProfileScreen() {
           rounded size="large"
           source={{ uri: imgPath(store.doctor?.icon), }}
         />
-        <Text h3>{store.doctor?.name}{store.doctor?.title}</Text>
-        <Text h4>{store.doctor?.department?.name}</Text>
+        <Text h4>{store.doctor?.name}{store.doctor?.title}</Text>
+        <Text h5>{store.doctor?.department?.name}</Text>
       </Card>
       <Divider></Divider>
       <Avatar

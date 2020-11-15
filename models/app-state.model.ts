@@ -4,8 +4,6 @@ import { Notification } from "./io/notification.model";
 
 export class AppState {
   constructor(
-    public readonly count?: number, //test
-
     public readonly doctor?: Doctor,
     public readonly token?: string,
 

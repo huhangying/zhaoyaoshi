@@ -3,17 +3,19 @@ import { Doctor } from "../../models/crm/doctor.model";
 import { clearLocalStorage, getDoctor, getToken, setDoctor, setToken } from "./local.store";
 import { Store } from "./store";
 import { Notification } from "../../models/io/notification.model";
+import { SocketioService } from "./socketio.service";
 
 export class AppStoreService extends Store<AppState> {
-
-  constructor(
-  ) {
+  constructor() {
     super(new AppState());
   }
 
   // selectors
   get token() { return this.state?.token; }
   get doctor() { return this.state?.doctor; }
+  // get chatNotifications() { return this.state?.chatNotifications; }
+  // get feedbackNotifications() { return this.state?.feedbackNotifications; }
+  // get consultNotifications() { return this.state?.consultNotifications; }
   // get token() { return this.state?.token || getToken(); }
   // get doctor() { return this.state?.doctor || getDoctor(); }
 
