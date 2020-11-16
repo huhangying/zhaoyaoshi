@@ -12,7 +12,7 @@ import { getUnreadCount } from '../services/notification.service';
 export default function TabConsultScreen() {
   const navigation = useNavigation();
   const store = useStore();
-  const state = useSelector(state => state);
+  const state = useSelector((state: AppState) => state);
   return (
     <>
       <Header
