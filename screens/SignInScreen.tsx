@@ -7,7 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import { doctorLogin } from '../services/doctor.service';
 import { setDoctor, setToken } from '../services/core/local.store';
 import { refreshPage } from '../services/core/auth';
-import { tap } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
 
 export default function SignInScreen() {
   const navigation = useNavigation();
@@ -29,15 +30,15 @@ export default function SignInScreen() {
 
     doctorLogin(username, password).pipe(
       tap(async result => {
-        if (result.status !== 200) {
-          setHasError(true);
-          setErrorMessage('用户名或者密码错误。');
-          return;
-        }
-        await setToken(result.data.token);
-        delete result.data.token;
-        await setDoctor(result.data);
+        await setToken(result.token);
+        delete result.token;
+        await setDoctor(result);
         refreshPage();
+      }),
+      catchError(err => {
+        setHasError(true);
+        setErrorMessage('用户名或者密码错误。');
+        return EMPTY;
       })
     ).subscribe();
     // .then(async result => {

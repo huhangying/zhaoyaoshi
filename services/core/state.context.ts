@@ -1,4 +1,5 @@
 import * as React from "react";
-import { AppStoreService } from "./app-store.service";
+import { AppState } from "../../models/app-state.model";
 
-export const AppContext = React.createContext(new AppStoreService());
+// export const AppContext = React.createContext(new AppStoreService());
+export const AppContext = React.createContext(new AppState());

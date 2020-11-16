@@ -47,6 +47,8 @@
     "@types/react": "~16.9.35",
     "@types/react-native": "~0.63.2",
     "@types/socket.io-client": "^1.4.33",
+    "eslint": "^7.13.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
     "jest-expo": "^39.0.0",
     "typescript": "~3.9.2"
   },

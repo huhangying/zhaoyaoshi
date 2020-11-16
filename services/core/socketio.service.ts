@@ -6,6 +6,11 @@ import * as moment from 'moment';
 import { UserFeedback } from '../../models/io/user-feedback.model';
 import { Consult } from '../../models/consult/consult.model';
 import { AppStoreService } from './app-store.service';
+import { convertChatNotificationList, getChatUnreadListByDocter } from '../chat.service';
+import { map, take, tap, withLatestFrom } from 'rxjs/operators';
+import { convertFeedbackNotificationList, getFeedbackUnreadListByDocter } from '../user-feedback.service';
+import { convertConsultNotificationList, getPendingConsultsByDoctorId } from '../consult.service';
+import { forkJoin } from 'rxjs';
 
 export class SocketioService {
   socket: any;
@@ -82,7 +87,7 @@ export class SocketioService {
         return appStore.updateConsultNotifications(notifications);
     }
   }
-  private addNotiToExisted(storeNotifications: any[]=[], noti: Notification) {
+  private addNotiToExisted(storeNotifications: any[] = [], noti: Notification) {
     let notifications = [];
     if (!storeNotifications?.length) {
       notifications = [noti];
@@ -99,4 +104,21 @@ export class SocketioService {
     }
     return notifications;
   }
+
+  getUnreadList(doctorId: string) {
+    return forkJoin({
+      chats: getChatUnreadListByDocter(doctorId),
+      feedbacks: getFeedbackUnreadListByDocter(doctorId),
+      consults: getPendingConsultsByDoctorId(doctorId)
+    }).pipe(
+      map(({chats, feedbacks, consults}) => {
+        return {
+          chatNotifications: convertChatNotificationList(chats, NotificationType.chat),
+          feedbackNotifications: convertFeedbackNotificationList(feedbacks),
+          consultNotifications: convertConsultNotificationList(consults),
+        };
+      })
+    );
+  }
+
 }

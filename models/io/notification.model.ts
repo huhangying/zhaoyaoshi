@@ -9,7 +9,7 @@ export interface Notification {
   // group?: string; // doctor group name
   // brief: string;
   keyId?: string;
-  created: Date;
+  created?: Date;
 }
 
 export enum NotificationType {

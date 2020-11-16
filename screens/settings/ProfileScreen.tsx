@@ -7,38 +7,44 @@ import { imgPath } from '../../services/core/image.service';
 import { useEffect } from 'react';
 import { getDoctorDetailsById } from '../../services/doctor.service';
 import { AppContext } from '../../services/core/state.context';
+import { AppStoreActionType, appStoreInitialState, appStoreReducer } from '../../services/core/app-store.reducer';
+import { distinctUntilChanged } from 'rxjs/operators';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const store = React.useContext(AppContext);
+  const appState = React.useContext(AppContext);
+  const [state, dispatch] = React.useReducer(appStoreReducer, appState);
 
   useEffect(() => {
-    if (store.doctor?._id) {
-      getDoctorDetailsById(store.doctor._id).subscribe(doc => {
-        store.updateDoctor(doc.data);
+    if (state.doctor?._id) {
+      getDoctorDetailsById(state.doctor._id).pipe(
+        distinctUntilChanged()
+      ).subscribe(doc => {
+        dispatch({type: AppStoreActionType.UpdateDoctor, payload: doc});
+        // state.updateDoctor(doc);
       })
     }
     return () => {
     }
-  }, [store])
+  }, [])
 
   return (
     <ScrollView>
       <Card containerStyle={{ padding: 10, margin: 0, flex: 1, alignItems: 'center' }} >
         <Avatar
           rounded size="large"
-          source={{ uri: imgPath(store.doctor?.icon), }}
+          source={{ uri: imgPath(state.doctor?.icon), }}
         />
-        <Text h4>{store.doctor?.name}{store.doctor?.title}</Text>
-        <Text h5>{store.doctor?.department?.name}</Text>
+        <Text h4>{state.doctor?.name}{state.doctor?.title}</Text>
+        <Text h4>{state.doctor?.department?.name}</Text>
       </Card>
       <Divider></Divider>
       <Avatar
         size="xlarge"
-        source={{ uri: store.doctor?.qrcode }}
+        source={{ uri: state.doctor?.qrcode }}
       />
       <Text>
-        {JSON.stringify(store.doctor)}
+        {JSON.stringify(state.doctor)}
       </Text>
       <Button
         title="Go to ChatScreen... again"

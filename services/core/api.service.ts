@@ -1,7 +1,8 @@
 import { getToken } from "./local.store";
 import Axios from "axios-observable";
 import { from } from "rxjs";
-import { switchMap } from "rxjs/operators";
+import { catchError, map, switchMap } from "rxjs/operators";
+import { AxiosResponse, AxiosError } from "axios";
 Axios.defaults.baseURL = 'http://timebox.i234.me/api/';
 
 // const baseUrl = 'http://timebox.i234.me/api/';
@@ -48,7 +49,14 @@ export const getApi = <T>(path: string, params?: any) => {
           Authorization: `Bearer ${token}`
         },
       });
-    })
+    }),
+    map((rsp: AxiosResponse<T>) => rsp.data),
+    // catchError(error => {
+    //   if (error instanceof AxiosError) {
+    //     console.log(error);
+    //   }
+    //   throw error;
+    // })
   );
 }
 
@@ -60,7 +68,8 @@ export const patchApi = <T>(path: string, data: any) => {
           Authorization: `Bearer ${token}`
         },
       });
-    })
+    }),
+    map((rsp: AxiosResponse<T>) => rsp.data),
   );
 }
 
@@ -72,7 +81,8 @@ export const postApi = <T>(path: string, data: any) => {
           Authorization: `Bearer ${token}`
         },
       });
-    })
+    }),
+    map((rsp: AxiosResponse<T>) => rsp.data),
   );
 }
 
@@ -84,6 +94,7 @@ export const deleteApi = <T>(path: string) => {
           Authorization: `Bearer ${token}`
         },
       });
-    })
+    }),
+    map((rsp: AxiosResponse<T>) => rsp.data),
   );
 }

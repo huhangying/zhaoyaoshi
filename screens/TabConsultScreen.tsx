@@ -4,13 +4,12 @@ import * as React from 'react';
 import { Button, StyleSheet } from 'react-native';
 import { Divider, Header } from 'react-native-elements';
 
-import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { AppContext } from '../services/core/state.context';
 
 export default function TabConsultScreen() {
   const navigation = useNavigation();
-  const { doctor } = React.useContext(AppContext);
+  const { doctor, chatNotifications, feedbackNotifications, consultNotifications } = React.useContext(AppContext);
 
   return (
     <>
@@ -27,10 +26,13 @@ export default function TabConsultScreen() {
       <Divider style={{ backgroundColor: 'lightgray' }} />
       <View style={styles.container}>
         <Text style={styles.title}>{doctor?.name}</Text>
-        <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+        <Text>
+          {chatNotifications?.length} |
+          {feedbackNotifications?.length} |
+          {consultNotifications?.length} |
+          {doctor?.title} |
+        </Text>
 
-
-        <EditScreenInfo path="/screens/consult/ChatScreen.js" />
         <Button title="go chat" onPress={() => {
           // navigation.setOptions
           navigation.navigate('ChatScreen');
