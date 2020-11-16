@@ -1,14 +1,18 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { createContext } from 'react';
+import React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
 import { View } from './components/Themed';
 
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
+import { appStoreReducer } from './services/core/app-store.reducer';
 
 export default function App() {
+  const store = createStore(appStoreReducer);
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
@@ -21,10 +25,12 @@ export default function App() {
     );
   } else {
     return (
-      <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </SafeAreaProvider>
+      <Provider store={store}>
+        <SafeAreaProvider>
+          <Navigation colorScheme={colorScheme} />
+          <StatusBar />
+        </SafeAreaProvider>
+      </Provider>
     );
   }
 }

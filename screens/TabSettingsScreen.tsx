@@ -3,13 +3,14 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Avatar, ListItem } from 'react-native-elements';
+import { useSelector } from 'react-redux';
+import { AppState } from '../models/app-state.model';
 import { logout } from '../services/core/auth';
 import { imgPath } from '../services/core/image.service';
-import { AppContext } from '../services/core/state.context';
 
 export default function TabSettingsScreen() {
   const { navigate } = useNavigation();
-  const { doctor } = React.useContext(AppContext);
+  const doctor = useSelector((state: AppState) => state.doctor);
   return (
     <>
       <ListItem key={0} bottomDivider onPress={() => navigate('ProfileScreen')}>

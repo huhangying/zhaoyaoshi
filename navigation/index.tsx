@@ -9,35 +9,42 @@ import LinkingConfiguration from './LinkingConfiguration';
 import SignInScreen from '../screens/SignInScreen';
 import { getAuthState } from '../services/core/auth';
 import { Auth } from '../models/auth.model';
-import { AppContext } from '../services/core/state.context';
 import { SocketioService } from '../services/core/socketio.service';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import { tap } from 'rxjs/operators';
 import { AppStoreActionType, appStoreInitialState, appStoreReducer } from '../services/core/app-store.reducer';
+import { createStore } from 'redux';
+import { connect, Provider, useSelector, useStore } from 'react-redux';
+import { useDispatch } from 'react-redux'
+import { updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, updateToken } from '../services/core/app-store.actions';
+import { AppState } from "../models/app-state.model";
 
 const Stack = createStackNavigator();
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+  // const store = createStore(appStoreReducer);
+  const store = useStore();
   const [auth, setAuth] = React.useState({} as Auth);
-  const [state, dispatch] = React.useReducer(appStoreReducer, appStoreInitialState);
+  // const [appStore, setAppStore] = React.useState(appStoreInitialState);
+  // const [state, dispatch] = React.useReducer(appStoreReducer, appStoreInitialState);
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
-    async function fetchData() {
-      const _auth = await getAuthState();
-      // .then(_auth => {
+    // const _auth = await getAuthState();
+    getAuthState().then(_auth => {
       setAuth(_auth);
       if (_auth?.doctor?._id) {
-        dispatch({ type: AppStoreActionType.UpdateDoctor, payload: _auth.doctor });
-        dispatch({ type: AppStoreActionType.UpdateToken, payload: _auth.token });
+        dispatch(updateDoctor(_auth.doctor));
+        dispatch(updateToken(_auth.token));
 
         // inital store data, only once
         const socketio = new SocketioService(_auth.doctor._id);
         socketio.getUnreadList(_auth.doctor._id).pipe(
           tap(({ chatNotifications, feedbackNotifications, consultNotifications }) => {
-            dispatch({ type: AppStoreActionType.UpdateChatNotifications, payload: chatNotifications });
-            dispatch({ type: AppStoreActionType.UpdateFeedbackNotifications, payload: feedbackNotifications });
-            dispatch({ type: AppStoreActionType.UpdateConsultNotifications, payload: consultNotifications });
+            dispatch(updateChatNotifications(chatNotifications));
+            dispatch(updateFeedbackNotifications(feedbackNotifications));
+            dispatch(updateConsultNotifications(consultNotifications));
           })
         ).subscribe();
 
@@ -48,34 +55,31 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
           let notifications = [];
           switch (noti.type) {
             case NotificationType.chat:
-              notifications = socketio.addNotiToExisted(state.chatNotifications, noti);
-              dispatch({ type: AppStoreActionType.UpdateChatNotifications, payload: notifications });
+              notifications = socketio.addNotiToExisted(store.getState().chatNotifications, noti);
+              dispatch(updateChatNotifications(notifications));
               break;
-      
+
             case NotificationType.adverseReaction:
             case NotificationType.doseCombination:
-              notifications = socketio.addNotiToExisted(state.feedbackNotifications, noti);
-              dispatch({ type: AppStoreActionType.UpdateFeedbackNotifications, payload: notifications });
+              notifications = socketio.addNotiToExisted(store.getState().feedbackNotifications, noti);
+              dispatch(updateFeedbackNotifications(notifications));
               break;
-      
-      
+
             case NotificationType.consultChat:
             case NotificationType.consultPhone:
-              notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
-              dispatch({ type: AppStoreActionType.UpdateConsultNotifications, payload: notifications });
+              notifications = socketio.addNotiToExisted(store.getState().consultNotifications, noti);
+              dispatch(updateConsultNotifications(notifications));
               break;
           }
         });
       }
-    }
+    });
 
-    fetchData();
     return () => {
     }
   }, []);
 
   return (
-    <AppContext.Provider value={state}>
       <NavigationContainer
         linking={LinkingConfiguration}
         theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -92,6 +96,23 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
           <Stack.Screen name="NotFound" component={NotFoundScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-    </AppContext.Provider>
   );
 }
+const mapState = (state: AppState) => {
+  return {
+    doctor: state.doctor,
+    token: state.token,
+    chatNotifications: state.chatNotifications,
+    feedbackNotifications: state.feedbackNotifications,
+    consultNotifications: state.consultNotifications,
+  }
+}
+
+const mapDispatch = {
+  updateDoctor,
+  updateToken,
+  updateChatNotifications,
+  updateFeedbackNotifications,
+  updateConsultNotifications,
+}
+export default connect(mapState, mapDispatch)(Navigation);

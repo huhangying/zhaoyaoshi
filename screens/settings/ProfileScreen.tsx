@@ -6,22 +6,22 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { imgPath } from '../../services/core/image.service';
 import { useEffect } from 'react';
 import { getDoctorDetailsById } from '../../services/doctor.service';
-import { AppContext } from '../../services/core/state.context';
 import { AppStoreActionType, appStoreInitialState, appStoreReducer } from '../../services/core/app-store.reducer';
 import { distinctUntilChanged } from 'rxjs/operators';
+import { useDispatch, useStore } from 'react-redux';
+import { updateDoctor } from '../../services/core/app-store.actions';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
-  const appState = React.useContext(AppContext);
-  const [state, dispatch] = React.useReducer(appStoreReducer, appState);
+  const doctor = useStore().getState().doctor;
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (state.doctor?._id) {
-      getDoctorDetailsById(state.doctor._id).pipe(
+    if (doctor?._id) {
+      getDoctorDetailsById(doctor._id).pipe(
         distinctUntilChanged()
       ).subscribe(doc => {
-        dispatch({type: AppStoreActionType.UpdateDoctor, payload: doc});
-        // state.updateDoctor(doc);
+        dispatch(updateDoctor(doc));
       })
     }
     return () => {
@@ -33,18 +33,18 @@ export default function ProfileScreen() {
       <Card containerStyle={{ padding: 10, margin: 0, flex: 1, alignItems: 'center' }} >
         <Avatar
           rounded size="large"
-          source={{ uri: imgPath(state.doctor?.icon), }}
+          source={{ uri: imgPath(doctor?.icon), }}
         />
-        <Text h4>{state.doctor?.name}{state.doctor?.title}</Text>
-        <Text h4>{state.doctor?.department?.name}</Text>
+        <Text h4>{doctor?.name}{doctor?.title}</Text>
+        <Text h4>{doctor?.department?.name}</Text>
       </Card>
       <Divider></Divider>
       <Avatar
         size="xlarge"
-        source={{ uri: state.doctor?.qrcode }}
+        source={{ uri: doctor?.qrcode }}
       />
       <Text>
-        {JSON.stringify(state.doctor)}
+        {JSON.stringify(doctor)}
       </Text>
       <Button
         title="Go to ChatScreen... again"

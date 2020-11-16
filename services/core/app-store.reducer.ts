@@ -20,27 +20,27 @@ export interface AppStoreAction {
 // export const AppContext = React.createContext(new AppStoreService());
 export const appStoreInitialState = new AppState();
 
-export function appStoreReducer(state: AppState, action: AppStoreAction) {
+export function appStoreReducer(state: AppState = appStoreInitialState, action: AppStoreAction) {
   switch (action.type) {
     case AppStoreActionType.UpdateLoading:
-      return {...state, loading: action.payload};
+      return { ...state, loading: action.payload };
 
     case AppStoreActionType.UpdateDoctor:
       setDoctor(action.payload);
-      return {...state, doctor: action.payload};
+      return { ...state, doctor: action.payload };
 
     case AppStoreActionType.UpdateToken:
       setToken(action.payload);
-      return {...state, token: action.payload};
+      return { ...state, token: action.payload };
 
     case AppStoreActionType.UpdateChatNotifications:
-      return {...state, chatNotifications: action.payload};
+      return { ...state, chatNotifications: action.payload };
 
     case AppStoreActionType.UpdateFeedbackNotifications:
-      return {...state, feedbackNotifications: action.payload};
+      return { ...state, feedbackNotifications: action.payload };
 
     case AppStoreActionType.UpdateConsultNotifications:
-      return {...state, consultNotifications: action.payload};
+      return { ...state, consultNotifications: action.payload };
 
     case AppStoreActionType.Reset:
       // clear localstorage
@@ -48,6 +48,6 @@ export function appStoreReducer(state: AppState, action: AppStoreAction) {
       return appStoreInitialState;
 
     default:
-      throw new Error();
+      return state
   }
 }

@@ -89,7 +89,7 @@ export class SocketioService {
   }
 
   addNotiToExisted(storeNotifications: any[] = [], noti: Notification) {
-    let notifications = [];
+    let notifications: Notification[] = [];
     if (!storeNotifications?.length) {
       notifications = [noti];
     } else {

@@ -3,12 +3,12 @@ import { StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { AppContext } from '../../services/core/state.context';
+import { useSelector } from 'react-redux';
+import { AppState } from '../../models/app-state.model';
 
 export default function ChatScreen() {
   const navigation = useNavigation();
-  const { doctor } = React.useContext(AppContext);
-
+  const doctor = useSelector((state: AppState) => state.doctor)
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Tab On三十一e{doctor?.name}</Text>

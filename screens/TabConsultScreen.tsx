@@ -3,15 +3,16 @@ import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { Button, StyleSheet } from 'react-native';
 import { Divider, Header } from 'react-native-elements';
+import { useSelector, useStore } from 'react-redux';
 
 import { Text, View } from '../components/Themed';
-import { AppContext } from '../services/core/state.context';
+import { AppState } from '../models/app-state.model';
 import { getUnreadCount } from '../services/notification.service';
 
 export default function TabConsultScreen() {
   const navigation = useNavigation();
-  const { doctor, chatNotifications, feedbackNotifications, consultNotifications } = React.useContext(AppContext);
-
+  const store = useStore();
+  const state = useSelector((state: AppState) => state);
   return (
     <>
       <Header
@@ -26,12 +27,12 @@ export default function TabConsultScreen() {
       />
       <Divider style={{ backgroundColor: 'lightgray' }} />
       <View style={styles.container}>
-        <Text style={styles.title}>{doctor?.name}</Text>
+        <Text style={styles.title}>{state.doctor?.name}</Text>
         <Text>
-          {getUnreadCount(chatNotifications)} | 
-          {getUnreadCount(feedbackNotifications)} | 
-          {getUnreadCount(consultNotifications)} | 
-          {doctor?.title} |
+          {getUnreadCount(state.chatNotifications)} | 
+          {getUnreadCount(state.feedbackNotifications)} | 
+          {getUnreadCount(state.consultNotifications)} | 
+          {store.getState().doctor?.title} |
         </Text>
 
         <Button title="go chat" onPress={() => {

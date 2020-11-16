@@ -11,15 +11,16 @@ import TabFeedbackScreen from '../screens/TabFeedbackScreen';
 import { BottomTabParamList, TabConsultParamList, TabSettingsParamList, TabManageParamList, TabFeedbackParamList } from '../models/types';
 import ChatScreen from '../screens/consult/ChatScreen';
 import ProfileScreen from '../screens/settings/ProfileScreen';
-import { AppContext } from '../services/core/state.context';
 import { getUnreadCount } from '../services/notification.service';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { useSelector } from 'react-redux';
+import { AppState } from '../models/app-state.model';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-  const { chatNotifications, feedbackNotifications, consultNotifications } = React.useContext(AppContext);
+  const state = useSelector((state: AppState) => state);
 
   return (
     <BottomTab.Navigator
@@ -33,7 +34,7 @@ export default function BottomTabNavigator() {
         options={{
           title: '咨询',
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-chatbubbles" color={color} />,
-          tabBarBadge: getUnreadCount(chatNotifications),
+          tabBarBadge: getUnreadCount(state.chatNotifications),
         }}
       />
       <BottomTab.Screen
