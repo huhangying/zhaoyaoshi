@@ -5,7 +5,7 @@ import { clearLocalStorage, setDoctor, setToken } from "./local.store";
 // export const AppContext = React.createContext(new AppStoreService());
 export const appStoreInitialState = new AppState();
 
-export function appStoreReducer(state: AppState = appStoreInitialState, action: AppStoreAction) {
+export function appStoreReducer(state: AppState = appStoreInitialState, action: AppStoreAction): AppState {
   switch (action.type) {
     case AppStoreActionType.UpdateLoading:
       return { ...state, loading: action.payload };

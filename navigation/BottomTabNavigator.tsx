@@ -20,7 +20,7 @@ const BottomTab = createMaterialBottomTabNavigator();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
-  const state = useSelector((state: AppState) => state);
+  const state = useSelector(state => state);
 
   return (
     <BottomTab.Navigator
