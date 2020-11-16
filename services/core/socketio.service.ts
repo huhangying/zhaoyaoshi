@@ -67,6 +67,7 @@ export class SocketioService {
     this.socket.on('notification', next);
   }
 
+  // no use!
   addNotification(noti: Notification, appStore: AppStoreService) {
     let notifications = [];
     // save to store
@@ -80,14 +81,14 @@ export class SocketioService {
         notifications = this.addNotiToExisted(appStore.state.feedbackNotifications, noti);
         return appStore.updateFeedbackNotifications(notifications);
 
-
       case NotificationType.consultChat:
       case NotificationType.consultPhone:
         notifications = this.addNotiToExisted(appStore.state.consultNotifications, noti);
         return appStore.updateConsultNotifications(notifications);
     }
   }
-  private addNotiToExisted(storeNotifications: any[] = [], noti: Notification) {
+
+  addNotiToExisted(storeNotifications: any[] = [], noti: Notification) {
     let notifications = [];
     if (!storeNotifications?.length) {
       notifications = [noti];
@@ -103,6 +104,14 @@ export class SocketioService {
       }
     }
     return notifications;
+  }
+
+  getUnreadCount(notifications: Notification[]) {
+    if (!notifications?.length) return 0;
+    return notifications.reduce((total, noti) => {
+      total += noti.count;
+      return total;
+    }, 0);
   }
 
   getUnreadList(doctorId: string) {

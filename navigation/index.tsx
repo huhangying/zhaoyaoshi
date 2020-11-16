@@ -11,7 +11,7 @@ import { getAuthState } from '../services/core/auth';
 import { Auth } from '../models/auth.model';
 import { AppContext } from '../services/core/state.context';
 import { SocketioService } from '../services/core/socketio.service';
-import { Notification } from '../models/io/notification.model';
+import { Notification, NotificationType } from '../models/io/notification.model';
 import { tap } from 'rxjs/operators';
 import { AppStoreActionType, appStoreInitialState, appStoreReducer } from '../services/core/app-store.reducer';
 
@@ -42,11 +42,30 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         ).subscribe();
 
         // io.onChat()
-        // socketio.onNotification((noti: Notification) => {
-        //   // add the following line if 已经在chat/feedback 页面同病患交互不算新消息。
-        //   // if (noti.patientId === this.pid && noti.type === +this.notiType) return; // skip
-        //   socketio.addNotification(noti, store);
-        // });
+        socketio.onNotification((noti: Notification) => {
+          // add the following line if 已经在chat/feedback 页面同病患交互不算新消息。
+          // if (noti.patientId === this.pid && noti.type === +this.notiType) return; // skip
+          let notifications = [];
+          switch (noti.type) {
+            case NotificationType.chat:
+              notifications = socketio.addNotiToExisted(state.chatNotifications, noti);
+              dispatch({ type: AppStoreActionType.UpdateChatNotifications, payload: notifications });
+              break;
+      
+            case NotificationType.adverseReaction:
+            case NotificationType.doseCombination:
+              notifications = socketio.addNotiToExisted(state.feedbackNotifications, noti);
+              dispatch({ type: AppStoreActionType.UpdateFeedbackNotifications, payload: notifications });
+              break;
+      
+      
+            case NotificationType.consultChat:
+            case NotificationType.consultPhone:
+              notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
+              dispatch({ type: AppStoreActionType.UpdateConsultNotifications, payload: notifications });
+              break;
+          }
+        });
       }
     }
 

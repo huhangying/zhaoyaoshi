@@ -6,6 +6,7 @@ import { Divider, Header } from 'react-native-elements';
 
 import { Text, View } from '../components/Themed';
 import { AppContext } from '../services/core/state.context';
+import { getUnreadCount } from '../services/notification.service';
 
 export default function TabConsultScreen() {
   const navigation = useNavigation();
@@ -27,9 +28,9 @@ export default function TabConsultScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>{doctor?.name}</Text>
         <Text>
-          {chatNotifications?.length} |
-          {feedbackNotifications?.length} |
-          {consultNotifications?.length} |
+          {getUnreadCount(chatNotifications)} | 
+          {getUnreadCount(feedbackNotifications)} | 
+          {getUnreadCount(consultNotifications)} | 
           {doctor?.title} |
         </Text>
 

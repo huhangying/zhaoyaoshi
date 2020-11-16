@@ -1,5 +1,4 @@
 import { Ionicons } from '@expo/vector-icons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 
@@ -12,23 +11,29 @@ import TabFeedbackScreen from '../screens/TabFeedbackScreen';
 import { BottomTabParamList, TabConsultParamList, TabSettingsParamList, TabManageParamList, TabFeedbackParamList } from '../models/types';
 import ChatScreen from '../screens/consult/ChatScreen';
 import ProfileScreen from '../screens/settings/ProfileScreen';
+import { AppContext } from '../services/core/state.context';
+import { getUnreadCount } from '../services/notification.service';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 
-const BottomTab = createBottomTabNavigator();
+const BottomTab = createMaterialBottomTabNavigator();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const { chatNotifications, feedbackNotifications, consultNotifications } = React.useContext(AppContext);
 
   return (
     <BottomTab.Navigator
       initialRouteName="consult"
-      tabBarOptions={{ activeTintColor: Colors[colorScheme].tint }}>
+      activeColor={Colors[colorScheme].tint}
+      inactiveColor={Colors[colorScheme].text}
+      barStyle={{ backgroundColor: Colors[colorScheme].background }}  >
       <BottomTab.Screen
         name="consult"
         component={TabConsultNavigator}
         options={{
           title: '咨询',
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-chatbubbles" color={color} />,
-          tabBarBadge: 3,
+          tabBarBadge: getUnreadCount(chatNotifications),
         }}
       />
       <BottomTab.Screen
@@ -62,7 +67,7 @@ export default function BottomTabNavigator() {
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
 function TabBarIcon(props: { name: string; color: string }) {
-  return <Ionicons size={30} style={{ marginBottom: -3 }} {...props} />;
+  return <Ionicons size={26} style={{ marginBottom: -3 }} {...props} />;
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
