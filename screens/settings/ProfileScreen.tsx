@@ -1,12 +1,10 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { View } from '../../components/Themed';
 import { Avatar, Button, Card, Divider, Text } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { imgPath } from '../../services/core/image.service';
 import { useEffect } from 'react';
 import { getDoctorDetailsById } from '../../services/doctor.service';
-import { AppStoreActionType, appStoreInitialState, appStoreReducer } from '../../services/core/app-store.reducer';
 import { distinctUntilChanged } from 'rxjs/operators';
 import { useDispatch, useStore } from 'react-redux';
 import { updateDoctor } from '../../services/core/app-store.actions';

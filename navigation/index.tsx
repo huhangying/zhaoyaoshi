@@ -12,9 +12,7 @@ import { Auth } from '../models/auth.model';
 import { SocketioService } from '../services/core/socketio.service';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import { tap } from 'rxjs/operators';
-import { AppStoreActionType, appStoreInitialState, appStoreReducer } from '../services/core/app-store.reducer';
-import { createStore } from 'redux';
-import { connect, Provider, useSelector, useStore } from 'react-redux';
+import { connect, useStore } from 'react-redux';
 import { useDispatch } from 'react-redux'
 import { updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, updateToken } from '../services/core/app-store.actions';
 import { AppState } from "../models/app-state.model";

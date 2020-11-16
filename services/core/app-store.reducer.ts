@@ -1,21 +1,6 @@
-import * as React from "react";
 import { AppState } from "../../models/app-state.model";
+import { AppStoreAction, AppStoreActionType } from "./app-store.actions";
 import { clearLocalStorage, setDoctor, setToken } from "./local.store";
-
-export enum AppStoreActionType {
-  UpdateLoading,
-  UpdateDoctor,
-  UpdateToken,
-  UpdateChatNotifications,
-  UpdateFeedbackNotifications,
-  UpdateConsultNotifications,
-  Reset,
-}
-
-export interface AppStoreAction {
-  type: AppStoreActionType,
-  payload?: any;
-}
 
 // export const AppContext = React.createContext(new AppStoreService());
 export const appStoreInitialState = new AppState();
