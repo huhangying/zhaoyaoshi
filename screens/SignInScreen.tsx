@@ -1,9 +1,7 @@
 import * as React from 'react';
-// import { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from '../components/Themed';
 import { Input, Button } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
 import { doctorLogin } from '../services/doctor.service';
 import { setDoctor, setToken } from '../services/core/local.store';
 import { refreshPage } from '../services/core/auth';
@@ -11,15 +9,11 @@ import { catchError, tap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 
 export default function SignInScreen() {
-  const navigation = useNavigation();
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [hasError, setHasError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
 
-  // const authContext = React.useMemo(authMethods, []);
-  // const AuthContext = React.createContext(authContext);
-  // const { signIn } = React.useContext(AuthContext);
 
   const login = (username: string, password: string) => {
     if (!username || !password) {
@@ -41,23 +35,6 @@ export default function SignInScreen() {
         return EMPTY;
       })
     ).subscribe();
-    // .then(async result => {
-    //   if (result?.return) {
-    //     setHasError(true);
-    //     setErrorMessage('用户名或者密码错误。');
-    //     return;
-    //   }
-    //   await setToken(result.token);
-    //   delete result.token;
-    //   await setDoctor(result);
-    //   refreshPage();
-    //   // navigation.navigate('Root');
-    //   // navigation.navigate('NotFound');
-    // })
-    // .catch(err => {
-    //   setHasError(true);
-    //   setErrorMessage('用户名或者密码错误。');
-    // });
   }
 
   return (
