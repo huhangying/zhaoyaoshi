@@ -1,31 +1,16 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Avatar, Button, Card, Divider, Text } from 'react-native-elements';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { imgPath } from '../../services/core/image.service';
 import { useEffect } from 'react';
-import { getDoctorDetailsById } from '../../services/doctor.service';
-import { distinctUntilChanged } from 'rxjs/operators';
 import { useDispatch, useStore } from 'react-redux';
-import { updateDoctor } from '../../services/core/app-store.actions';
 
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const doctor = useStore().getState().doctor;
-  // const dispatch = useDispatch();
 
   useEffect(() => {
-    if (doctor?._id) {
-      // getDoctorDetailsById(doctor._id).pipe(
-      //   distinctUntilChanged()
-      // ).subscribe(doc => {
-      //   dispatch(updateDoctor(doc));
-      // });
-      // getDoctorDetailsById(doctor._id).toPromise().then(doc => {
-
-      //   dispatch(updateDoctor(doc));
-      // });
-    }
     return () => {
     }
   }, [])

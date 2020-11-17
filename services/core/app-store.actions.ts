@@ -27,7 +27,7 @@ export const updateDoctor = (doctor: Doctor) => (
     payload: doctor,
   }
 );
-export const updateToken = (token: string = '') => (
+export const updateToken = (token = '') => (
   {
     type: AppStoreActionType.UpdateToken,
     payload: token,

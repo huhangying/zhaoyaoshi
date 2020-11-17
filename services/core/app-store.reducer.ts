@@ -32,6 +32,12 @@ export function appStoreReducer(state: AppState = appStoreInitialState, action: 
       clearLocalStorage();
       return appStoreInitialState;
 
+
+      // case FOREGROUND:
+      //   return 'back to foreground';
+      // case BACKGROUND:
+      // case INACTIVE:
+      //   return 'inactive';
     default:
       return state
   }

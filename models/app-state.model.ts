@@ -1,7 +1,6 @@
 import { Doctor } from "./crm/doctor.model";
 import { Notification } from "./io/notification.model";
 
-
 export class AppState {
   constructor(
     public readonly doctor?: Doctor,

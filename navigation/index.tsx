@@ -75,7 +75,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
 
     return () => {
     }
-  }, []);
+  }, [store, dispatch]);
 
   return (
       <NavigationContainer
