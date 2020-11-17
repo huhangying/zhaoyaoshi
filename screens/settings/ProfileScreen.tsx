@@ -12,15 +12,19 @@ import { updateDoctor } from '../../services/core/app-store.actions';
 export default function ProfileScreen() {
   const navigation = useNavigation();
   const doctor = useStore().getState().doctor;
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   useEffect(() => {
     if (doctor?._id) {
-      getDoctorDetailsById(doctor._id).pipe(
-        distinctUntilChanged()
-      ).subscribe(doc => {
-        dispatch(updateDoctor(doc));
-      })
+      // getDoctorDetailsById(doctor._id).pipe(
+      //   distinctUntilChanged()
+      // ).subscribe(doc => {
+      //   dispatch(updateDoctor(doc));
+      // });
+      // getDoctorDetailsById(doctor._id).toPromise().then(doc => {
+
+      //   dispatch(updateDoctor(doc));
+      // });
     }
     return () => {
     }
@@ -31,7 +35,7 @@ export default function ProfileScreen() {
       <Card containerStyle={{ padding: 10, margin: 0, flex: 1, alignItems: 'center' }} >
         <Avatar
           rounded size="large"
-          source={{ uri: imgPath(doctor?.icon), }}
+          source={{ uri: imgPath(doctor.icon) }}
         />
         <Text h4>{doctor?.name}{doctor?.title}</Text>
         <Text h4>{doctor?.department?.name}</Text>

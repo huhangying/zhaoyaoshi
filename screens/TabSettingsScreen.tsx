@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { Avatar, ListItem } from 'react-native-elements';
+import { Avatar, Divider, ListItem } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { logout } from '../services/core/auth';
@@ -16,8 +16,8 @@ export default function TabSettingsScreen() {
       <ListItem key={0} bottomDivider onPress={() => navigate('ProfileScreen')}>
         <Avatar size="medium" source={{ uri: imgPath(doctor?.icon) }} />
         <ListItem.Content>
-          <ListItem.Title>{doctor?.name}{doctor?.title}</ListItem.Title>
-          {/* <ListItem.Subtitle>{doctor?.department}</ListItem.Subtitle> */}
+          <ListItem.Title>{doctor?.name} {doctor?.title}</ListItem.Title>
+          <ListItem.Subtitle>{doctor?.department?.name}</ListItem.Subtitle>
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
@@ -42,8 +42,16 @@ export default function TabSettingsScreen() {
         </ListItem.Content>
         <ListItem.Chevron />
       </ListItem>
-      <ListItem key={4} onPress={() => logout()}>
-        <Ionicons name="ios-power" size={24} />
+      <ListItem key={4} bottomDivider>
+        <Ionicons name="ios-information-circle-outline" size={24} />
+        <ListItem.Content>
+          <ListItem.Title>关于</ListItem.Title>
+        </ListItem.Content>
+        <ListItem.Chevron />
+      </ListItem>
+      <Divider></Divider>
+      <ListItem key={5} onPress={() => logout()}>
+        <Ionicons name="ios-power" size={24} color="red" />
         <ListItem.Content>
           <ListItem.Title>退出登录</ListItem.Title>
         </ListItem.Content>

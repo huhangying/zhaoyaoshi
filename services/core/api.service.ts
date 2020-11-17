@@ -1,6 +1,6 @@
 import { getToken } from "./local.store";
 import Axios from "axios-observable";
-import { from } from "rxjs";
+import { EMPTY, from } from "rxjs";
 import { catchError, map, switchMap } from "rxjs/operators";
 import { AxiosResponse, AxiosError } from "axios";
 Axios.defaults.baseURL = 'http://timebox.i234.me/api/';
@@ -52,10 +52,11 @@ export const getApi = <T>(path: string, params?: any) => {
     }),
     map((rsp: AxiosResponse<T>) => rsp.data),
     // catchError(error => {
-    //   if (error instanceof AxiosError) {
-    //     console.log(error);
-    //   }
-    //   throw error;
+    //   // if (error instanceof AxiosError) {
+    //   //   console.log(error);
+    //   // }
+    //   // throw error;
+    //   return EMPTY;
     // })
   );
 }

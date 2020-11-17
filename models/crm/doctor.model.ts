@@ -6,7 +6,7 @@ export interface Doctor {
   user_id: string;
   name?: string;
   role?: number;
-  department?: string; //id
+  department?: Department; //id
   title?: string;
   tel?: string;
   cell?: string;
@@ -26,7 +26,7 @@ export interface Doctor {
   apply?: boolean;
   order?: number;
 
-  password?: string;
+  // password?: string;
   token?: string; // temp
   hospitalName?: string;  // for localstorage
   wechatUrl?: string;     // for localstorage
@@ -34,4 +34,15 @@ export interface Doctor {
   prices?: ConsultServicePrice[];
 
   cs?: boolean; // if customer service doctor // for localstorage
+}
+
+
+export interface Department {
+  _id: string;
+  name: string;
+  desc?: string;
+  address?: string;
+  direction?: string;
+  order?: number;
+  apply?: boolean;
 }

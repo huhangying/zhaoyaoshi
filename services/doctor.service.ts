@@ -11,7 +11,7 @@ export function getDoctorDetailsById(id: string) {
 
 
 export function doctorLogin(user_id: string, password: string) {
-  return patchApi<Doctor>('login/doctor', {user_id, password, hid: 2});
+  return patchApi<Doctor>('app-login/doctor', {user_id, password, hid: 2});
 }
 
 
