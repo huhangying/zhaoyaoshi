@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Button, StyleSheet } from 'react-native';
 import { Divider, Header } from 'react-native-elements';
 import { useSelector, useStore } from 'react-redux';
+import EditTextList from '../components/EditTextList';
 
 import { Text, View } from '../components/Themed';
 import { AppState } from '../models/app-state.model';
@@ -13,6 +14,10 @@ export default function TabConsultScreen() {
   const navigation = useNavigation();
   const store = useStore();
   const state = useSelector((state: AppState) => state);
+  const onListSave = React.useCallback(newList => {
+    console.log('You clicked ', newList);
+  }, []);
+
   return (
     <>
       <Header
@@ -34,12 +39,14 @@ export default function TabConsultScreen() {
           {getUnreadCount(state.consultNotifications)} | 
           {store.getState().doctor?.title} |
         </Text>
-
+      
         <Button title="go chat" onPress={() => {
           // navigation.setOptions
           navigation.navigate('ChatScreen');
         }} />
       </View>
+      <Divider></Divider>
+      <EditTextList list={['a', 'b', 'c']} onListSave={onListSave}/>
     </>
   );
 }

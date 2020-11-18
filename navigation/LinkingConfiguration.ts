@@ -25,6 +25,8 @@ export default {
             screens: {
               TabSettingsScreen: 'settings',
               ProfileScreen: 'profile',
+              ConsultSettingsScreen: 'consult-settings',
+              ShortcutSettingsScreen: 'shortcut-settings'
             },
           },
         },

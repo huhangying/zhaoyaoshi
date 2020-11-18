@@ -15,6 +15,8 @@ import { getUnreadCount } from '../services/notification.service';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
+import ConsultSettingsScreen from '../screens/settings/ConsultSettingsScreen';
+import ShortcutSettingsScreen from '../screens/settings/ShortcutSettingsScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -134,6 +136,16 @@ function TabSettingsNavigator() {
         name="ProfileScreen"
         component={ProfileScreen}
         options={{ headerTitle: '个人信息' }}
+      />
+      <TabConsultStack.Screen
+        name="ConsultSettingsScreen"
+        component={ConsultSettingsScreen}
+        options={{ headerTitle: '付费咨询设置' }}
+      />
+      <TabConsultStack.Screen
+        name="ShortcutSettingsScreen"
+        component={ShortcutSettingsScreen}
+        options={{ headerTitle: '快捷回复设置' }}
       />
     </TabSettingsStack.Navigator>
   );

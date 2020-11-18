@@ -28,7 +28,7 @@ export default function TabSettingsScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem key={1} bottomDivider>
+        <ListItem key={1} bottomDivider onPress={() => navigate('ConsultSettingsScreen')}>
           <Ionicons name="ios-pricetags" size={24} />
           <ListItem.Content>
             <ListItem.Title>付费咨询设置</ListItem.Title>
@@ -42,10 +42,10 @@ export default function TabSettingsScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem key={3} bottomDivider>
+        <ListItem key={3} bottomDivider onPress={() => navigate('ShortcutSettingsScreen')}>
           <Ionicons name="ios-podium" size={24} />
           <ListItem.Content>
-            <ListItem.Title>统计信息</ListItem.Title>
+            <ListItem.Title>快捷回复设置</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
@@ -58,7 +58,7 @@ export default function TabSettingsScreen() {
         </ListItem>
         <Divider></Divider>
         <ListItem key={5} onPress={() => logout()}>
-          <Ionicons name="ios-power" size={24} color="" />
+          <Ionicons name="ios-power" size={24} color="red" />
           <ListItem.Content>
             <ListItem.Title>退出登录</ListItem.Title>
           </ListItem.Content>
