@@ -30,23 +30,23 @@ export default function TabConsultScreen() {
           justifyContent: 'space-around',
         }}
       />
+      <EditTextList list={['a', 'b', 'c']} onListSave={onListSave} />
       <Divider style={{ backgroundColor: 'lightgray' }} />
       <View style={styles.container}>
         <Text style={styles.title}>{state.doctor?.name}</Text>
         <Text>
-          {getUnreadCount(state.chatNotifications)} | 
-          {getUnreadCount(state.feedbackNotifications)} | 
-          {getUnreadCount(state.consultNotifications)} | 
+          {getUnreadCount(state.chatNotifications)} |
+          {getUnreadCount(state.feedbackNotifications)} |
+          {getUnreadCount(state.consultNotifications)} |
           {store.getState().doctor?.title} |
         </Text>
-      
+
         <Button title="go chat" onPress={() => {
           // navigation.setOptions
           navigation.navigate('ChatScreen');
         }} />
       </View>
       <Divider></Divider>
-      <EditTextList list={['a', 'b', 'c']} onListSave={onListSave}/>
     </>
   );
 }

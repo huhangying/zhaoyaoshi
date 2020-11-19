@@ -8,7 +8,7 @@ import TabConsultScreen from '../screens/TabConsultScreen';
 import TabSettingsScreen from '../screens/TabSettingsScreen';
 import TabManageScreen from '../screens/TabManageScreen';
 import TabFeedbackScreen from '../screens/TabFeedbackScreen';
-import { BottomTabParamList, TabConsultParamList, TabSettingsParamList, TabManageParamList, TabFeedbackParamList } from '../models/types';
+import { TabSettingsParamList, TabManageParamList, TabFeedbackParamList } from '../models/types';
 import ChatScreen from '../screens/consult/ChatScreen';
 import ProfileScreen from '../screens/settings/ProfileScreen';
 import { getUnreadCount } from '../services/notification.service';
@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import ConsultSettingsScreen from '../screens/settings/ConsultSettingsScreen';
 import ShortcutSettingsScreen from '../screens/settings/ShortcutSettingsScreen';
+import BookingsScreen from '../screens/feedback/BookingsScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -43,8 +44,8 @@ export default function BottomTabNavigator() {
         name="feedback"
         component={TabFeedbackNavigator}
         options={{
-          title: '反馈',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
+          title: '门诊',
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-medkit" color={color} />,
         }}
       />
       <BottomTab.Screen
@@ -103,6 +104,11 @@ function TabFeedbackNavigator() {
         name="TabFeedbackScreen"
         component={TabFeedbackScreen}
         options={{ headerTitle: '门诊反馈' }}
+      />
+      <TabConsultStack.Screen
+        name="BookingsScreen"
+        component={BookingsScreen}
+        options={{ headerTitle: '您的病患预约' }}
       />
     </TabFeedbackStack.Navigator>
   );

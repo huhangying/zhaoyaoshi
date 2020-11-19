@@ -1,8 +1,8 @@
 
 export interface Notification {
-  patientId: string;
-  type: NotificationType;
-  count: number;
+  patientId?: string;
+  type?: NotificationType;
+  count?: number;
   name?: string;
   icon?: string;
 

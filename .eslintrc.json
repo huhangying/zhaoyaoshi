@@ -2,7 +2,8 @@
     "env": {
         "browser": true,
         "es6": true,
-        "node": true
+        "node": true,
+        "react-native/react-native": true
     },
     "extends": [
         "eslint:recommended",
@@ -17,10 +18,15 @@
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": 2018,
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true
+        }
     },
     "plugins": [
         "@typescript-eslint",
+        "react",
+        "react-native",
         "react-hooks"
     ],
     "rules": {
@@ -33,6 +39,12 @@
         "@typescript-eslint/interface-name-prefix": "off",
         "react-hooks/rules-of-hooks": "error",
         "react-hooks/exhaustive-deps": "warn",
-        "@typescript-eslint/explicit-module-boundary-types": "off"
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        // "react-native/no-unused-styles": 2,
+        "react-native/split-platform-components": 2,
+        // "react-native/no-inline-styles": 2,
+        // "react-native/no-color-literals": 2,
+        // "react-native/no-raw-text": 2,
+        "react-native/no-single-element-style-arrays": 2
     }
 }

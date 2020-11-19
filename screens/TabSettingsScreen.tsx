@@ -23,7 +23,7 @@ export default function TabSettingsScreen() {
         <ListItem key={0} bottomDivider onPress={() => navigate('ProfileScreen')}>
           <Avatar size="medium" source={{ uri: imgPath(doctor?.icon) }} />
           <ListItem.Content>
-            <ListItem.Title>{doctor?.name} {doctor?.title}</ListItem.Title>
+            <ListItem.Title>{doctor?.name}{doctor?.title}</ListItem.Title>
             <ListItem.Subtitle>{doctor?.department?.name}</ListItem.Subtitle>
           </ListItem.Content>
           <ListItem.Chevron />

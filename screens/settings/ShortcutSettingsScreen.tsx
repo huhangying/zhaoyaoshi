@@ -1,8 +1,5 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Button, Card, Divider, Text } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
-import { imgPath } from '../../services/core/image.service';
+import { StyleSheet } from 'react-native';
 import { useEffect } from 'react';
 import { useDispatch, useStore } from 'react-redux';
 import EditTextList from '../../components/EditTextList';
@@ -12,7 +9,6 @@ import { updateDoctor } from '../../services/core/app-store.actions';
 
 export default function ShortcutSettingsScreen() {
   const [shortcuts, setShortcuts] = React.useState([])
-  const navigation = useNavigation();
   const { doctor } = useStore().getState();
   const dispatch = useDispatch();
 
@@ -20,14 +16,13 @@ export default function ShortcutSettingsScreen() {
     setShortcuts(doctor.shortcuts.split('|'));
     return () => {
     }
-  }, [doctor.shortcuts]);
+  }, [doctor, doctor.shortcuts]);
 
   const onListSave = React.useCallback(newList => {
     const newShortcuts = shortcuts.join('|');
     updateDoctorShortcuts(doctor.user_id, newShortcuts).pipe(
       tap(rsp => {
         if (rsp?._id) {
-          // 
           dispatch(updateDoctor({...doctor, shortcuts: newShortcuts}));
         }
       })

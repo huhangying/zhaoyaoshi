@@ -14,6 +14,7 @@ export default {
           TabFeedback: {
             screens: {
               TabFeedbackScreen: 'feedback',
+              BookingsScreen: 'bookings'
             },
           },
           TabManage: {
