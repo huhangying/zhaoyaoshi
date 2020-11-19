@@ -56,8 +56,8 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
               <ListItem.Content>
                 <ListItem.Title>{l}</ListItem.Title>
               </ListItem.Content>
-              <ListItem.Chevron type='ionicon' name="ios-create" size={30} color="green" style={styles.mr2} onPress={() => openSelect(l, i)} />
-              <ListItem.Chevron type='ionicon' name="ios-trash" size={30} color="red" style={styles.mr2} onPress={() => deleteConfirm(l, i)} />
+              <ListItem.Chevron type='ionicon' name="ios-create" size={24} color="green" style={styles.mr2} onPress={() => openSelect(l, i)} />
+              <ListItem.Chevron type='ionicon' name="ios-trash" size={24} color="red" style={styles.mr2} onPress={() => deleteConfirm(l, i)} />
             </ListItem>
           ))
         }

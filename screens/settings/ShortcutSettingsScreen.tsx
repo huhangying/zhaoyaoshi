@@ -6,6 +6,7 @@ import EditTextList from '../../components/EditTextList';
 import { updateDoctorShortcuts } from '../../services/doctor.service';
 import { tap } from 'rxjs/operators';
 import { updateDoctor } from '../../services/core/app-store.actions';
+import { Caption } from 'react-native-paper';
 
 export default function ShortcutSettingsScreen() {
   const [shortcuts, setShortcuts] = React.useState([])
@@ -13,7 +14,9 @@ export default function ShortcutSettingsScreen() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setShortcuts(doctor.shortcuts.split('|'));
+    if (doctor.shortcuts) {
+      setShortcuts(doctor.shortcuts.split('|'));
+    }
     return () => {
     }
   }, [doctor, doctor.shortcuts]);
@@ -23,7 +26,7 @@ export default function ShortcutSettingsScreen() {
     updateDoctorShortcuts(doctor.user_id, newShortcuts).pipe(
       tap(rsp => {
         if (rsp?._id) {
-          dispatch(updateDoctor({...doctor, shortcuts: newShortcuts}));
+          dispatch(updateDoctor({ ...doctor, shortcuts: newShortcuts }));
         }
       })
     ).subscribe();
@@ -31,6 +34,7 @@ export default function ShortcutSettingsScreen() {
 
   return (
     <>
+      <Caption style={styles.m3}>快捷回复列表</Caption>
       <EditTextList list={shortcuts} onListSave={onListSave} />
     </>
   );
@@ -50,5 +54,8 @@ const styles = StyleSheet.create({
     marginVertical: 30,
     height: 1,
     width: '80%',
+  },
+  m3: {
+    margin: 16
   },
 });

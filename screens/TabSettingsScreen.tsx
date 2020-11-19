@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { logout } from '../services/core/auth';
 import { imgPath } from '../services/core/image.service';
+import { Text } from 'react-native-paper';
 
 export default function TabSettingsScreen() {
   const { navigate } = useNavigation();
@@ -28,6 +29,7 @@ export default function TabSettingsScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
+        <Text> </Text>
         <ListItem key={1} bottomDivider onPress={() => navigate('ConsultSettingsScreen')}>
           <Ionicons name="ios-pricetags" size={24} />
           <ListItem.Content>
@@ -56,7 +58,7 @@ export default function TabSettingsScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <Divider></Divider>
+        <Text> </Text>
         <ListItem key={5} onPress={() => logout()}>
           <Ionicons name="ios-power" size={24} color="red" />
           <ListItem.Content>

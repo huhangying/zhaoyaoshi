@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ActivityIndicator, Modal, StyleSheet } from 'react-native';
 
 import { View } from '../components/Themed';
-import { useSelector, useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { Badge, ListItem } from 'react-native-elements';
 import { Fontisto, Ionicons } from '@expo/vector-icons';
@@ -13,8 +13,7 @@ import { Notification, NotificationType } from '../models/io/notification.model'
 
 export default function TabFeedbackScreen() {
   const { navigate } = useNavigation();
-  const doctor = useSelector((state: AppState) => state.doctor);
-  const store = useStore().getState();
+  const store = useSelector((state: AppState) => state);
 
   const [notiVisible, setNotiVisible] = React.useState(false);
   const [notiTitle, setNotiTitle] = React.useState('');
@@ -30,14 +29,14 @@ export default function TabFeedbackScreen() {
     setNotiList(notiList);
   }
   const getDoseCombinationNotis = () => {
-    return store.feedbackNotifications?.filter((_: Notification) => _.type === NotificationType.doseCombination);
+    return store.feedbackNotifications?.filter((_: Notification) => _.type === NotificationType.doseCombination) || [];
   }
   const getAadverseReactionNotis = () => {
-    return store.feedbackNotifications?.filter((_: Notification) => _.type === NotificationType.adverseReaction);
+    return store.feedbackNotifications?.filter((_: Notification) => _.type === NotificationType.adverseReaction) || [];
   }
 
 
-  if (!doctor) {
+  if (!store?.doctor) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
