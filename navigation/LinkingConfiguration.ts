@@ -17,9 +17,9 @@ export default {
               BookingsScreen: 'bookings'
             },
           },
-          TabManage: {
+          TabPatient: {
             screens: {
-              TabManageScreen: 'manage',
+              TabPatientScreen: 'patient',
             },
           },
           TabSettings: {

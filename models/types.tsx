@@ -8,7 +8,7 @@ export type RootStackParamList = {
 export type BottomTabParamList = {
   consult: undefined;
   feedback: undefined;
-  manage: undefined;
+  patient: undefined;
   settings: undefined;
 };
 
@@ -21,8 +21,8 @@ export type TabFeedbackParamList = {
   TabFeedbackScreen: undefined;
 };
 
-export type TabManageParamList = {
-  TabManageScreen: undefined;
+export type TabPatientParamList = {
+  TabPatientScreen: undefined;
 };
 
 export type TabSettingsParamList = {

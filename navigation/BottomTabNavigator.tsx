@@ -6,9 +6,9 @@ import Colors from '../constants/Colors';
 import useColorScheme from '../hooks/useColorScheme';
 import TabConsultScreen from '../screens/TabConsultScreen';
 import TabSettingsScreen from '../screens/TabSettingsScreen';
-import TabManageScreen from '../screens/TabManageScreen';
+import TabPatientScreen from '../screens/TabPatientScreen';
 import TabFeedbackScreen from '../screens/TabFeedbackScreen';
-import { TabSettingsParamList, TabManageParamList, TabFeedbackParamList } from '../models/types';
+import { TabSettingsParamList, TabPatientParamList, TabFeedbackParamList } from '../models/types';
 import ChatScreen from '../screens/consult/ChatScreen';
 import ProfileScreen from '../screens/settings/ProfileScreen';
 import { getUnreadCount } from '../services/notification.service';
@@ -49,8 +49,8 @@ export default function BottomTabNavigator() {
         }}
       />
       <BottomTab.Screen
-        name="manage"
-        component={TabManageNavigator}
+        name="patient"
+        component={TabPatientNavigator}
         options={{
           title: '管理',
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-cog" color={color} />,
@@ -114,17 +114,17 @@ function TabFeedbackNavigator() {
   );
 }
 
-const TabManageStack = createStackNavigator<TabManageParamList>();
+const TabPatientStack = createStackNavigator<TabPatientParamList>();
 
-function TabManageNavigator() {
+function TabPatientNavigator() {
   return (
-    <TabManageStack.Navigator>
-      <TabManageStack.Screen
-        name="TabManageScreen"
-        component={TabManageScreen}
+    <TabPatientStack.Navigator>
+      <TabPatientStack.Screen
+        name="TabPatientScreen"
+        component={TabPatientScreen}
         options={{ headerTitle: '病患管理' }}
       />
-    </TabManageStack.Navigator>
+    </TabPatientStack.Navigator>
   );
 }
 
