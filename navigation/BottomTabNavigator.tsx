@@ -18,6 +18,7 @@ import { AppState } from '../models/app-state.model';
 import ConsultSettingsScreen from '../screens/settings/ConsultSettingsScreen';
 import ShortcutSettingsScreen from '../screens/settings/ShortcutSettingsScreen';
 import BookingsScreen from '../screens/feedback/BookingsScreen';
+import AboutScreen from '../screens/settings/AboutScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -52,8 +53,8 @@ export default function BottomTabNavigator() {
         name="patient"
         component={TabPatientNavigator}
         options={{
-          title: '管理',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-cog" color={color} />,
+          title: '病患管理',
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-people" color={color} />,
         }}
       />
       <BottomTab.Screen
@@ -152,6 +153,11 @@ function TabSettingsNavigator() {
         name="ShortcutSettingsScreen"
         component={ShortcutSettingsScreen}
         options={{ headerTitle: '快捷回复设置' }}
+      />
+      <TabConsultStack.Screen
+        name="AboutScreen"
+        component={AboutScreen}
+        options={{ headerTitle: '关于' }}
       />
     </TabSettingsStack.Navigator>
   );

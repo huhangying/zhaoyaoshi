@@ -21,6 +21,7 @@ export default function TabSettingsScreen() {
   } else {
     return (
       <>
+        <Text> </Text>
         <ListItem key={0} bottomDivider onPress={() => navigate('ProfileScreen')}>
           <Avatar size="medium" source={{ uri: imgPath(doctor?.icon) }} />
           <ListItem.Content>
@@ -45,13 +46,13 @@ export default function TabSettingsScreen() {
           <ListItem.Chevron />
         </ListItem>
         <ListItem key={3} bottomDivider onPress={() => navigate('ShortcutSettingsScreen')}>
-          <Ionicons name="ios-podium" size={24} />
+          <Ionicons name="ios-undo" color="seagreen" size={24} />
           <ListItem.Content>
             <ListItem.Title>快捷回复设置</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem key={4} bottomDivider>
+        <ListItem key={4} bottomDivider onPress={() => navigate('AboutScreen')}>
           <Ionicons name="ios-information-circle-outline" size={24} />
           <ListItem.Content>
             <ListItem.Title>关于</ListItem.Title>
