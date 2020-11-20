@@ -50,7 +50,7 @@ export function convertFeedbackNotificationList(feedbacks: UserFeedback[]): Noti
     }
     notis = notis.map(_ => {
       if (_.patientId === feedback.user && _.type === feedback.type) {
-        _.count = _.count + 1;
+        _.count = (_.count || 0) + 1;
       }
       return _;
     });

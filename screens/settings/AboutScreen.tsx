@@ -1,21 +1,9 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Button, Card, Divider, Text } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
-import { imgPath } from '../../services/core/image.service';
-import { useEffect } from 'react';
-import { useStore } from 'react-redux';
-import { View } from '../../components/Themed';
+import { StyleSheet } from 'react-native';
+import { Text, View } from '../../components/Themed';
 import Config from '../../constants/config';
 
 export default function AboutScreen() {
-  const navigation = useNavigation();
-  const doctor = useStore().getState().doctor;
-
-  useEffect(() => {
-    return () => {
-    }
-  }, [])
 
   return (
     <View style={styles.container}>

@@ -53,7 +53,7 @@ export default function TabSettingsScreen() {
           <ListItem.Chevron />
         </ListItem>
         <ListItem key={4} bottomDivider onPress={() => navigate('AboutScreen')}>
-          <Ionicons name="ios-information-circle-outline" size={24} />
+          <Ionicons name="ios-information-circle-outline" size={24} color="gray" />
           <ListItem.Content>
             <ListItem.Title>关于</ListItem.Title>
           </ListItem.Content>
