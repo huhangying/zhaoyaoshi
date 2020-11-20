@@ -35,10 +35,10 @@ export default function TabPatientScreen() {
     return (
       <>
         <Caption style={styles.m3}> 您现有 {count} 个已关注病患。 </Caption>
-        <ListItem key={1} bottomDivider onPress={() => navigate('ConsultSettingsScreen')}>
+        <ListItem key={1} bottomDivider onPress={() => navigate('RelationshipScreen')}>
           <Ionicons name="ios-filing" size={24} color="sandybrown" />
           <ListItem.Content>
-            <ListItem.Title>查看已关注的患者</ListItem.Title>
+            <ListItem.Title>查看已关注患者</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>

@@ -1,7 +1,10 @@
 
+import { Observable } from 'redux';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DoctorGroup } from '../models/crm/doctor-group.model';
 import { Doctor } from '../models/crm/doctor.model';
-import { Relationship } from '../models/crm/relationship.model';
+import { GroupedRelationship, Relationship } from '../models/crm/relationship.model';
 import { getApi, patchApi } from './core/api.service';
 // getDoctorsByDepartment(departmentId: string) {
 //   return this.api.get<Doctor[]>('doctors/department/' + departmentId);
@@ -32,4 +35,34 @@ export function getRelationshipsByDoctorId(doctorId: string) {
   return getApi<Relationship[]>('relationships/doctor/' + doctorId);
 }
 
+export function getDoctorGroups(doctorId: string) {
+  return getDoctorGroupsByDoctorId(doctorId).pipe(map(groups => ([
+    { _id: '*', name: '全部群组' },
+    { _id: '', name: '未分组' },
+    ...groups
+  ])));
+}
 
+export function getPatientGroupedRelationships(doctorId: string) {
+  return getRelationshipsByDoctorId(doctorId).pipe(
+    map(relationships => {
+      const userIdList: string[] = [];
+      const selectedGroupedRelationships = relationships.reduce((newGrouped: GroupedRelationship[], relationship: Relationship) => {
+        const userId = relationship.user?._id || '';
+        if (userId && userIdList.indexOf(userId) > -1) {
+          // found, add into grouped
+          return newGrouped.map(grouped => {
+            if (grouped.user._id === userId) {
+              grouped.relationships.push(relationship);
+            }
+            return grouped;
+          });
+        }
+        userIdList.push(userId);
+        newGrouped.push({ user: relationship.user, relationships: [relationship] });
+        return newGrouped;
+      }, []);
+      return selectedGroupedRelationships;
+    })
+  );
+}

@@ -7,7 +7,7 @@ import { UserFeedback } from '../../models/io/user-feedback.model';
 import { Consult } from '../../models/consult/consult.model';
 import { AppStoreService } from './app-store.service';
 import { convertChatNotificationList, getChatUnreadListByDocter } from '../chat.service';
-import { map, take, tap, withLatestFrom } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { convertFeedbackNotificationList, getFeedbackUnreadListByDocter } from '../user-feedback.service';
 import { convertConsultNotificationList, getPendingConsultsByDoctorId } from '../consult.service';
 import { forkJoin } from 'rxjs';
@@ -109,7 +109,7 @@ export class SocketioService {
   getUnreadCount(notifications: Notification[]) {
     if (!notifications?.length) return 0;
     return notifications.reduce((total, noti) => {
-      total += noti.count;
+      total += (noti.count || 0);
       return total;
     }, 0);
   }
@@ -120,7 +120,7 @@ export class SocketioService {
       feedbacks: getFeedbackUnreadListByDocter(doctorId),
       consults: getPendingConsultsByDoctorId(doctorId)
     }).pipe(
-      map(({chats, feedbacks, consults}) => {
+      map(({ chats, feedbacks, consults }) => {
         return {
           chatNotifications: convertChatNotificationList(chats, NotificationType.chat),
           feedbackNotifications: convertFeedbackNotificationList(feedbacks),

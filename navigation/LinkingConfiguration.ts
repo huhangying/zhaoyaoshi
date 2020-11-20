@@ -20,6 +20,7 @@ export default {
           TabPatient: {
             screens: {
               TabPatientScreen: 'patient',
+              RelationshipScreen: 'relationship',
             },
           },
           TabSettings: {

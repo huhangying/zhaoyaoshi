@@ -1,23 +1,26 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Button, Card, Divider, Text } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import { useEffect } from 'react';
-import { useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { AppState } from '../../models/app-state.model';
+import { Text, View } from '../../components/Themed';
 
 export default function BookingsScreen() {
   const navigation = useNavigation();
-  const doctor = useStore().getState().doctor;
+  const doctor = useSelector((state: AppState) => state.doctor);
 
   useEffect(() => {
     return () => {
     }
-  }, [])
+  }, [doctor?._id])
 
   return (
-    <ScrollView>
+    <>
+      <ScrollView>
 
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 

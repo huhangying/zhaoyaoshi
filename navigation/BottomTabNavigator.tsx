@@ -19,6 +19,7 @@ import ConsultSettingsScreen from '../screens/settings/ConsultSettingsScreen';
 import ShortcutSettingsScreen from '../screens/settings/ShortcutSettingsScreen';
 import BookingsScreen from '../screens/feedback/BookingsScreen';
 import AboutScreen from '../screens/settings/AboutScreen';
+import RelationshipScreen from '../screens/patient/RelationshipScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -96,7 +97,7 @@ function TabConsultNavigator() {
   );
 }
 
-const TabFeedbackStack = createStackNavigator<TabFeedbackParamList>();
+const TabFeedbackStack = createStackNavigator();
 
 function TabFeedbackNavigator() {
   return (
@@ -115,7 +116,7 @@ function TabFeedbackNavigator() {
   );
 }
 
-const TabPatientStack = createStackNavigator<TabPatientParamList>();
+const TabPatientStack = createStackNavigator();
 
 function TabPatientNavigator() {
   return (
@@ -124,6 +125,11 @@ function TabPatientNavigator() {
         name="TabPatientScreen"
         component={TabPatientScreen}
         options={{ headerTitle: '病患管理' }}
+      />
+      <TabPatientStack.Screen
+        name="RelationshipScreen"
+        component={RelationshipScreen}
+        options={{ headerTitle: '查看已关注患者' }}
       />
     </TabPatientStack.Navigator>
   );
