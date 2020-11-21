@@ -18,7 +18,6 @@ export default function RelationshipScreen() {
   const [groupedRelationships, setGroupedRelationships] = useState([]);
   const initDoctorGroup: DoctorGroup = { _id: '', name: '' };
   const [doctorGroups, setDoctorGroups] = useState([initDoctorGroup])
-  const [user, setUser] = useState({ _id: '' })
 
   useEffect(() => {
     if (doctor?._id) {
@@ -53,19 +52,19 @@ export default function RelationshipScreen() {
     return data;
   }
 
+  const [user, setUser] = useState({ _id: '' })
+  const [visible, setVisible] = React.useState(false);
+  const closePatientDetails = () => setVisible(false);
   const openPatientDetails = (user?: User) => {
     if (user?._id) {
       setUser(user);
       setVisible(true);
     }
   }
-
-  const [visible, setVisible] = React.useState(false);
-  const closePatientDetails = () => setVisible(false);
-
+  
   const [expandId, setExpandId] = React.useState(-1);
   const handlePress = (i: number) => setExpandId(i);
-
+  
   return (
     <>
       <Text style={styles.m3}>用户群组</Text>

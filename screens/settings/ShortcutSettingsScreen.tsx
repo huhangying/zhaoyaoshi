@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { useEffect } from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import EditTextList from '../../components/EditTextList';
 import { updateDoctorShortcuts } from '../../services/doctor.service';
 import { tap } from 'rxjs/operators';

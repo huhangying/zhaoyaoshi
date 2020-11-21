@@ -6,11 +6,12 @@ import { Text } from '../../components/Themed';
 import { getRelationshipsByDoctorId } from '../../services/doctor.service';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../../models/app-state.model';
-import { Button, DataTable, Headline, Searchbar, Snackbar, Subheading, Switch, Title } from 'react-native-paper';
+import { Button, DataTable, Dialog, Divider, Headline, Searchbar, Snackbar, Subheading, Switch, Title } from 'react-native-paper';
 import { User } from '../../models/crm/user.model';
 import { Relationship } from '../../models/crm/relationship.model';
 import moment from 'moment';
 import { updateRoleById } from '../../services/user.service';
+import PatientDetails from '../../components/PatientDetails';
 
 export default function PatientAuditScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -75,6 +76,16 @@ export default function PatientAuditScreen() {
     setSnackbarMessage(msg);
   }
 
+  const [user, setUser] = useState({ _id: '' })
+  const [visible, setVisible] = React.useState(false);
+  const closePatientDetails = () => setVisible(false);
+  const openPatientDetails = (user?: User) => {
+    if (user?._id) {
+      setUser(user);
+      setVisible(true);
+    }
+  }
+
   if (!doctor?._id || loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -103,7 +114,7 @@ export default function PatientAuditScreen() {
             </DataTable.Header>
             {filterRelationships?.length ? (
               filterRelationships.map((rel, i) => (
-                <DataTable.Row key={i}>
+                <DataTable.Row key={i} onPress={() => openPatientDetails(rel.user)}>
                   <DataTable.Cell key={i + '-1'}>
                     <Text>
                       {rel.user?.name}
@@ -139,6 +150,18 @@ export default function PatientAuditScreen() {
           onDismiss={onDismissSnackBar}>
           {snackbarMessage}
         </Snackbar>
+
+        <Dialog visible={visible} onDismiss={closePatientDetails}>
+          <Dialog.Title>{user.name}</Dialog.Title>
+          <Divider></Divider>
+          <Dialog.Content style={styles.m3}>
+            <PatientDetails user={user} />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button mode="outlined" style={styles.actionBar} onPress={closePatientDetails}>
+              关闭</Button>
+          </Dialog.Actions>
+        </Dialog>
       </>
     );
   }
@@ -167,5 +190,10 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: 'ivory',
     marginBottom: 1,
-  }
+  },
+  actionBar: {
+    paddingHorizontal: 24,
+    marginHorizontal: 16,
+    marginBottom: 16
+  },
 });
