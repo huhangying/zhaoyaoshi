@@ -21,6 +21,7 @@ export interface User {
   sin?: string;
   admissionNumber?: string;
   visitedDepartments?: string[]; // department ids, 用来判定应该使用初诊问卷还是复诊问卷
+  created?: Date;
   // locked_count?: number;
   // apply: boolean;
   department?: string;

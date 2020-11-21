@@ -7,7 +7,7 @@ export interface Relationship {
   group?: string; // id
   // user: string; // id
   user?: User;
-  apply: boolean;
+  apply?: boolean;
 }
 
 export interface Relationship2 {

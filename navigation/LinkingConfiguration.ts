@@ -21,6 +21,7 @@ export default {
             screens: {
               TabPatientScreen: 'patient',
               RelationshipScreen: 'relationship',
+              PatientAuditScreen: 'patient-audit',
             },
           },
           TabSettings: {

@@ -63,7 +63,7 @@ export function convertConsultNotificationList(consults: Consult[]): Notificatio
     }
     notis = notis.map(_ => {
       if (_.patientId === consult.user && _.type === type) {
-        _.count = _.count + 1;
+        _.count = (_.count || 0) + 1;
       }
       return _;
     });

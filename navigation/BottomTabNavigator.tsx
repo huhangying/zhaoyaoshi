@@ -20,6 +20,7 @@ import ShortcutSettingsScreen from '../screens/settings/ShortcutSettingsScreen';
 import BookingsScreen from '../screens/feedback/BookingsScreen';
 import AboutScreen from '../screens/settings/AboutScreen';
 import RelationshipScreen from '../screens/patient/RelationshipScreen';
+import PatientAuditScreen from '../screens/patient/PatientAuditScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -130,6 +131,11 @@ function TabPatientNavigator() {
         name="RelationshipScreen"
         component={RelationshipScreen}
         options={{ headerTitle: '查看已关注患者' }}
+      />
+      <TabPatientStack.Screen
+        name="PatientAuditScreen"
+        component={PatientAuditScreen}
+        options={{ headerTitle: '病患审核' }}
       />
     </TabPatientStack.Navigator>
   );

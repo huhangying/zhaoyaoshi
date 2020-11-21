@@ -43,7 +43,7 @@ export default function TabPatientScreen() {
           <ListItem.Chevron />
         </ListItem>
         <Text> </Text>
-        <ListItem key={2} bottomDivider>
+        <ListItem key={2} bottomDivider onPress={() => navigate('PatientAuditScreen')}>
           <Ionicons name="ios-switch" size={24} color="royalblue"/>
           <ListItem.Content>
             <ListItem.Title>病患审核</ListItem.Title>

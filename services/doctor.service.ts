@@ -59,7 +59,9 @@ export function getPatientGroupedRelationships(doctorId: string) {
           });
         }
         userIdList.push(userId);
-        newGrouped.push({ user: relationship.user, relationships: [relationship] });
+        if (relationship.user) {
+          newGrouped.push({ user: relationship.user, relationships: [relationship] });
+        }
         return newGrouped;
       }, []);
       return selectedGroupedRelationships;

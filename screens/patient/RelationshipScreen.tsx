@@ -14,9 +14,11 @@ import PatientDetails from '../../components/PatientDetails';
 
 export default function RelationshipScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
-  const [groupedRelationships, setGroupedRelationships] = useState([])
-  const [doctorGroups, setDoctorGroups] = useState([])
-  const [user, setUser] = useState({ _id: '' })
+  // const initGroupedRelationship: GroupedRelationship = { user: { _id: '' }, relationships: [] };
+  const [groupedRelationships, setGroupedRelationships] = useState([]);
+  const initDoctorGroup: DoctorGroup = {_id: '', name: ''};
+  const [doctorGroups, setDoctorGroups] = useState([initDoctorGroup])
+  const [user, setUser] = useState({ _id: '', name: '' })
 
   useEffect(() => {
     if (doctor?._id) {
@@ -53,7 +55,6 @@ export default function RelationshipScreen() {
 
   const openPatientDetails = (user?: User) => {
     if (user) {
-      console.log(user);
       setUser(user);
       setVisible(true);
     }
@@ -73,7 +74,7 @@ export default function RelationshipScreen() {
           <List.Accordion
             style={styles.group}
             left={props => <List.Icon {...props} icon="account-group" />}
-            title={group.name} 
+            title={group.name}
             id={i} key={i}
             expanded={i === expandId}
             onPress={() => handlePress(i)}>
