@@ -151,17 +151,10 @@ export default function PatientAuditScreen() {
           {snackbarMessage}
         </Snackbar>
 
-        <Dialog visible={visible} onDismiss={closePatientDetails}>
-          <Dialog.Title>{user.name}</Dialog.Title>
-          <Divider></Divider>
-          <Dialog.Content style={styles.m3}>
-            <PatientDetails user={user} />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button mode="outlined" style={styles.actionBar} onPress={closePatientDetails}>
-              关闭</Button>
-          </Dialog.Actions>
-        </Dialog>
+        {visible &&
+          <PatientDetails user={user} onClose={closePatientDetails} />
+        }
+
       </>
     );
   }
@@ -190,10 +183,5 @@ const styles = StyleSheet.create({
   item: {
     backgroundColor: 'ivory',
     marginBottom: 1,
-  },
-  actionBar: {
-    paddingHorizontal: 24,
-    marginHorizontal: 16,
-    marginBottom: 16
   },
 });

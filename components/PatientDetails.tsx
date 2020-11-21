@@ -1,12 +1,10 @@
 import React from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import moment from 'moment';
 import { User } from '../models/crm/user.model';
 import { Text, View } from './Themed';
-import { Divider } from 'react-native-paper';
+import { Button, Dialog, Divider } from 'react-native-paper';
 
-export default function PatientDetails({ user }: { user: User }) {
+export default function PatientDetails({ user, onClose }: { user: User, onClose: any }) {
 
   if (!user?._id) {
     return (
@@ -16,22 +14,30 @@ export default function PatientDetails({ user }: { user: User }) {
     );
   } else {
     return (
-      <>
-        <Text>性别： {user.gender}</Text>
+      <Dialog visible={true} onDismiss={onClose}>
+        <Dialog.Title>{user.name}</Dialog.Title>
         <Divider></Divider>
-        <Text>生日：{user.birthdate}</Text>
-        <Divider></Divider>
-        <Text>手机：{user.cell}</Text>
-        <Divider></Divider>
-        <Text>疾病诊断：{user.diagnoses?.replace(/[|]/g, ', ')}</Text>
-        <Divider></Divider>
-        <Text>诊断提醒：{user.prompt?.replace(/[|]/g, ', ')}</Text>
-        <Divider></Divider>
-        <View>
-          <Text>病患备注：{user.notes?.replace(/[|]/g, ', ')}</Text>
+        <Dialog.Content style={styles.m3}>
+          <Text>性别： {user.gender}</Text>
           <Divider></Divider>
-        </View>
-      </>
+          <Text>生日：{user.birthdate}</Text>
+          <Divider></Divider>
+          <Text>手机：{user.cell}</Text>
+          <Divider></Divider>
+          <Text>疾病诊断：{user.diagnoses?.replace(/[|]/g, ', ')}</Text>
+          <Divider></Divider>
+          <Text>诊断提醒：{user.prompt?.replace(/[|]/g, ', ')}</Text>
+          <Divider></Divider>
+          <View>
+            <Text>病患备注：{user.notes?.replace(/[|]/g, ', ')}</Text>
+            <Divider></Divider>
+          </View>
+        </Dialog.Content>
+        <Dialog.Actions>
+          <Button mode="outlined" style={styles.actionBar} onPress={onClose}>
+            关闭</Button>
+        </Dialog.Actions>
+      </Dialog>
     )
   }
 }
@@ -79,5 +85,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5
-  }
+  },
+  m3: {
+    margin: 16,
+    marginVertical: 16,
+  },
+  actionBar: {
+    paddingHorizontal: 24,
+    marginHorizontal: 16,
+    marginBottom: 16
+  },
 });

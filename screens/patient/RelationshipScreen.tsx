@@ -7,7 +7,7 @@ import { getDoctorGroups, getPatientGroupedRelationships } from '../../services/
 import { GroupedRelationship, Relationship } from '../../models/crm/relationship.model';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../../models/app-state.model';
-import { Button, Dialog, Divider, List } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import { DoctorGroup } from '../../models/crm/doctor-group.model';
 import { User } from '../../models/crm/user.model';
 import PatientDetails from '../../components/PatientDetails';
@@ -61,10 +61,10 @@ export default function RelationshipScreen() {
       setVisible(true);
     }
   }
-  
+
   const [expandId, setExpandId] = React.useState(-1);
   const handlePress = (i: number) => setExpandId(i);
-  
+
   return (
     <>
       <Text style={styles.m3}>用户群组</Text>
@@ -91,17 +91,9 @@ export default function RelationshipScreen() {
       </ScrollView>
 
 
-      <Dialog visible={visible} onDismiss={closePatientDetails}>
-        <Dialog.Title>{user.name}</Dialog.Title>
-        <Divider></Divider>
-        <Dialog.Content style={styles.m3}>
-          <PatientDetails user={user} />
-        </Dialog.Content>
-        <Dialog.Actions>
-          <Button mode="outlined" style={styles.actionBar} onPress={closePatientDetails}>
-            关闭</Button>
-        </Dialog.Actions>
-      </Dialog>
+      {visible &&
+        <PatientDetails user={user} onClose={closePatientDetails} />
+      }
     </>
   );
 }
@@ -110,11 +102,6 @@ const styles = StyleSheet.create({
   m3: {
     margin: 16,
     marginVertical: 16,
-  },
-  actionBar: {
-    paddingHorizontal: 24,
-    marginHorizontal: 16,
-    marginBottom: 16
   },
   title: {
     fontSize: 20,
