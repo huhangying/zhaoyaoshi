@@ -16,9 +16,9 @@ export default function RelationshipScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
   // const initGroupedRelationship: GroupedRelationship = { user: { _id: '' }, relationships: [] };
   const [groupedRelationships, setGroupedRelationships] = useState([]);
-  const initDoctorGroup: DoctorGroup = {_id: '', name: ''};
+  const initDoctorGroup: DoctorGroup = { _id: '', name: '' };
   const [doctorGroups, setDoctorGroups] = useState([initDoctorGroup])
-  const [user, setUser] = useState({ _id: '', name: '' })
+  const [user, setUser] = useState({ _id: '' })
 
   useEffect(() => {
     if (doctor?._id) {
@@ -54,7 +54,7 @@ export default function RelationshipScreen() {
   }
 
   const openPatientDetails = (user?: User) => {
-    if (user) {
+    if (user?._id) {
       setUser(user);
       setVisible(true);
     }

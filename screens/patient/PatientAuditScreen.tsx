@@ -6,7 +6,7 @@ import { Text } from '../../components/Themed';
 import { getRelationshipsByDoctorId } from '../../services/doctor.service';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../../models/app-state.model';
-import { Button, DataTable, Headline, Searchbar, Subheading, Switch, Title } from 'react-native-paper';
+import { Button, DataTable, Headline, Searchbar, Snackbar, Subheading, Switch, Title } from 'react-native-paper';
 import { User } from '../../models/crm/user.model';
 import { Relationship } from '../../models/crm/relationship.model';
 import moment from 'moment';
@@ -19,7 +19,7 @@ export default function PatientAuditScreen() {
   const [filterRelationships, setFilterRelationships] = useState([initRelationsip]);
   const [loading, setLoading] = useState(false)
 
-  const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+  const [isSwitchOn, setIsSwitchOn] = React.useState(true);
   const onToggleSwitch = () => {
     const current = !isSwitchOn;
     setIsSwitchOn(current);
@@ -36,6 +36,9 @@ export default function PatientAuditScreen() {
         tap(results => {
           setRelationships(results);
           setLoading(false);
+          // init
+          setIsSwitchOn(false);
+          setFilterRelationships(results.filter(_ => _.user?.role === 0));
         })
       ).subscribe();
     }
@@ -50,17 +53,26 @@ export default function PatientAuditScreen() {
         tap(user => {
           if (user) {
             // update
-            const updated = relationships.map(r => (r.user?._id === user._id ? { ...r, user }: r));
+            const updated = relationships.map(r => (r.user?._id === user._id ? { ...r, user } : r));
             setRelationships(updated);
-            const filterUpdated = filterRelationships.map(r => (r.user?._id === user._id ? { ...r, user }: r));
+            const filterUpdated = filterRelationships.map(r => (r.user?._id === user._id ? { ...r, user } : r));
             setFilterRelationships(filterUpdated);
             // success message
+            openSnackbar('操作成功！');
           } else {
             // error message
           }
         })
       ).subscribe();
     }
+  }
+
+  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const onDismissSnackBar = () => setSnackbarVisible(false);
+  const openSnackbar = (msg: string) => {
+    setSnackbarVisible(true);
+    setSnackbarMessage(msg);
   }
 
   if (!doctor?._id || loading) {
@@ -116,11 +128,17 @@ export default function PatientAuditScreen() {
                 </DataTable.Row>
               ))
             ) : (
-                <Text>no reords</Text>
+                <Text style={styles.headline}>没有相关数据。</Text>
               )
             }
           </DataTable>
         </ScrollView>
+
+        <Snackbar
+          visible={snackbarVisible}
+          onDismiss={onDismissSnackBar}>
+          {snackbarMessage}
+        </Snackbar>
       </>
     );
   }
