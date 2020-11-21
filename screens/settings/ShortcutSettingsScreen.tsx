@@ -1,35 +1,38 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { useEffect } from 'react';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import EditTextList from '../../components/EditTextList';
 import { updateDoctorShortcuts } from '../../services/doctor.service';
 import { tap } from 'rxjs/operators';
 import { updateDoctor } from '../../services/core/app-store.actions';
 import { Caption } from 'react-native-paper';
+import { AppState } from '../../models/app-state.model';
 
 export default function ShortcutSettingsScreen() {
-  const [shortcuts, setShortcuts] = React.useState([])
-  const { doctor } = useStore().getState();
+  const [shortcuts, setShortcuts] = React.useState([''])
+  const doctor = useSelector((state: AppState) => state.doctor);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (doctor.shortcuts) {
+    if (doctor?.shortcuts) {
       setShortcuts(doctor.shortcuts.split('|'));
     }
     return () => {
     }
-  }, [doctor, doctor.shortcuts]);
+  }, [doctor?.shortcuts]);
 
   const onListSave = React.useCallback(newList => {
     const newShortcuts = shortcuts.join('|');
-    updateDoctorShortcuts(doctor.user_id, newShortcuts).pipe(
-      tap(rsp => {
-        if (rsp?._id) {
-          dispatch(updateDoctor({ ...doctor, shortcuts: newShortcuts }));
-        }
-      })
-    ).subscribe();
+    if (doctor) {
+      updateDoctorShortcuts(doctor.user_id, newShortcuts).pipe(
+        tap(rsp => {
+          if (rsp?._id) {
+            dispatch(updateDoctor({ ...doctor, shortcuts: newShortcuts }));
+          }
+        })
+      ).subscribe();
+    }
   }, [doctor, shortcuts, dispatch]);
 
   return (

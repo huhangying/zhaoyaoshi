@@ -110,7 +110,7 @@ function TabFeedbackNavigator() {
       <TabConsultStack.Screen
         name="BookingsScreen"
         component={BookingsScreen}
-        options={{ headerTitle: '您的病患预约' }}
+        options={{ headerTitle: '门诊预约' }}
       />
     </TabFeedbackStack.Navigator>
   );

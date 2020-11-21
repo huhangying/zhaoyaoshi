@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { Modal, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Text, View } from '../../components/Themed';
+import { Text } from '../../components/Themed';
 import { getDoctorGroups, getPatientGroupedRelationships } from '../../services/doctor.service';
 import { GroupedRelationship, Relationship } from '../../models/crm/relationship.model';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../../models/app-state.model';
-import { Badge, Button, Dialog, Divider, List } from 'react-native-paper';
+import { Button, Dialog, Divider, List } from 'react-native-paper';
 import { DoctorGroup } from '../../models/crm/doctor-group.model';
 import { User } from '../../models/crm/user.model';
 import PatientDetails from '../../components/PatientDetails';
@@ -90,9 +90,6 @@ export default function RelationshipScreen() {
         }
       </ScrollView>
 
-      {/* <Modal visible={visible} animationType="slide" transparent={true} onDismiss={closePatientDetails}>
-          <PatientDetails user={user} onClose={onPatientDetailsClose} />
-        </Modal> */}
 
       <Dialog visible={visible} onDismiss={closePatientDetails}>
         <Dialog.Title>{user.name}</Dialog.Title>

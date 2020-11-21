@@ -49,7 +49,7 @@ export default function TabFeedbackScreen() {
         <ListItem key={0} bottomDivider onPress={() => navigate('BookingsScreen')}>
           <Ionicons name="ios-calendar" size={24} color="orange" />
           <ListItem.Content>
-            <ListItem.Title>您的病患预约</ListItem.Title>
+            <ListItem.Title>门诊预约</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
