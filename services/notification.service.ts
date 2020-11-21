@@ -8,7 +8,7 @@ import { Notification } from '../models/io/notification.model';
 export function getUnreadCount(notifications: Notification[] = []) {
   if (!notifications?.length) return 0;
   return notifications.reduce((total, noti) => {
-    total += noti.count;
+    total += (noti.count || 0);
     return total;
   }, 0);
 }

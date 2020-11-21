@@ -46,7 +46,7 @@ export function convertChatNotificationList(chats: Chat[], notiType: Notificatio
     notis = notis.map(_ => {
       if (_.patientId === chat.sender) {
         // 如果重复计数的bug还是发生的话，在这里增加 通过验证时间戳（created）来确保不重复加
-        _.count = _.count + 1;
+        _.count = (_.count || 0) + 1;
       }
       return _;
     });
