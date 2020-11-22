@@ -53,7 +53,7 @@ export default function TabFeedbackScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <Caption style={styles.m3}>用药反馈</Caption>
+        <Caption style={styles.m3}>门诊病患用药反馈</Caption>
         <ListItem key={1} bottomDivider
           onPress={() => openNotification('联合用药反馈', getDoseCombinationNotis())}>
           <Fontisto name="pills" size={24} color="lightblue"></Fontisto>
@@ -86,44 +86,8 @@ export default function TabFeedbackScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  containerStyle: { backgroundColor: 'red' },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
   m3: {
     margin: 18,
     marginVertical: 16
   },
-  centeredView: {
-    // flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    // marginTop: 22
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  }
 });

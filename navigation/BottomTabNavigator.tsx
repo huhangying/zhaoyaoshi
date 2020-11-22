@@ -87,7 +87,7 @@ function TabConsultNavigator() {
       <TabConsultStack.Screen
         name="TabConsult"
         component={TabConsultScreen}
-        options={{ headerTitle: '药师咨询', headerShown: false }}
+        options={{ headerTitle: '药师咨询'}}
       />
       <TabConsultStack.Screen
         name="ChatScreen"
