@@ -31,7 +31,7 @@ export default function TabFeedbackScreen() {
   const getDoseCombinationNotis = () => {
     return store.feedbackNotifications?.filter((_: Notification) => _.type === NotificationType.doseCombination) || [];
   }
-  const getAadverseReactionNotis = () => {
+  const getAdverseReactionNotis = () => {
     return store.feedbackNotifications?.filter((_: Notification) => _.type === NotificationType.adverseReaction) || [];
   }
 
@@ -66,12 +66,12 @@ export default function TabFeedbackScreen() {
           <ListItem.Chevron />
         </ListItem>
         <ListItem key={2}
-          onPress={() => openNotification('不良反应反馈', getAadverseReactionNotis())}>
+          onPress={() => openNotification('不良反应反馈', getAdverseReactionNotis())}>
           <Fontisto name="frowning" size={24} color="gray"></Fontisto>
           <ListItem.Content>
             <ListItem.Title>
               不良反应反馈
-              <Badge status="success" value={getAadverseReactionNotis()?.length}></Badge>
+              <Badge status="success" value={getAdverseReactionNotis()?.length}></Badge>
             </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
