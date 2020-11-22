@@ -63,7 +63,7 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
         }
       </ScrollView>
 
-      <Dialog visible={visible}>
+      <Dialog visible={visible} style={{marginBottom: 136}}>
         <Dialog.Title>{action === 'delete' ? '确认删除' :
           (action === 'add' ? '新增' : '编辑')}</Dialog.Title>
         <Divider></Divider>

@@ -1,7 +1,7 @@
 import { ConsultServicePrice } from "../consult/doctor-consult.model";
 
 export interface Doctor {
-  _id?: string;
+  _id: string;
   hid?: number;
   user_id: string;
   name?: string;

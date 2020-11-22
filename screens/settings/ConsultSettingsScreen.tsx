@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Button, Card, Divider, ListItem, Text } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
-import { imgPath } from '../../services/core/image.service';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
+import { Modal, ScrollView, StyleSheet } from 'react-native';
+import { Avatar, Button, Card, ListItem, Text } from 'react-native-elements';
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Caption, List, Paragraph, Subheading } from 'react-native-paper';
-import EditTextList from '../../components/EditTextList';
 import { AppState } from '../../models/app-state.model';
 import { ConsultServicePrice } from '../../models/consult/doctor-consult.model';
 import { Ionicons } from '@expo/vector-icons';
+import ConsultTags from './consult/ConsultTags';
+import ConsultDiseaseTypes from './consult/ConsultDiseaseTypes';
 
 export default function ConsultSettingsScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -29,6 +28,26 @@ export default function ConsultSettingsScreen() {
     return () => {
     }
   }, [doctor])
+
+  // Tags
+  const [tagsVisible, setTagsVisible] = useState(false);
+  const closeConsultTags = () => setTagsVisible(false);
+  const onCloseConsultTags = useCallback(() => {
+    closeConsultTags();
+  }, [])
+  const openConsultTags = () => {
+    setTagsVisible(true);
+  }
+
+  // diseaseTypes
+  const [diseaseTypesVisible, setDiseaseTypesVisible] = useState(false);
+  const closeConsultDiseaseTypes = () => setDiseaseTypesVisible(false);
+  const onCloseConsultDiseaseTypes = useCallback(() => {
+    closeConsultDiseaseTypes();
+  }, [])
+  const openConsultDiseaseTypes = () => {
+    setDiseaseTypesVisible(true);
+  }
 
   return (
     <>
@@ -68,22 +87,29 @@ export default function ConsultSettingsScreen() {
 
       {doctor?.prices?.length &&
         <>
-          <Caption style={styles.m3}>设置病患微信端显示</Caption>
-          <ListItem key={1} bottomDivider >
+          <Caption style={styles.m3}>设置病患微信端显示内容</Caption>
+          <ListItem key={1} bottomDivider onPress={openConsultTags}>
             <Ionicons name="ios-pricetags" size={24} color="sandybrown" />
             <ListItem.Content>
-              <ListItem.Title>自定义标签设置</ListItem.Title>
+              <ListItem.Title>自定义标签设定</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
           <Text> </Text>
-          <ListItem key={2} bottomDivider >
+          <ListItem key={2} bottomDivider onPress={openConsultDiseaseTypes}>
             <Ionicons name="md-apps" size={24} color="royalblue" />
             <ListItem.Content>
               <ListItem.Title>咨询疾病类型设定</ListItem.Title>
             </ListItem.Content>
             <ListItem.Chevron />
           </ListItem>
+
+          <Modal visible={tagsVisible} animationType="slide" onDismiss={closeConsultTags}>
+            <ConsultTags doctorid={doctor._id} onClose={onCloseConsultTags}></ConsultTags>
+          </Modal>
+          <Modal visible={diseaseTypesVisible} animationType="slide" onDismiss={closeConsultDiseaseTypes}>
+            <ConsultDiseaseTypes doctorid={doctor._id} onClose={onCloseConsultDiseaseTypes}></ConsultDiseaseTypes>
+          </Modal>
         </>
       }
     </>
