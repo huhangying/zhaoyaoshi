@@ -1,7 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Text, ListItem } from 'react-native-elements';
-import { Button, Card, Divider } from 'react-native-paper';
+import { Text, ListItem, Header, Button } from 'react-native-elements';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
@@ -9,84 +8,50 @@ import moment from 'moment';
 export default function NotificationList({ list, title, onClose }: { list: Notification[], title: string, onClose: any }) {
 
   return (
-    <Card style={styles.container}>
-      <Card.Title title={title}
-        left={() => <Ionicons name="ios-notifications-outline" size={24} color="gray" />}
+    <View style={{ flex: 1, backgroundColor: 'whitesmoke' }}>
+      <Header
+        leftComponent={{ icon: 'notifications', color: '#fff' }}
+        centerComponent={{ text: title, style: { color: '#fff' } }}
+        rightComponent={{ icon: 'close', color: '#fff', onPress: onClose }}
       />
-      <Divider></Divider>
-      <Card.Content>
-        <ScrollView>
-          {
-            list.map((noti, i) => (
-              <ListItem key={i} bottomDivider>
+      <ScrollView>
+        {
+          list.map((noti, i) => (
+            <ListItem key={i} bottomDivider>
+              <ListItem.Content>
+                <ListItem.Title>{noti.name}发送了 {noti.count} 条新消息</ListItem.Title>
                 <ListItem.Content>
-                  <ListItem.Title>{noti.name}发送了 {noti.count} 条新消息</ListItem.Title>
-                  <ListItem.Content>
-                    <Text style={[styles.textHint, styles.px3]}>发送于{moment(noti.created).format('YYYY年MM月DD日')}</Text>
-                  </ListItem.Content>
+                  <Text style={[styles.textHint, styles.px3]}>发送于{moment(noti.created).format('YYYY年MM月DD日')}</Text>
                 </ListItem.Content>
-                <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" />
-              </ListItem>
-            ))
-          }
-        </ScrollView>
-      </Card.Content>
-      <Card.Actions>
-        <Button mode="outlined" style={{ flex: 1 }} onPress={() => onClose()}>
-          取消</Button>
-      </Card.Actions>
-    </Card>
+              </ListItem.Content>
+              <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" />
+            </ListItem>
+          ))
+        }
+      </ScrollView>
+      <View style={styles.fixBottom}>
+        <Button 
+          title='关闭'
+          onPress={() => onClose()}>
+        </Button>
+      </View>
+    </View>
   );
 }
 
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    // alignItems: "center",
-    marginTop: 26
-  },
-  mr1: {
-    marginRight: 4
-  },
-  mr2: {
-    marginRight: 8
-  },
-  mx2: {
-    margin: 8
-  },
-  mr3: {
-    marginRight: 16
-  },
   px3: {
     paddingHorizontal: 16
-  },
-  pt3: {
-    paddingTop: 16
-  },
-  highlight: {
-    backgroundColor: '#ffeeba',
-  },
-  normal: {
   },
   textHint: {
     color: 'gray',
     fontSize: 12
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  }
+  fixBottom: {
+    position: 'absolute',
+    margin: 24,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  },
 });

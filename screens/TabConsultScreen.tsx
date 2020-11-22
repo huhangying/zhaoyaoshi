@@ -1,10 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-import { StackScreenProps } from '@react-navigation/stack';
 import * as React from 'react';
 import { Button, StyleSheet } from 'react-native';
 import { Divider, Header } from 'react-native-elements';
 import { useSelector, useStore } from 'react-redux';
-import EditTextList from '../components/EditTextList';
 
 import { Text, View } from '../components/Themed';
 import { AppState } from '../models/app-state.model';
@@ -14,9 +12,6 @@ export default function TabConsultScreen() {
   const navigation = useNavigation();
   const store = useStore();
   const state = useSelector((state: AppState) => state);
-  const onListSave = React.useCallback(newList => {
-    console.log('You clicked ', newList);
-  }, []);
 
   return (
     <>
@@ -30,7 +25,6 @@ export default function TabConsultScreen() {
           justifyContent: 'space-around',
         }}
       />
-      <EditTextList list={['a', 'b', 'c']} onListSave={onListSave} />
       <Divider style={{ backgroundColor: 'lightgray' }} />
       <View style={styles.container}>
         <Text style={styles.title}>{state.doctor?.name}</Text>
