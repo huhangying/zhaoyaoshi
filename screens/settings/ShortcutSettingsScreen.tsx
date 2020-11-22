@@ -59,6 +59,7 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   m3: {
-    margin: 16
+    margin: 16,
+    marginVertical: 16,
   },
 });

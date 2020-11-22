@@ -34,7 +34,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
           </View>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button mode="outlined" style={styles.actionBar} onPress={onClose}>
+          <Button mode="outlined" style={{ flex: 1 }} onPress={onClose}>
             关闭</Button>
         </Dialog.Actions>
       </Dialog>
@@ -89,10 +89,5 @@ const styles = StyleSheet.create({
   m3: {
     margin: 16,
     marginVertical: 16,
-  },
-  actionBar: {
-    paddingHorizontal: 24,
-    marginHorizontal: 16,
-    marginBottom: 16
   },
 });

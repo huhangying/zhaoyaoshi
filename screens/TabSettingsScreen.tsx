@@ -32,14 +32,14 @@ export default function TabSettingsScreen() {
         </ListItem>
         <Text> </Text>
         <ListItem key={1} bottomDivider onPress={() => navigate('ConsultSettingsScreen')}>
-          <Ionicons name="ios-pricetags" size={24} />
+          <Ionicons name="ios-pricetags" size={24} color="orange" />
           <ListItem.Content>
             <ListItem.Title>付费咨询设置</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <ListItem key={2} bottomDivider>
-          <Ionicons name="ios-color-palette" size={24} />
+          <Ionicons name="ios-color-palette" size={24} color="purple" />
           <ListItem.Content>
             <ListItem.Title>设置</ListItem.Title>
           </ListItem.Content>
@@ -53,7 +53,7 @@ export default function TabSettingsScreen() {
           <ListItem.Chevron />
         </ListItem>
         <ListItem key={4} bottomDivider onPress={() => navigate('AboutScreen')}>
-          <Ionicons name="ios-information-circle-outline" size={24} color="gray" />
+          <Ionicons name="ios-information-circle-outline" size={24} color="lightblue" />
           <ListItem.Content>
             <ListItem.Title>关于</ListItem.Title>
           </ListItem.Content>
