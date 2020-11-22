@@ -7,17 +7,17 @@ import { getDoctorGroups, getPatientGroupedRelationships } from '../../services/
 import { GroupedRelationship, Relationship } from '../../models/crm/relationship.model';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../../models/app-state.model';
-import { List } from 'react-native-paper';
+import { Button, Dialog, Divider, List } from 'react-native-paper';
 import { DoctorGroup } from '../../models/crm/doctor-group.model';
 import { User } from '../../models/crm/user.model';
 import PatientDetails from '../../components/PatientDetails';
 
 export default function RelationshipScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
-  // const initGroupedRelationship: GroupedRelationship = { user: { _id: '' }, relationships: [] };
   const [groupedRelationships, setGroupedRelationships] = useState([]);
   const initDoctorGroup: DoctorGroup = { _id: '', name: '' };
   const [doctorGroups, setDoctorGroups] = useState([initDoctorGroup])
+  const [user, setUser] = useState({ _id: '' })
 
   useEffect(() => {
     if (doctor?._id) {
@@ -52,15 +52,16 @@ export default function RelationshipScreen() {
     return data;
   }
 
-  const [user, setUser] = useState({ _id: '' })
-  const [visible, setVisible] = React.useState(false);
-  const closePatientDetails = () => setVisible(false);
   const openPatientDetails = (user?: User) => {
-    if (user?._id) {
+    if (user) {
+      console.log(user);
       setUser(user);
       setVisible(true);
     }
   }
+
+  const [visible, setVisible] = React.useState(false);
+  const closePatientDetails = () => setVisible(false);
 
   const [expandId, setExpandId] = React.useState(-1);
   const handlePress = (i: number) => setExpandId(i);
@@ -72,7 +73,7 @@ export default function RelationshipScreen() {
         {doctorGroups.map((group: DoctorGroup, i) => (
           <List.Accordion
             style={styles.group}
-            left={props => <List.Icon {...props} icon="account-group" color="azure" />}
+            left={props => <List.Icon {...props} icon="account-group" />}
             title={group.name}
             id={i} key={i}
             expanded={i === expandId}
@@ -90,7 +91,6 @@ export default function RelationshipScreen() {
         }
       </ScrollView>
 
-
       {visible &&
         <PatientDetails user={user} onClose={closePatientDetails} />
       }
@@ -103,12 +103,17 @@ const styles = StyleSheet.create({
     margin: 16,
     marginVertical: 16,
   },
+  actionBar: {
+    paddingHorizontal: 24,
+    marginHorizontal: 16,
+    marginBottom: 16
+  },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
   },
   group: {
-    backgroundColor: 'lightskyblue',
+    backgroundColor: 'paleturquoise',
     marginBottom: 1,
   },
   item: {

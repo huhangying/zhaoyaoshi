@@ -1,6 +1,4 @@
 
-import { Observable } from 'redux';
-import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DoctorGroup } from '../models/crm/doctor-group.model';
 import { Doctor } from '../models/crm/doctor.model';
@@ -67,4 +65,20 @@ export function getPatientGroupedRelationships(doctorId: string) {
       return selectedGroupedRelationships;
     })
   );
+}
+
+// 其它功能
+export function getRoleLabel(role = 0) {
+  switch (role) {
+    case 0:
+      return '药师';
+    case 1:
+      return '科室管理员';
+    case 2:
+      return '医院管理员';
+    case 3:
+      return '系统管理员';
+    default:
+      return '';
+  }
 }

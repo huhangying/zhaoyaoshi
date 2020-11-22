@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { User } from '../models/crm/user.model';
 import { Text, View } from './Themed';
 import { Button, Dialog, Divider } from 'react-native-paper';
+import { wxImgPath } from '../services/core/image.service';
+import { Avatar } from 'react-native-elements';
 
 export default function PatientDetails({ user, onClose }: { user: User, onClose: any }) {
+
+
+  useEffect(() => {
+    return () => {
+    }
+  }, [user])
 
   if (!user?._id) {
     return (
@@ -15,23 +23,30 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
   } else {
     return (
       <Dialog visible={true} onDismiss={onClose}>
-        <Dialog.Title>{user.name}</Dialog.Title>
+        <Dialog.Title>
+          <Avatar
+            rounded size="medium"
+            source={{ uri: wxImgPath(user.icon) }} />
+          <Text> {'  ' + user.name}</Text>
+        </Dialog.Title>
         <Divider></Divider>
-        <Dialog.Content style={styles.m3}>
-          <Text>性别： {user.gender}</Text>
-          <Divider></Divider>
-          <Text>生日：{user.birthdate}</Text>
-          <Divider></Divider>
-          <Text>手机：{user.cell}</Text>
-          <Divider></Divider>
-          <Text>疾病诊断：{user.diagnoses?.replace(/[|]/g, ', ')}</Text>
-          <Divider></Divider>
-          <Text>诊断提醒：{user.prompt?.replace(/[|]/g, ', ')}</Text>
-          <Divider></Divider>
-          <View>
-            <Text>病患备注：{user.notes?.replace(/[|]/g, ', ')}</Text>
+        <Dialog.Content style={styles.content}>
+          <ScrollView>
+            <Text style={styles.item}>状态： {user.role === 1 ? '审核通过' : '未审核'}</Text>
             <Divider></Divider>
-          </View>
+            <Text style={styles.item}>性别： {user.gender === 'M' ? '男' : (user.gender === 'F' ? '女' : '')}</Text>
+            <Divider></Divider>
+            <Text style={styles.item}>生日：{user.birthdate}</Text>
+            <Divider></Divider>
+            <Text style={styles.item}>手机：{user.cell}</Text>
+            <Divider></Divider>
+            <Text style={styles.item}>疾病诊断：{user.diagnoses?.replace(/[|]/g, ', ')}</Text>
+            <Divider></Divider>
+            <Text style={styles.item}>诊断提醒：{user.prompt?.replace(/[|]/g, ', ')}</Text>
+            <Divider></Divider>
+            <Text style={styles.item}>病患备注：{user.notes?.replace(/[|]/g, ', ')}</Text>
+            <Divider></Divider>
+          </ScrollView>
         </Dialog.Content>
         <Dialog.Actions>
           <Button mode="outlined" style={{ flex: 1 }} onPress={onClose}>
@@ -44,50 +59,10 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
 
 
 const styles = StyleSheet.create({
-  mr1: {
-    marginRight: 4
+  content: {
+    marginTop: 16,
   },
-  mr2: {
-    marginRight: 8
-  },
-  mx2: {
-    margin: 8
-  },
-  mr3: {
-    marginRight: 16
-  },
-  px3: {
-    paddingHorizontal: 16
-  },
-  pt3: {
-    paddingTop: 16
-  },
-  highlight: {
-    backgroundColor: '#ffeeba',
-  },
-  normal: {
-  },
-  textHint: {
-    color: 'gray',
-    fontSize: 12
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5
-  },
-  m3: {
-    margin: 16,
-    marginVertical: 16,
-  },
+  item: {
+    paddingVertical: 10,
+  }
 });
