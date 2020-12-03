@@ -9,12 +9,14 @@ export default {
           TabConsult:  {
             screens: {
               TabConsultScreen: 'consult',
+              ConsultChatScreen: 'consult-chat',
             },
           },                      
           TabFeedback: {
             screens: {
               TabFeedbackScreen: 'feedback',
-              BookingsScreen: 'bookings'
+              BookingsScreen: 'bookings',
+              FeedbackChatScreen: 'feedback-chat',
             },
           },
           TabPatient: {

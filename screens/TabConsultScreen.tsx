@@ -59,6 +59,7 @@ export default function TabConsultScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
+        <Text> </Text>
         <ListItem key={2}
           onPress={() => openNotification('免费咨询消息提醒', chatNotifications || [])}>
           <Ionicons name="ios-notifications" size={24} color="turquoise"></Ionicons>

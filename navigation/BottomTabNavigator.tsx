@@ -10,6 +10,7 @@ import TabPatientScreen from '../screens/TabPatientScreen';
 import TabFeedbackScreen from '../screens/TabFeedbackScreen';
 import { TabSettingsParamList, TabPatientParamList, TabFeedbackParamList } from '../models/types';
 import ChatScreen from '../screens/consult/ChatScreen';
+import ConsultScreen from '../screens/consult/ConsultScreen';
 import ProfileScreen from '../screens/settings/ProfileScreen';
 import { getUnreadCount } from '../services/notification.service';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -21,6 +22,7 @@ import BookingsScreen from '../screens/feedback/BookingsScreen';
 import AboutScreen from '../screens/settings/AboutScreen';
 import RelationshipScreen from '../screens/patient/RelationshipScreen';
 import PatientAuditScreen from '../screens/patient/PatientAuditScreen';
+import FeedbackChatScreen from '../screens/feedback/FeedbackChatScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -94,6 +96,11 @@ function TabConsultNavigator() {
         component={ChatScreen}
         options={{ headerTitle: '免费咨询' }}
       />
+      <TabConsultStack.Screen
+        name="ConsultScreen"
+        component={ConsultScreen}
+        options={{ headerTitle: '付费咨询', headerShown: false }}
+      />
     </TabConsultStack.Navigator>
   );
 }
@@ -112,6 +119,11 @@ function TabFeedbackNavigator() {
         name="BookingsScreen"
         component={BookingsScreen}
         options={{ headerTitle: '门诊预约' }}
+      />
+      <TabConsultStack.Screen
+        name="FeedbackChatScreen"
+        component={FeedbackChatScreen}
+        options={{ headerTitle: '门诊反馈' }}
       />
     </TabFeedbackStack.Navigator>
   );

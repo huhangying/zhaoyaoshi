@@ -65,6 +65,7 @@ export default function TabFeedbackScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
+        <Text> </Text>
         <ListItem key={2}
           onPress={() => openNotification('不良反应反馈', getAdverseReactionNotis())}>
           <Fontisto name="frowning" size={24} color="gray"></Fontisto>

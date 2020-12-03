@@ -2,10 +2,30 @@ import React from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text, ListItem, Header, Button } from 'react-native-elements';
 import { Notification, NotificationType } from '../models/io/notification.model';
-import { Ionicons } from '@expo/vector-icons';
 import moment from 'moment';
+import { useNavigation } from '@react-navigation/native';
 
 export default function NotificationList({ list, title, onClose }: { list: Notification[], title: string, onClose: any }) {
+  const { navigate } = useNavigation();
+
+  const chatNavigate = (noti: Notification) => {
+    if (noti) {
+      switch (noti.type) {
+        case NotificationType.chat:
+          navigate('ChatScreen');
+          break;
+        case NotificationType.consultChat:
+        case NotificationType.consultPhone:
+          navigate('ConsultScreen');
+          break;
+        case NotificationType.doseCombination:
+        case NotificationType.adverseReaction:
+          navigate('FeedbackChatScreen', { type: noti.type });
+          break;
+      }
+      onClose(); // close noti modal
+    }
+  }
 
   return (
     <View style={{ flex: 1, backgroundColor: 'whitesmoke' }}>
@@ -17,7 +37,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
       <ScrollView>
         {
           list.map((noti, i) => (
-            <ListItem key={i} bottomDivider>
+            <ListItem key={i} bottomDivider onPress={() => chatNavigate(noti)}>
               <ListItem.Content>
                 <ListItem.Title>{noti.name}发送了 {noti.count} 条新消息</ListItem.Title>
                 <ListItem.Content>
@@ -30,7 +50,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
         }
       </ScrollView>
       <View style={styles.fixBottom}>
-        <Button 
+        <Button
           title='关闭'
           onPress={() => onClose()}>
         </Button>
