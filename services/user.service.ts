@@ -1,6 +1,11 @@
 import { User } from "../models/crm/user.model";
 import { getApi, patchApi } from "./core/api.service";
 
+export function getUserDetailsById(id: string) {
+  return getApi<User>(`user/${id}`);
+
+}
+
 export function getUserCountByDoctorId(doctorId: string) {
   return getApi<{total: number}>(`relationships/count/doctor/${doctorId}`);
 }

@@ -53,7 +53,7 @@ export default function TabConsultScreen() {
           <Ionicons name="ios-megaphone" size={24} color="coral"></Ionicons>
           <ListItem.Content>
             <ListItem.Title>
-              付费咨询消息提醒
+              付费咨询消息提醒&nbsp;&nbsp;
               <Badge status="success" value={consultNotifications?.length}></Badge>
             </ListItem.Title>
           </ListItem.Content>
@@ -65,7 +65,7 @@ export default function TabConsultScreen() {
           <Ionicons name="ios-notifications" size={24} color="turquoise"></Ionicons>
           <ListItem.Content>
             <ListItem.Title>
-              免费咨询消息提醒
+              免费咨询消息提醒&nbsp;&nbsp;
               <Badge status="success" value={chatNotifications?.length}></Badge>
             </ListItem.Title>
           </ListItem.Content>

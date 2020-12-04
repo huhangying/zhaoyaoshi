@@ -59,7 +59,7 @@ export default function TabFeedbackScreen() {
           <Fontisto name="pills" size={24} color="lightblue"></Fontisto>
           <ListItem.Content>
             <ListItem.Title>
-              联合用药反馈
+              联合用药反馈&nbsp;&nbsp;
               <Badge status="success" value={getDoseCombinationNotis()?.length}></Badge>
             </ListItem.Title>
           </ListItem.Content>
@@ -71,7 +71,7 @@ export default function TabFeedbackScreen() {
           <Fontisto name="frowning" size={24} color="gray"></Fontisto>
           <ListItem.Content>
             <ListItem.Title>
-              不良反应反馈
+              不良反应反馈&nbsp;&nbsp;
               <Badge status="success" value={getAdverseReactionNotis()?.length}></Badge>
             </ListItem.Title>
           </ListItem.Content>

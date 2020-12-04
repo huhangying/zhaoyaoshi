@@ -12,7 +12,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
     if (noti) {
       switch (noti.type) {
         case NotificationType.chat:
-          navigate('ChatScreen');
+          navigate('ChatScreen', {pid: noti.patientId});
           break;
         case NotificationType.consultChat:
         case NotificationType.consultPhone:
@@ -39,7 +39,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
           list.map((noti, i) => (
             <ListItem key={i} bottomDivider onPress={() => chatNavigate(noti)}>
               <ListItem.Content>
-                <ListItem.Title>{noti.name}发送了 {noti.count} 条新消息</ListItem.Title>
+          <ListItem.Title>{noti.patientId}{noti.name}发送了 {noti.count} 条新消息</ListItem.Title>
                 <ListItem.Content>
                   <Text style={[styles.textHint, styles.px3]}>发送于{moment(noti.created).format('YYYY年MM月DD日')}</Text>
                 </ListItem.Content>
