@@ -28,13 +28,13 @@ export default function ChatScreen() {
   useEffect(() => {
     if (doctor?._id) {
       setLoading(true);
-      getChatHistory(doctor._id, route.params.pid).pipe(
+      getChatHistory(doctor._id, route.params?.pid).pipe(
         tap(_chats => {
           setChats(_chats);
           setLoading(false);
         })
       ).subscribe();
-      getUserDetailsById(route.params.pid).pipe(
+      getUserDetailsById(route.params?.pid).pipe(
         tap(_user => {
           setUser(_user);
         })
@@ -53,37 +53,37 @@ export default function ChatScreen() {
   } else {
     return (
       <ScrollView ref={scrollViewRef}
-        onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })} >
-          <View style={styles.chats}>
-            {chats.map((chat, i) => (chat.sender === doctor._id ?
-              <ChatItem key={i} chat={chat} doctor={doctor} icon={imgPath(doctor.icon)}></ChatItem>
-              :
-              <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''}></ChatItem>
-            ))
-            }
-          </View>
+        onContentSizeChange={() => scrollViewRef?.current?.scrollToEnd({ animated: true })} >
+        <View style={styles.chats}>
+          {chats.map((chat, i) => (chat.sender === doctor._id ?
+            <ChatItem key={i} chat={chat} doctor={doctor} icon={imgPath(doctor.icon)}></ChatItem>
+            :
+            <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''}></ChatItem>
+          ))
+          }
+        </View>
       </ ScrollView>
-        );
-        }
-        }
+    );
+  }
+}
 
 const styles = StyleSheet.create({
-          container: {
-          flex: 1,
+  container: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
-          fontSize: 20,
+    fontSize: 20,
     fontWeight: 'bold',
   },
   separator: {
-          marginVertical: 30,
+    marginVertical: 30,
     height: 1,
     width: '80%',
   },
   chats: {
-          // flex: 1,
-          flexDirection: 'column-reverse',
+    // flex: 1,
+    flexDirection: 'column-reverse',
   }
 });
