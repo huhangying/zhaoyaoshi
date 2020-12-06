@@ -66,8 +66,8 @@ export default function ChatScreen() {
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "position" : 'height'}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 96} >
-        <ScrollView ref={scrollViewRef} style={{ marginBottom: 56 }}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 96} >
+        <ScrollView ref={scrollViewRef} style={{ marginBottom: Platform.OS === "ios" ? 116 : 88 }}
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
@@ -79,17 +79,11 @@ export default function ChatScreen() {
           </View>
         </ ScrollView>
         <SafeAreaView style={styles.fixBottom}>
-
-          {/* <TextInput placeholder="请输入..."
+          <Input
+            placeholder="请输入..."
             style={styles.bottomInput}
             multiline={true}
-            // leftIcon={<View style={{ flex: 1, flexDirection: 'row'}}><Button title="登录"></Button><Text>ddd</Text></View>}
-          /> */}
-
-          <Input placeholder="请输入..."
-            style={styles.bottomInput}
-            multiline={true}
-            rightIcon={<Button title="发送" containerStyle={{marginRight: -12}} buttonStyle={{paddingRight: 14}} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}></Button>}
+            rightIcon={<Button title="发送" containerStyle={{ marginRight: -12 }} buttonStyle={{ paddingRight: 14 }} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}></Button>}
           />
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -27, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
@@ -98,12 +92,11 @@ export default function ChatScreen() {
               <Ionicons name="ios-image" size={28} color="#0095ff" style={styles.mr3}></Ionicons>
               <Ionicons name="ios-undo" size={28} color="#0095ff" ></Ionicons>
             </View>
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent:'center', backgroundColor: 'lightgray'}}>
-              <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16}} title="标识完成"></Button>
-              <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16}} title="返回付费咨询"></Button>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
+              <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16 }} title="标识完成"></Button>
+              <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16 }} title="返回付费咨询"></Button>
             </View>
           </View>
-
         </SafeAreaView>
       </KeyboardAvoidingView>
     );
@@ -119,11 +112,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
   },
   chats: {
     // flex: 1,
@@ -143,6 +131,6 @@ const styles = StyleSheet.create({
   },
   mr3: {
     marginRight: 22,
-  }
+  },
 
 });
