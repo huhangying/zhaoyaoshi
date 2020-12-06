@@ -15,15 +15,15 @@ export class AppStoreService extends Store<AppState> {
   // selectors
   get token() { return this.state?.token; }
   get doctor() { return this.state?.doctor; }
-  get chatNotifications() { return this.state?.chatNotifications; }
-  get feedbackNotifications() { return this.state?.feedbackNotifications; }
-  get consultNotifications() { return this.state?.consultNotifications; }
+  get chatNotifications() { return this.state?.chatNotifications || []; }
+  get feedbackNotifications() { return this.state?.feedbackNotifications || []; }
+  get consultNotifications() { return this.state?.consultNotifications || []; }
   // get token() { return this.state?.token || getToken(); }
   // get doctor() { return this.state?.doctor || getDoctor(); }
 
-  get loading() { return this.state?.loading; }
-  get errorMessage() { return this.state?.errorMessage; }
-  get hideBottomBar() { return this.state?.hideBottomBar; }
+  get loading() { return this.state?.loading || false; }
+  get errorMessage() { return this.state?.errorMessage || ''; }
+  get hideBottomBar() { return this.state?.hideBottomBar || false; }
 
   updateDoctor(doctor?: Doctor) {
     if (doctor) {

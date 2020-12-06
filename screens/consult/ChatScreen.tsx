@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
+import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
-import { Button } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 import { useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
@@ -14,6 +14,7 @@ import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
 import { imgPath } from '../../services/core/image.service';
 import { UpdateHideBottomBar } from '../../services/core/app-store.actions';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
@@ -24,7 +25,7 @@ export default function ChatScreen() {
   const [chats, setChats] = useState(initChats);
   const initUser: User = { _id: '' };
   const [user, setUser] = useState(initUser);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (doctor?._id) {
@@ -43,8 +44,12 @@ export default function ChatScreen() {
     }
 
     dispatch(UpdateHideBottomBar(true));
+    console.log('->');
+
 
     return () => {
+      console.log('<-');
+
       dispatch(UpdateHideBottomBar(false));
     }
   }, [doctor?._id, route.params?.pid, dispatch])
@@ -69,9 +74,22 @@ export default function ChatScreen() {
             }
           </View>
         </ ScrollView>
-        <View style={styles.fixBottom}>
-          <Text>dsfsd</Text>
-        </View>
+        <SafeAreaView style={styles.fixBottom}>
+
+          <Input placeholder="请输入..."
+            style={styles.bottomInput}
+            inputContainerStyle={{ marginVertical: 0, paddingVertical: 0 }}
+            containerStyle={{ marginVertical: 0, paddingVertical: 0 }}
+            inputStyle={{ marginVertical: 0, paddingVertical: 0 }}
+            multiline={true}
+            // leftIcon={<View style={{ flex: 1, flexDirection: 'row'}}><Button title="登录"></Button><Text>ddd</Text></View>}
+            rightIcon={{ type: 'ionicon', name: 'ios-paper-plane', color: '#2f95dc', size: 30 }}
+          />
+          <View style={{ flex: 1, flexDirection: 'row', marginTop: -20, backgroundColor: 'transparent' }}>
+            <Ionicons name="ios-notifications" size={24} color="turquoise"></Ionicons>
+            <Text>ddd</Text>
+          </View>
+        </SafeAreaView>
       </>
     );
   }
@@ -98,11 +116,14 @@ const styles = StyleSheet.create({
   },
   fixBottom: {
     position: 'absolute',
-    padding: 16,
     right: 0,
     left: 0,
     bottom: 0,
-    backgroundColor: 'lightblue'
+    backgroundColor: 'lightblue',
   },
+  bottomInput: {
+    paddingVertical: 0,
+    marginVertical: 0,
+  }
 
 });

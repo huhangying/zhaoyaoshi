@@ -151,7 +151,7 @@ export default function PatientAuditScreen() {
           {snackbarMessage}
         </Snackbar>
 
-        {visible &&
+        {!!visible &&
           <PatientDetails user={user} onClose={closePatientDetails} />
         }
 

@@ -15,7 +15,7 @@ export default function ChatItem({ chat, doctor, icon }: { chat: Chat, doctor: D
   return (
 
     <View style={chat.sender === doctor._id ? styles.alignRight : styles.alignLeft}>
-      {icon &&
+      {!!icon &&
         <Avatar
           containerStyle={styles.icon}
           rounded
@@ -26,7 +26,7 @@ export default function ChatItem({ chat, doctor, icon }: { chat: Chat, doctor: D
         {(() => {
           switch (chat.type) {
             case ChatType.picture:
-              return (
+              return (!!chat.data &&
                 <Image
                   source={{ uri: imgPath(chat.data) }}
                   style={{ width: 200, height: 200 }}

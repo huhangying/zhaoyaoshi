@@ -14,7 +14,7 @@ import PatientDetails from '../../components/PatientDetails';
 
 export default function RelationshipScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
-  // const initGroupedRelationship: GroupedRelationship = { user: { _id: '' }, relationships: [] };
+  // const initGroupedRelationship: GroupedRelationship[] = []; //{ user: { _id: '' }, relationships: [] };
   const [groupedRelationships, setGroupedRelationships] = useState([]);
   const initDoctorGroup: DoctorGroup = { _id: '', name: '' };
   const [doctorGroups, setDoctorGroups] = useState([initDoctorGroup])
@@ -91,7 +91,7 @@ export default function RelationshipScreen() {
       </ScrollView>
 
 
-      {visible &&
+      {!!visible &&
         <PatientDetails user={user} onClose={closePatientDetails} />
       }
     </>

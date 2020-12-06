@@ -5,7 +5,7 @@ import * as Config from './../constants/config';
 
 export const chatDataList = (text: string): string[] => {
   if (!text) return [''];
-  return text.split(/(\/:[\p{L}]{2}\s)/gu).filter(_ => _ !== '');
+  return text.split(/(\/:[\p{L}]{1,2}\s)/gu).filter(_ => _ !== ''); // {1,2}: 支持 /：微笑 /：酷
 }
 
 export const isEmoji = (text: string): boolean => {
@@ -13,6 +13,6 @@ export const isEmoji = (text: string): boolean => {
 }
 
 export const getEmojiPath = (text: string) => {
-  const code = qqface.textMap.indexOf(text.substr(2, 2)) + 1;
+  const code = qqface.textMap.indexOf(text.substr(2, text.length - 3)) + 1;
   return code ? `${Config.default.imageServer}/assets/qqface/${code}.gif` : '';
 }
