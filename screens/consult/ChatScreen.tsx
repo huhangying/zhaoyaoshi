@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../../components/Themed';
-import { Button, Input } from 'react-native-elements';
+import { BottomSheet, Button, Input, ListItem } from 'react-native-elements';
 import { useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
 import { Chat } from '../../models/io/chat.model';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getChatHistory } from '../../services/chat.service';
 import { tap } from 'rxjs/operators';
 import ChatItem from '../../components/ChatItem';
@@ -15,6 +15,7 @@ import { User } from '../../models/crm/user.model';
 import { imgPath } from '../../services/core/image.service';
 import { UpdateHideBottomBar } from '../../services/core/app-store.actions';
 import { Ionicons } from '@expo/vector-icons';
+import ShortcutBottomMenu from '../../components/chat/ShortcutsBottomMenu';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
@@ -26,6 +27,8 @@ export default function ChatScreen() {
   const initUser: User = { _id: '' };
   const [user, setUser] = useState(initUser);
   const dispatch = useDispatch();
+  const [isShortcutsMenuVisible, setIsShortcutsMenuVisible] = useState(false);
+  const [inputText, setInputText] = useState('')
 
   useEffect(() => {
     if (doctor?._id) {
@@ -56,6 +59,18 @@ export default function ChatScreen() {
     scrollViewRef?.current?.scrollToEnd({ animated: true });
   }
 
+  const onShortcutSelected = useCallback((shortcut) => {
+    if (shortcut) {
+      setInputText(inputText + shortcut);      
+    }
+    setIsShortcutsMenuVisible(false);
+  }, [inputText]);
+
+  const showShortcutsMenu = () => {
+    // shortcutsRef.current?.show();
+    setIsShortcutsMenuVisible(true);
+  };
+
   if (!doctor?._id || loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -81,6 +96,8 @@ export default function ChatScreen() {
         <SafeAreaView style={styles.fixBottom}>
           <Input
             placeholder="请输入..."
+            value={inputText}
+            onChangeText={setInputText}
             style={styles.bottomInput}
             multiline={true}
             rightIcon={<Button title="发送" containerStyle={{ marginRight: -12 }} buttonStyle={{ paddingRight: 14 }} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}></Button>}
@@ -90,7 +107,7 @@ export default function ChatScreen() {
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightgray' }}>
               <Ionicons name="ios-happy" size={28} color="#0095ff" style={styles.mr3} ></Ionicons>
               <Ionicons name="ios-image" size={28} color="#0095ff" style={styles.mr3}></Ionicons>
-              <Ionicons name="ios-undo" size={28} color="#0095ff" ></Ionicons>
+              <Ionicons name="ios-undo" size={28} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
               <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16 }} title="标识完成"></Button>
@@ -98,6 +115,8 @@ export default function ChatScreen() {
             </View>
           </View>
         </SafeAreaView>
+
+        <ShortcutBottomMenu shortcuts={doctor.shortcuts} isVisible={isShortcutsMenuVisible} onSelect={onShortcutSelected}></ShortcutBottomMenu>
       </KeyboardAvoidingView>
     );
   }
