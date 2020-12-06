@@ -21,6 +21,10 @@ export class AppStoreService extends Store<AppState> {
   // get token() { return this.state?.token || getToken(); }
   // get doctor() { return this.state?.doctor || getDoctor(); }
 
+  get loading() { return this.state?.loading; }
+  get errorMessage() { return this.state?.errorMessage; }
+  get hideBottomBar() { return this.state?.hideBottomBar; }
+
   updateDoctor(doctor?: Doctor) {
     if (doctor) {
       this.setState({
@@ -41,13 +45,6 @@ export class AppStoreService extends Store<AppState> {
     }
   }
 
-  updateLoading(loading: boolean) {
-    this.setState({
-      ...this.state,
-      loading,
-    });
-  }
-
   updateChatNotifications(chatNotifications: Notification[]) {
     this.setState({
       ...this.state,
@@ -66,6 +63,27 @@ export class AppStoreService extends Store<AppState> {
     this.setState({
       ...this.state,
       consultNotifications,
+    });
+  }
+
+  updateLoading(loading: boolean) {
+    this.setState({
+      ...this.state,
+      loading,
+    });
+  }
+
+  updateErrorMessage(errorMessage: string) {
+    this.setState({
+      ...this.state,
+      errorMessage,
+    });
+  }
+
+  updateHideBottomBar(hideBottomBar: boolean) {
+    this.setState({
+      ...this.state,
+      hideBottomBar,
     });
   }
 

@@ -7,9 +7,6 @@ export const appStoreInitialState = new AppState();
 
 export function appStoreReducer(state: AppState = appStoreInitialState, action: AppStoreAction): AppState {
   switch (action.type) {
-    case AppStoreActionType.UpdateLoading:
-      return { ...state, loading: action.payload };
-
     case AppStoreActionType.UpdateDoctor:
       setDoctor(action.payload);
       return { ...state, doctor: action.payload };
@@ -27,17 +24,26 @@ export function appStoreReducer(state: AppState = appStoreInitialState, action: 
     case AppStoreActionType.UpdateConsultNotifications:
       return { ...state, consultNotifications: action.payload };
 
+    case AppStoreActionType.UpdateLoading:
+      return { ...state, loading: action.payload };
+
+    case AppStoreActionType.UpdateErrorMessage:
+      return { ...state, errorMessage: action.payload };
+
+    case AppStoreActionType.UpdateHideBottomBar:
+      return { ...state, hideBottomBar: action.payload };
+
     case AppStoreActionType.Reset:
       // clear localstorage
       clearLocalStorage();
       return appStoreInitialState;
 
 
-      // case FOREGROUND:
-      //   return 'back to foreground';
-      // case BACKGROUND:
-      // case INACTIVE:
-      //   return 'inactive';
+    // case FOREGROUND:
+    //   return 'back to foreground';
+    // case BACKGROUND:
+    // case INACTIVE:
+    //   return 'inactive';
     default:
       return state
   }

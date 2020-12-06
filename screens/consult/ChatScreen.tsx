@@ -2,18 +2,18 @@ import * as React from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button } from 'react-native-elements';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { useSelector } from 'react-redux';
+import { useRoute } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
 import { Chat } from '../../models/io/chat.model';
 import { useEffect, useRef, useState } from 'react';
 import { getChatHistory } from '../../services/chat.service';
 import { tap } from 'rxjs/operators';
-import { List } from 'react-native-paper';
 import ChatItem from '../../components/ChatItem';
 import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
 import { imgPath } from '../../services/core/image.service';
+import { UpdateHideBottomBar } from '../../services/core/app-store.actions';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
@@ -24,6 +24,7 @@ export default function ChatScreen() {
   const [chats, setChats] = useState(initChats);
   const initUser: User = { _id: '' };
   const [user, setUser] = useState(initUser);
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (doctor?._id) {
@@ -40,9 +41,13 @@ export default function ChatScreen() {
         })
       ).subscribe();
     }
+
+    dispatch(UpdateHideBottomBar(true));
+
     return () => {
+      dispatch(UpdateHideBottomBar(false));
     }
-  }, [doctor?._id, route.params?.pid])
+  }, [doctor?._id, route.params?.pid, dispatch])
 
   if (!doctor?._id || loading) {
     return (
@@ -52,17 +57,22 @@ export default function ChatScreen() {
     );
   } else {
     return (
-      <ScrollView ref={scrollViewRef}
-        onContentSizeChange={() => scrollViewRef?.current?.scrollToEnd({ animated: true })} >
-        <View style={styles.chats}>
-          {chats.map((chat, i) => (chat.sender === doctor._id ?
-            <ChatItem key={i} chat={chat} doctor={doctor} icon={imgPath(doctor.icon)}></ChatItem>
-            :
-            <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''}></ChatItem>
-          ))
-          }
+      <>
+        <ScrollView ref={scrollViewRef} style={{ marginBottom: 50 }}
+          onContentSizeChange={() => scrollViewRef?.current?.scrollToEnd({ animated: true })} >
+          <View style={styles.chats}>
+            {chats.map((chat, i) => (chat.sender === doctor._id ?
+              <ChatItem key={i} chat={chat} doctor={doctor} icon={imgPath(doctor.icon)}></ChatItem>
+              :
+              <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''}></ChatItem>
+            ))
+            }
+          </View>
+        </ ScrollView>
+        <View style={styles.fixBottom}>
+          <Text>dsfsd</Text>
         </View>
-      </ ScrollView>
+      </>
     );
   }
 }
@@ -85,5 +95,14 @@ const styles = StyleSheet.create({
   chats: {
     // flex: 1,
     flexDirection: 'column-reverse',
-  }
+  },
+  fixBottom: {
+    position: 'absolute',
+    padding: 16,
+    right: 0,
+    left: 0,
+    bottom: 0,
+    backgroundColor: 'lightblue'
+  },
+
 });

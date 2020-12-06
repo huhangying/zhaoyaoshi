@@ -21,11 +21,9 @@ const Stack = createStackNavigator();
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
-  // const store = createStore(appStoreReducer);
+ 
   const store = useStore();
   const [auth, setAuth] = React.useState({} as Auth);
-  // const [appStore, setAppStore] = React.useState(appStoreInitialState);
-  // const [state, dispatch] = React.useReducer(appStoreReducer, appStoreInitialState);
   const dispatch = useDispatch();
 
   React.useEffect(() => {

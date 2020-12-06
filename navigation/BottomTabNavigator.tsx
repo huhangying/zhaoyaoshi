@@ -8,7 +8,7 @@ import TabConsultScreen from '../screens/TabConsultScreen';
 import TabSettingsScreen from '../screens/TabSettingsScreen';
 import TabPatientScreen from '../screens/TabPatientScreen';
 import TabFeedbackScreen from '../screens/TabFeedbackScreen';
-import { TabSettingsParamList, TabPatientParamList, TabFeedbackParamList } from '../models/types';
+import { TabSettingsParamList } from '../models/types';
 import ChatScreen from '../screens/consult/ChatScreen';
 import ConsultScreen from '../screens/consult/ConsultScreen';
 import ProfileScreen from '../screens/settings/ProfileScreen';
@@ -35,7 +35,7 @@ export default function BottomTabNavigator() {
       initialRouteName="consult"
       activeColor={Colors[colorScheme].tint}
       inactiveColor={Colors[colorScheme].text}
-      barStyle={{ backgroundColor: Colors[colorScheme].background }}  >
+      barStyle={{ backgroundColor: Colors[colorScheme].background, display: state.hideBottomBar ? 'none' : 'flex' }}  >
       <BottomTab.Screen
         name="consult"
         component={TabConsultNavigator}
@@ -89,7 +89,7 @@ function TabConsultNavigator() {
       <TabConsultStack.Screen
         name="TabConsult"
         component={TabConsultScreen}
-        options={{ headerTitle: '药师咨询'}}
+        options={{ headerTitle: '药师咨询' }}
       />
       <TabConsultStack.Screen
         name="ChatScreen"

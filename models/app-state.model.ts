@@ -7,8 +7,12 @@ export class AppState {
     public readonly token?: string,
 
     public readonly loading?: boolean,
+    public readonly errorMessage?: string,
+
     public readonly chatNotifications?: Notification[],
     public readonly feedbackNotifications?: Notification[],
     public readonly consultNotifications?: Notification[],
+
+    public readonly hideBottomBar?: boolean,
   ) { }
 }

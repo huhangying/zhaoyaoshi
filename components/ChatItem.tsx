@@ -76,14 +76,6 @@ const styles = StyleSheet.create({
     paddingTop: 6,
     paddingBottom: 0,
   },
-  fixBottom: {
-    position: 'absolute',
-    margin: 24,
-    right: 0,
-    left: 0,
-    bottom: 0,
-  },
-
   sender: {
     paddingTop: 10,
     paddingBottom: 4,

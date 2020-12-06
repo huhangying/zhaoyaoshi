@@ -4,11 +4,15 @@ import { Notification } from "../../models/io/notification.model";
 
 export enum AppStoreActionType {
   UpdateLoading,
+  UpdateErrorMessage,
+
   UpdateDoctor,
   UpdateToken,
   UpdateChatNotifications,
   UpdateFeedbackNotifications,
   UpdateConsultNotifications,
+
+  UpdateHideBottomBar,
   Reset,
 }
 
@@ -51,6 +55,28 @@ export const updateConsultNotifications = (consultNotifications: Notification[])
     payload: consultNotifications,
   }
 );
+
+export const UpdateLoading = (loading: boolean) => (
+  {
+    type: AppStoreActionType.UpdateLoading,
+    payload: loading,
+  }
+);
+
+export const UpdateErrorMessage = (errorMessage: string) => (
+  {
+    type: AppStoreActionType.UpdateErrorMessage,
+    payload: errorMessage,
+  }
+);
+
+export const UpdateHideBottomBar = (hideBottomBar: boolean) => (
+  {
+    type: AppStoreActionType.UpdateHideBottomBar,
+    payload: hideBottomBar,
+  }
+);
+
 export const resetStore = () => (
   {
     type: AppStoreActionType.Reset,
