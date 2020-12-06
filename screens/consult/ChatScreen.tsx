@@ -100,7 +100,7 @@ export default function ChatScreen() {
             onChangeText={setInputText}
             style={styles.bottomInput}
             multiline={true}
-            rightIcon={<Button title="发送" containerStyle={{ marginRight: -12 }} buttonStyle={{ paddingRight: 14 }} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}></Button>}
+            rightIcon={<Button title="发送" containerStyle={{ marginRight: -12 }} buttonStyle={{ paddingLeft: 4, paddingRight: 12 }} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}></Button>}
           />
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -27, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
