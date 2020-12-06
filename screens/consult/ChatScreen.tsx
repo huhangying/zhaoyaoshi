@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivityIndicator, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button, Input } from 'react-native-elements';
 import { useRoute } from '@react-navigation/native';
@@ -43,16 +43,18 @@ export default function ChatScreen() {
       ).subscribe();
     }
 
+    Keyboard.addListener("keyboardDidShow", scrollToEnd);
     dispatch(UpdateHideBottomBar(true));
-    console.log('->');
-
 
     return () => {
-      console.log('<-');
-
+      Keyboard.removeListener("keyboardDidShow", scrollToEnd);
       dispatch(UpdateHideBottomBar(false));
     }
   }, [doctor?._id, route.params?.pid, dispatch])
+
+  const scrollToEnd = () => {
+    scrollViewRef?.current?.scrollToEnd({ animated: true });
+  }
 
   if (!doctor?._id || loading) {
     return (
@@ -62,9 +64,11 @@ export default function ChatScreen() {
     );
   } else {
     return (
-      <>
-        <ScrollView ref={scrollViewRef} style={{ marginBottom: 50 }}
-          onContentSizeChange={() => scrollViewRef?.current?.scrollToEnd({ animated: true })} >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "position" : 'height'}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 96} >
+        <ScrollView ref={scrollViewRef} style={{ marginBottom: 56 }}
+          onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
               <ChatItem key={i} chat={chat} doctor={doctor} icon={imgPath(doctor.icon)}></ChatItem>
@@ -76,21 +80,32 @@ export default function ChatScreen() {
         </ ScrollView>
         <SafeAreaView style={styles.fixBottom}>
 
-          <Input placeholder="请输入..."
+          {/* <TextInput placeholder="请输入..."
             style={styles.bottomInput}
-            inputContainerStyle={{ marginVertical: 0, paddingVertical: 0 }}
-            containerStyle={{ marginVertical: 0, paddingVertical: 0 }}
-            inputStyle={{ marginVertical: 0, paddingVertical: 0 }}
             multiline={true}
             // leftIcon={<View style={{ flex: 1, flexDirection: 'row'}}><Button title="登录"></Button><Text>ddd</Text></View>}
-            rightIcon={{ type: 'ionicon', name: 'ios-paper-plane', color: '#2f95dc', size: 30 }}
+          /> */}
+
+          <Input placeholder="请输入..."
+            style={styles.bottomInput}
+            multiline={true}
+            rightIcon={<Button title="发送" containerStyle={{marginRight: -12}} buttonStyle={{paddingRight: 14}} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}></Button>}
           />
-          <View style={{ flex: 1, flexDirection: 'row', marginTop: -20, backgroundColor: 'transparent' }}>
-            <Ionicons name="ios-notifications" size={24} color="turquoise"></Ionicons>
-            <Text>ddd</Text>
+
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -27, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightgray' }}>
+              <Ionicons name="ios-happy" size={28} color="#0095ff" style={styles.mr3} ></Ionicons>
+              <Ionicons name="ios-image" size={28} color="#0095ff" style={styles.mr3}></Ionicons>
+              <Ionicons name="ios-undo" size={28} color="#0095ff" ></Ionicons>
+            </View>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent:'center', backgroundColor: 'lightgray'}}>
+              <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16}} title="标识完成"></Button>
+              <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16}} title="返回付费咨询"></Button>
+            </View>
           </View>
+
         </SafeAreaView>
-      </>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -119,11 +134,15 @@ const styles = StyleSheet.create({
     right: 0,
     left: 0,
     bottom: 0,
-    backgroundColor: 'lightblue',
+    backgroundColor: 'white',
+    paddingHorizontal: 0,
+    marginHorizontal: 0,
   },
   bottomInput: {
-    paddingVertical: 0,
-    marginVertical: 0,
+    paddingHorizontal: 2,
+  },
+  mr3: {
+    marginRight: 22,
   }
 
 });

@@ -35,7 +35,6 @@ export default function BottomTabNavigator() {
       initialRouteName="consult"
       activeColor={Colors[colorScheme].tint}
       inactiveColor={Colors[colorScheme].text}
-      // style={{display: state.hideBottomBar ? 'none' : 'flex'}}
       barStyle={{ backgroundColor: Colors[colorScheme].background, display: state.hideBottomBar ? 'none' : 'flex' }}  >
       <BottomTab.Screen
         name="consult"
