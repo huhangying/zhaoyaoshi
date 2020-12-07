@@ -2,7 +2,6 @@ import io from 'socket.io-client';
 import { Chat } from '../../models/io/chat.model';
 import { Notification, NotificationType } from '../../models/io/notification.model';
 const ENDPOINT = "http://timebox.i234.me:3000";
-import * as moment from 'moment';
 import { UserFeedback } from '../../models/io/user-feedback.model';
 import { Consult } from '../../models/consult/consult.model';
 import { AppStoreService } from './app-store.service';
@@ -40,7 +39,7 @@ export class SocketioService {
   sendChat(room: string, chat: Chat) {
     this.socket.emit('chat', room, {
       ...chat,
-      created: moment()
+      created: new Date()
     });
   }
 
@@ -99,7 +98,7 @@ export class SocketioService {
       if (index === -1) {
         notifications.push(noti);
       } else { // if existed
-        notifications[index].count += 1;
+        notifications[index].count = (notifications[index].count || 0) + 1;
         notifications[index].created = noti.created;
       }
     }

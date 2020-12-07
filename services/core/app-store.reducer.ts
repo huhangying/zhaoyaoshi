@@ -33,6 +33,9 @@ export function appStoreReducer(state: AppState = appStoreInitialState, action: 
     case AppStoreActionType.UpdateHideBottomBar:
       return { ...state, hideBottomBar: action.payload };
 
+    case AppStoreActionType.UpdateIoService:
+      return { ...state, ioService: action.payload };
+
     case AppStoreActionType.Reset:
       // clear localstorage
       clearLocalStorage();

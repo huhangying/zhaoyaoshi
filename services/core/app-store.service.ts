@@ -3,6 +3,7 @@ import { Doctor } from "../../models/crm/doctor.model";
 import { clearLocalStorage, setDoctor, setToken } from "./local.store";
 import { Store } from "./store";
 import { Notification } from "../../models/io/notification.model";
+import { SocketioService } from "./socketio.service";
 
 export class AppStoreService extends Store<AppState> {
   constructor(initState?: AppState) {
@@ -24,6 +25,7 @@ export class AppStoreService extends Store<AppState> {
   get loading() { return this.state?.loading || false; }
   get errorMessage() { return this.state?.errorMessage || ''; }
   get hideBottomBar() { return this.state?.hideBottomBar || false; }
+  get ioService() { return this.state?.ioService || null; }
 
   updateDoctor(doctor?: Doctor) {
     if (doctor) {
@@ -84,6 +86,13 @@ export class AppStoreService extends Store<AppState> {
     this.setState({
       ...this.state,
       hideBottomBar,
+    });
+  }
+
+  updateIoService(ioService: SocketioService) {
+    this.setState({
+      ...this.state,
+      ioService,
     });
   }
 

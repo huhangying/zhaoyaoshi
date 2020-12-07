@@ -12,15 +12,15 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
     if (noti) {
       switch (noti.type) {
         case NotificationType.chat:
-          navigate('ChatScreen', {pid: noti.patientId});
+          navigate('ChatScreen', { pid: noti.patientId, type: noti.type });
           break;
         case NotificationType.consultChat:
         case NotificationType.consultPhone:
-          navigate('ConsultScreen');
+          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type });
           break;
         case NotificationType.doseCombination:
         case NotificationType.adverseReaction:
-          navigate('FeedbackChatScreen', { type: noti.type });
+          navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type });
           break;
       }
       onClose(); // close noti modal
@@ -39,7 +39,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
           list.map((noti, i) => (
             <ListItem key={i} bottomDivider onPress={() => chatNavigate(noti)}>
               <ListItem.Content>
-          <ListItem.Title>{noti.patientId}{noti.name}发送了 {noti.count} 条新消息</ListItem.Title>
+                <ListItem.Title>{noti.patientId}{noti.name}发送了 {noti.count} 条新消息</ListItem.Title>
                 <ListItem.Content>
                   <Text style={[styles.textHint, styles.px3]}>发送于{moment(noti.created).format('YYYY年MM月DD日')}</Text>
                 </ListItem.Content>

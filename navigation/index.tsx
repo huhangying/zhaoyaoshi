@@ -14,7 +14,7 @@ import { Notification, NotificationType } from '../models/io/notification.model'
 import { tap } from 'rxjs/operators';
 import { connect, useStore } from 'react-redux';
 import { useDispatch } from 'react-redux'
-import { updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, updateToken } from '../services/core/app-store.actions';
+import { updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, UpdateIoService, updateToken } from '../services/core/app-store.actions';
 import { AppState } from "../models/app-state.model";
 
 const Stack = createStackNavigator();
@@ -36,6 +36,8 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
 
         // inital store data, only once
         const socketio = new SocketioService(_auth.doctor._id);
+        dispatch(UpdateIoService(socketio));
+
         socketio.getUnreadList(_auth.doctor._id).pipe(
           tap(({ chatNotifications, feedbackNotifications, consultNotifications }) => {
             dispatch(updateChatNotifications(chatNotifications));

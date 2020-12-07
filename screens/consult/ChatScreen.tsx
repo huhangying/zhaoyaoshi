@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
 import { Chat, ChatType } from '../../models/io/chat.model';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { getChatHistory } from '../../services/chat.service';
+import { getChatHistory, sendChat } from '../../services/chat.service';
 import { tap } from 'rxjs/operators';
 import ChatItem from '../../components/ChatItem';
 import { getUserDetailsById } from '../../services/user.service';
@@ -18,11 +18,13 @@ import { Ionicons } from '@expo/vector-icons';
 import ShortcutBottomMenu from '../../components/chat/ShortcutsBottomMenu';
 import EmojiMenu from '../../components/chat/emojiMenu';
 import { NotificationType } from '../../models/io/notification.model';
+// import { LogBox } from 'react-native';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
   const route = useRoute();
   const doctor = useSelector((state: AppState) => state.doctor);
+  const ioService = useSelector((state: AppState) => state.ioService);
   const [type, setType] = useState(NotificationType.chat);
   const [pid, setPid] = useState('');
   const [loading, setLoading] = useState(false);
@@ -89,7 +91,7 @@ export default function ChatScreen() {
     if (doctor) {
       setShowEmojis(false);
       switch (type) {
-        case NotificationType.chat: // NotificationType.customerService
+        case NotificationType.chat:
           sendChatMsg(data, isImg);
           break;
 
@@ -108,21 +110,25 @@ export default function ChatScreen() {
   }
 
   const sendChatMsg = (data: string, isImg = false) => {
-    const chat: Chat = {
-      sender: doctor?._id || '',
-      senderName: doctor?.name || '',
+    if (!doctor) {
+      return;
+    }
+    const chat = {
+      room: doctor._id,
+      sender: doctor._id || '',
+      senderName: doctor.name || '',
       to: pid,
       type: !isImg ? ChatType.text : ChatType.picture,
       data: data,
       cs: false// this.isCs
     };
     const _chats = [...chats];
-    _chats.push(chat);
+    _chats.unshift(chat);
     setChats(_chats);
+    // setChats([...chats, chat]);
 
-    // this.socketio.sendChat(this.room, chat);
-    // this.chatService.sendChat(chat).subscribe();
-
+    ioService?.sendChat(doctor._id, chat);
+    sendChat(chat).subscribe(); // chatService
   }
 
 

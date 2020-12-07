@@ -1,3 +1,4 @@
+import { SocketioService } from "../services/core/socketio.service";
 import { Doctor } from "./crm/doctor.model";
 import { Notification } from "./io/notification.model";
 
@@ -14,5 +15,6 @@ export class AppState {
     public readonly consultNotifications?: Notification[],
 
     public readonly hideBottomBar?: boolean,
+    public readonly ioService?: SocketioService,
   ) { }
 }

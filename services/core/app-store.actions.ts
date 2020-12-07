@@ -1,6 +1,7 @@
 import { AppState } from "../../models/app-state.model";
 import { Doctor } from "../../models/crm/doctor.model";
 import { Notification } from "../../models/io/notification.model";
+import { SocketioService } from "./socketio.service";
 
 export enum AppStoreActionType {
   UpdateLoading,
@@ -13,6 +14,7 @@ export enum AppStoreActionType {
   UpdateConsultNotifications,
 
   UpdateHideBottomBar,
+  UpdateIoService,
   Reset,
 }
 
@@ -74,6 +76,13 @@ export const UpdateHideBottomBar = (hideBottomBar: boolean) => (
   {
     type: AppStoreActionType.UpdateHideBottomBar,
     payload: hideBottomBar,
+  }
+);
+
+export const UpdateIoService = (ioService: SocketioService) => (
+  {
+    type: AppStoreActionType.UpdateIoService,
+    payload: ioService,
   }
 );
 
