@@ -21,7 +21,7 @@ const Stack = createStackNavigator();
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
 export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
- 
+
   const store = useStore();
   const [auth, setAuth] = React.useState({} as Auth);
   const dispatch = useDispatch();
@@ -76,22 +76,23 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   }, [store, dispatch]);
 
   return (
-      <NavigationContainer
-        linking={LinkingConfiguration}
-        theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {!auth?.isLoggedIn ?
-            (
-              <Stack.Screen name="SignIn" component={SignInScreen} />
-            )
-            :
-            (
-              <Stack.Screen name="Root" component={BottomTabNavigator} />
-            )
-          }
-          <Stack.Screen name="NotFound" component={NotFoundScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+    <NavigationContainer
+      linking={LinkingConfiguration}
+      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}>
+        {!auth?.isLoggedIn ?
+          (
+            <Stack.Screen name="SignIn" component={SignInScreen} />
+          )
+          :
+          (
+            <Stack.Screen name="Root" component={BottomTabNavigator} />
+          )
+        }
+        <Stack.Screen name="NotFound" component={NotFoundScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 const mapState = (state: AppState) => {

@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet } from 'react-native';
 import { BottomSheet, ListItem } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 
-
-export default function ShortcutBottomMenu({ shortcuts, isVisible, onSelect }: { shortcuts?: string, isVisible: boolean, onSelect: any }) {
-  const initShortcutList: string[] = [];
-  const [shortcutList, setShortcutList] = useState(initShortcutList);
+export default function ShortcutBottomMenu({ shortcuts, onSelect }: { shortcuts: string, onSelect: any }) {
 
   const cancelMenu = () => {
     onSelect('');
@@ -15,18 +12,8 @@ export default function ShortcutBottomMenu({ shortcuts, isVisible, onSelect }: {
     onSelect(shortcut);
   }
 
-  useEffect(() => {
-    if (!shortcuts) {
-      setShortcutList([]);
-    } else {
-      setShortcutList(shortcuts.split('|'));
-    }
-    return () => {
-    }
-  }, [shortcuts])
-
   return (
-    <BottomSheet modalProps={{}} isVisible={isVisible}>
+    <BottomSheet modalProps={{animationType: 'slide'}} isVisible={true}>
       {!shortcuts ? (
         <ListItem key="title" bottomDivider >
           <ListItem.Content>
@@ -40,7 +27,7 @@ export default function ShortcutBottomMenu({ shortcuts, isVisible, onSelect }: {
                 <ListItem.Title style={{ color: 'white' }}>请选择快捷回复</ListItem.Title>
               </ListItem.Content>
             </ListItem>
-            {shortcutList.map((l, i) => (
+            {shortcuts.split('|').map((l, i) => (
               <ListItem key={i} bottomDivider onPress={() => selectShortcut(l)}>
                 <ListItem.Content>
                   <ListItem.Title>{l}</ListItem.Title>

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { ActivityIndicator, Keyboard, KeyboardAvoidingView, KeyboardEventListener, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button, Input } from 'react-native-elements';
 import { useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
-import { Chat } from '../../models/io/chat.model';
+import { Chat, ChatType } from '../../models/io/chat.model';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getChatHistory } from '../../services/chat.service';
 import { tap } from 'rxjs/operators';
@@ -17,11 +17,14 @@ import { UpdateHideBottomBar } from '../../services/core/app-store.actions';
 import { Ionicons } from '@expo/vector-icons';
 import ShortcutBottomMenu from '../../components/chat/ShortcutsBottomMenu';
 import EmojiMenu from '../../components/chat/emojiMenu';
+import { NotificationType } from '../../models/io/notification.model';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
   const route = useRoute();
   const doctor = useSelector((state: AppState) => state.doctor);
+  const [type, setType] = useState(NotificationType.chat);
+  const [pid, setPid] = useState('');
   const [loading, setLoading] = useState(false);
   const initChats: Chat[] = [];
   const [chats, setChats] = useState(initChats);
@@ -31,11 +34,12 @@ export default function ChatScreen() {
   const [isShortcutsMenuVisible, setIsShortcutsMenuVisible] = useState(false);
   const [inputText, setInputText] = useState('')
   const [showEmojis, setShowEmojis] = useState(false)
-  const hideBottomBar = useSelector((state: AppState) => state.hideBottomBar);
 
   useEffect(() => {
     if (doctor?._id) {
       setLoading(true);
+      setType(route.params?.type);
+      setPid(route.params?.pid);
       getChatHistory(doctor._id, route.params?.pid).pipe(
         tap(_chats => {
           setChats(_chats);
@@ -50,18 +54,16 @@ export default function ChatScreen() {
     }
 
     Keyboard.addListener("keyboardDidShow", scrollToEnd);
-    // if (!hideBottomBar) {
     dispatch(UpdateHideBottomBar(true));
-    // }
 
     return () => {
       Keyboard.removeListener("keyboardDidShow", scrollToEnd);
       dispatch(UpdateHideBottomBar(false));
     }
-  }, [doctor?._id, route.params?.pid, dispatch])
+  }, [doctor, doctor?._id, route.params, dispatch])
 
   const scrollToEnd = () => {
-    scrollViewRef?.current?.scrollToEnd({ animated: true });
+    scrollViewRef.current?.scrollToEnd({ animated: true });
   }
 
   const onShortcutSelected = useCallback((shortcut) => {
@@ -82,6 +84,47 @@ export default function ChatScreen() {
   const toggleEmojis = () => {
     setShowEmojis(!showEmojis);
   }
+
+  const send = (data: string, isImg = false) => {
+    if (doctor) {
+      setShowEmojis(false);
+      switch (type) {
+        case NotificationType.chat: // NotificationType.customerService
+          sendChatMsg(data, isImg);
+          break;
+
+        // case NotificationType.adverseReaction:
+        // case NotificationType.doseCombination:
+        //   this.sendFeedback(imgPath);
+        //   break;
+
+        // case NotificationType.consultChat:
+        //   this.sendConsult(imgPath);
+        //   break;
+      }
+      setInputText('');
+      scrollToEnd();
+    }
+  }
+
+  const sendChatMsg = (data: string, isImg = false) => {
+    const chat: Chat = {
+      sender: doctor?._id || '',
+      senderName: doctor?.name || '',
+      to: pid,
+      type: !isImg ? ChatType.text : ChatType.picture,
+      data: data,
+      cs: false// this.isCs
+    };
+    const _chats = [...chats];
+    _chats.push(chat);
+    setChats(_chats);
+
+    // this.socketio.sendChat(this.room, chat);
+    // this.chatService.sendChat(chat).subscribe();
+
+  }
+
 
   if (!doctor?._id || loading) {
     return (
@@ -112,13 +155,16 @@ export default function ChatScreen() {
             onChangeText={setInputText}
             style={styles.bottomInput}
             multiline={true}
-            rightIcon={<Button title="发送" containerStyle={{ marginRight: -12 }} buttonStyle={{ paddingLeft: 4, paddingRight: 12 }} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}></Button>}
+            rightIcon={
+              <Button title="发送" containerStyle={{ marginRight: -12 }} buttonStyle={{ paddingLeft: 4, paddingRight: 10 }} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}
+                disabled={!inputText} onPress={() => send(inputText)}
+              />}
           />
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -27, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightgray' }}>
               <Ionicons name="ios-happy" size={28} color="#0095ff"
-                style={{marginRight: 22, color: !showEmojis ? '#0095ff' : 'orange'}} onPress={toggleEmojis}></Ionicons>
+                style={{ marginRight: 22, color: !showEmojis ? '#0095ff' : 'orange' }} onPress={toggleEmojis}></Ionicons>
               <Ionicons name="ios-image" size={28} color="#0095ff" style={styles.mr3}></Ionicons>
               <Ionicons name="ios-undo" size={28} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
             </View>
@@ -130,9 +176,11 @@ export default function ChatScreen() {
           {!!showEmojis &&
             <EmojiMenu onSelect={onEmojiSelected}></EmojiMenu>
           }
+          {!!isShortcutsMenuVisible &&
+            <ShortcutBottomMenu shortcuts={doctor.shortcuts || ''} onSelect={onShortcutSelected}></ShortcutBottomMenu>
+          }
         </SafeAreaView>
 
-        <ShortcutBottomMenu shortcuts={doctor.shortcuts} isVisible={isShortcutsMenuVisible} onSelect={onShortcutSelected}></ShortcutBottomMenu>
       </KeyboardAvoidingView>
     );
   }
