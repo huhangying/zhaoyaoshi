@@ -16,3 +16,7 @@ export const getEmojiPath = (text: string) => {
   const code = qqface.textMap.indexOf(text.substr(2, text.length - 3)) + 1;
   return code ? `${Config.default.imageServer}/assets/qqface/${code}.gif` : '';
 }
+
+export const getEmojiPathByCode = (code: number) => {
+  return code ? `${Config.default.imageServer}/assets/qqface/${code}.gif` : '';
+}
