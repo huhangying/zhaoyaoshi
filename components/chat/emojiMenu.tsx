@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import *  as qqface from 'wx-qqface';
 import { Image } from 'react-native-elements';
-import { getEmojiPathByCode } from '../ChatHelper';
+import { getEmojiPathByCode } from './ChatHelper';
 
 export default function EmojiMenu({ onSelect }: { onSelect: any }) {
   const qqfaces: number[] = qqface.codeMap;

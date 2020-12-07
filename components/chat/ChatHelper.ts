@@ -1,9 +1,8 @@
 import *  as qqface from 'wx-qqface';
-import * as Config from './../constants/config';
+import * as Config from '../../constants/config';
 
 // separate emoji and other text => list
-
-export const chatDataList = (text: string): string[] => {
+export const parseChatData = (text: string): string[] => {
   if (!text) return [''];
   return text.split(/(\/:[\p{L}]{1,2}\s)/gu).filter(_ => _ !== ''); // {1,2}: 支持 /：微笑 /：酷
 }
