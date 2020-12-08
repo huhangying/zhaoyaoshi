@@ -8,7 +8,7 @@ import { AppState } from '../../models/app-state.model';
 import { Chat, ChatType } from '../../models/io/chat.model';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getChatHistory, sendChat } from '../../services/chat.service';
-import { distinctUntilChanged, take, tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import ChatItem from '../../components/ChatItem';
 import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
@@ -19,6 +19,8 @@ import ShortcutBottomMenu from '../../components/chat/ShortcutsBottomMenu';
 import EmojiMenu from '../../components/chat/emojiMenu';
 import { NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
+import * as ImagePicker from 'expo-image-picker';
+import { Image } from 'react-native-elements';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
@@ -67,6 +69,15 @@ export default function ChatScreen() {
         })
       ).subscribe();
     }
+
+    (async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Sorry, we need camera roll permissions to make this work!');
+        }
+      }
+    })();
 
     Keyboard.addListener("keyboardDidShow", scrollToEnd);
     dispatch(UpdateHideBottomBar(true));
@@ -143,10 +154,29 @@ export default function ChatScreen() {
     ioService?.sendChat(doctor._id, chat);
     sendChat(chat).subscribe(); // chatService
   }
+  const [image, setImage] = useState(null);
+  const pickImage = async () => {
+    // const result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: true,
+    //   aspect: [4, 3],
+    //   quality: 1,
+    // });
 
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.7,
+    });
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
 
   if (!doctor?._id || loading) {
-    return (<Spinner/>);
+    return <Spinner />;
   } else {
     return (
       <KeyboardAvoidingView
@@ -162,6 +192,9 @@ export default function ChatScreen() {
             ))
             }
           </View>
+          <>{image &&
+            <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+          }</>
         </ ScrollView>
         <SafeAreaView style={styles.fixBottom}>
           <Input
@@ -180,7 +213,7 @@ export default function ChatScreen() {
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightgray' }}>
               <Ionicons name="ios-happy" size={28} color="#0095ff"
                 style={{ marginRight: 22, color: !showEmojis ? '#0095ff' : 'orange' }} onPress={toggleEmojis}></Ionicons>
-              <Ionicons name="ios-image" size={28} color="#0095ff" style={styles.mr3}></Ionicons>
+              <Ionicons name="ios-image" size={28} color="#0095ff" style={styles.mr3} onPress={pickImage}></Ionicons>
               <Ionicons name="ios-undo" size={28} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
