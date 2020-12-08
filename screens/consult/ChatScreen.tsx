@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivityIndicator, Keyboard, KeyboardAvoidingView, KeyboardEventListener, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button, Input } from 'react-native-elements';
 import { useRoute } from '@react-navigation/native';
@@ -18,6 +18,7 @@ import { Ionicons } from '@expo/vector-icons';
 import ShortcutBottomMenu from '../../components/chat/ShortcutsBottomMenu';
 import EmojiMenu from '../../components/chat/emojiMenu';
 import { NotificationType } from '../../models/io/notification.model';
+import Spinner from '../../components/shared/Spinner';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
@@ -145,11 +146,7 @@ export default function ChatScreen() {
 
 
   if (!doctor?._id || loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <KeyboardAvoidingView

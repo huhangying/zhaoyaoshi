@@ -1,8 +1,6 @@
 import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { ActivityIndicator, Modal, StyleSheet } from 'react-native';
-
-import { View } from '../components/Themed';
+import { Modal, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { Badge, ListItem } from 'react-native-elements';
@@ -10,6 +8,7 @@ import { Fontisto, Ionicons } from '@expo/vector-icons';
 import { Text, Caption } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification, NotificationType } from '../models/io/notification.model';
+import Spinner from '../components/shared/Spinner';
 
 export default function TabFeedbackScreen() {
   const { navigate } = useNavigation();
@@ -37,11 +36,7 @@ export default function TabFeedbackScreen() {
 
 
   if (!store?.doctor) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <>

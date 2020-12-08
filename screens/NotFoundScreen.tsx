@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import Spinner from '../components/shared/Spinner';
 import { getAuthState } from '../services/core/auth';
 
 export default function NotFoundScreen() {
@@ -19,9 +19,5 @@ export default function NotFoundScreen() {
     return () => {
     }
   }, [navigation])
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <ActivityIndicator size="large" />
-    </View>
-  );
+  return (<Spinner/>);
 }

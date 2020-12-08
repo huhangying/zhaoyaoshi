@@ -2,10 +2,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Caption } from 'react-native-paper';
 import { useSelector } from 'react-redux';
+import Spinner from '../components/shared/Spinner';
 import { Text, View } from '../components/Themed';
 import { AppState } from '../models/app-state.model';
 import { getUserCountByDoctorId } from '../services/user.service';
@@ -26,11 +27,7 @@ export default function TabPatientScreen() {
   }, [doctor?._id])
 
   if (!doctor) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <>

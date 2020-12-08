@@ -1,17 +1,16 @@
 import * as React from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Card, Divider } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import { ScrollView, StyleSheet } from 'react-native';
+import { Avatar, Card } from 'react-native-elements';
 import { imgPath } from '../../services/core/image.service';
 import { useEffect } from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
-import { Text, View } from '../../components/Themed';
+import { useSelector, useStore } from 'react-redux';
+import { Text } from '../../components/Themed';
 import { AppState } from '../../models/app-state.model';
 import { DataTable } from 'react-native-paper';
 import { getRoleLabel } from '../../services/doctor.service';
+import Spinner from '../../components/shared/Spinner';
 
 export default function ProfileScreen() {
-  const navigation = useNavigation();
   const doctor = useSelector((state: AppState) => state.doctor);
 
   useEffect(() => {
@@ -20,11 +19,7 @@ export default function ProfileScreen() {
   }, [])
 
   if (!doctor) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <ScrollView>

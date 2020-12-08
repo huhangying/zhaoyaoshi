@@ -1,23 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Avatar, Divider, ListItem } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { logout } from '../services/core/auth';
 import { imgPath } from '../services/core/image.service';
 import { Text } from 'react-native-paper';
+import Spinner from '../components/shared/Spinner';
 
 export default function TabSettingsScreen() {
   const { navigate } = useNavigation();
   const doctor = useSelector((state: AppState) => state.doctor);
   if (!doctor) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <>

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Text } from '../../components/Themed';
@@ -12,6 +12,7 @@ import { Relationship } from '../../models/crm/relationship.model';
 import moment from 'moment';
 import { updateRoleById } from '../../services/user.service';
 import PatientDetails from '../../components/PatientDetails';
+import Spinner from '../../components/shared/Spinner';
 
 export default function PatientAuditScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -87,11 +88,7 @@ export default function PatientAuditScreen() {
   }
 
   if (!doctor?._id || loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <>

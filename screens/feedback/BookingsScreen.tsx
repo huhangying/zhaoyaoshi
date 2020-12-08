@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
@@ -11,6 +11,7 @@ import moment from 'moment';
 import { Booking } from '../../models/reservation/booking.model';
 import { Period } from '../../models/reservation/schedule.model';
 import { forkJoin } from 'rxjs';
+import Spinner from '../../components/shared/Spinner';
 
 export default function BookingsScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -58,11 +59,7 @@ export default function BookingsScreen() {
   }
 
   if (!doctor?._id || loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <>

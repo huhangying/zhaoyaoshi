@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { User } from '../models/crm/user.model';
 import { Text, View } from './Themed';
 import { Button, Dialog, Divider } from 'react-native-paper';
 import { wxImgPath } from '../services/core/image.service';
 import { Avatar } from 'react-native-elements';
+import Spinner from './shared/Spinner';
 
 export default function PatientDetails({ user, onClose }: { user: User, onClose: any }) {
 
@@ -15,11 +16,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
   }, [user])
 
   if (!user?._id) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <Dialog visible={true} onDismiss={onClose}>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { ActivityIndicator, Modal, StyleSheet } from 'react-native';
+import { Modal, StyleSheet } from 'react-native';
 
 import { View } from '../components/Themed';
 import { useSelector } from 'react-redux';
@@ -11,6 +11,7 @@ import { Text, Caption } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification } from '../models/io/notification.model';
 import { getUnreadCount } from '../services/notification.service';
+import Spinner from '../components/shared/Spinner';
 
 export default function TabConsultScreen() {
   const { navigate } = useNavigation();
@@ -31,11 +32,7 @@ export default function TabConsultScreen() {
   }
 
   if (!doctor) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
+    return (<Spinner/>);
   } else {
     return (
       <>
