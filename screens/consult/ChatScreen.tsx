@@ -8,7 +8,7 @@ import { AppState } from '../../models/app-state.model';
 import { Chat, ChatType } from '../../models/io/chat.model';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { getChatHistory, sendChat } from '../../services/chat.service';
-import { tap } from 'rxjs/operators';
+import { distinctUntilChanged, take, tap } from 'rxjs/operators';
 import ChatItem from '../../components/ChatItem';
 import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
@@ -18,7 +18,6 @@ import { Ionicons } from '@expo/vector-icons';
 import ShortcutBottomMenu from '../../components/chat/ShortcutsBottomMenu';
 import EmojiMenu from '../../components/chat/emojiMenu';
 import { NotificationType } from '../../models/io/notification.model';
-// import { LogBox } from 'react-native';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
@@ -37,18 +36,31 @@ export default function ChatScreen() {
   const [inputText, setInputText] = useState('')
   const [showEmojis, setShowEmojis] = useState(false)
 
+  // 监听呼入消息
+  const start = ioService?.onChat((msg: Chat) => {
+    if (msg.sender === pid) {
+      const _chats = [...chats];
+      _chats.unshift(msg);
+      setChats(_chats);
+      scrollToEnd();
+    }
+  });
+
   useEffect(() => {
+    const pid = route.params?.pid;
     if (doctor?._id) {
       setLoading(true);
       setType(route.params?.type);
-      setPid(route.params?.pid);
-      getChatHistory(doctor._id, route.params?.pid).pipe(
+      setPid(pid);
+      getChatHistory(doctor._id, pid).pipe(
+        take(1),
         tap(_chats => {
           setChats(_chats);
           setLoading(false);
         })
       ).subscribe();
-      getUserDetailsById(route.params?.pid).pipe(
+      getUserDetailsById(pid).pipe(
+        take(1),
         tap(_user => {
           setUser(_user);
         })
@@ -62,7 +74,7 @@ export default function ChatScreen() {
       Keyboard.removeListener("keyboardDidShow", scrollToEnd);
       dispatch(UpdateHideBottomBar(false));
     }
-  }, [doctor, doctor?._id, route.params, dispatch])
+  }, [doctor, doctor?._id, route.params?.pid, route.params?.type, dispatch, start]);
 
   const scrollToEnd = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
