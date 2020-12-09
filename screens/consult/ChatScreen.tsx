@@ -157,13 +157,19 @@ export default function ChatScreen() {
   }
   const [image, setImage] = useState(null);
   const pickImage = async () => {
-    // const result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
+  const pickCamera = async () => {
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -175,6 +181,7 @@ export default function ChatScreen() {
       setImage(result.uri);
     }
   };
+  
 
   const [isOpenViewer, setIsOpenViewer] = useState(false);
   const [viewerImg, setViewerImg] = useState('');
@@ -205,7 +212,8 @@ export default function ChatScreen() {
             }
           </View>
           <>{!!image &&
-            <Image source={{ uri: image || '' }} style={{ width: 200, height: 200 }} />
+            <Image source={{ uri: image || '' }} style={{ width: 200, height: 200 }} 
+            onPress={() => openViewer(image || '')} />
           }</>
         </ ScrollView>
         <SafeAreaView style={styles.fixBottom}>
@@ -223,10 +231,11 @@ export default function ChatScreen() {
 
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -27, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightgray' }}>
-              <Ionicons name="ios-happy" size={28} color="#0095ff"
+              <Ionicons name="ios-happy" size={26} color="#0095ff"
                 style={{ marginRight: 22, color: !showEmojis ? '#0095ff' : 'orange' }} onPress={toggleEmojis}></Ionicons>
-              <Ionicons name="ios-image" size={28} color="#0095ff" style={styles.mr3} onPress={pickImage}></Ionicons>
-              <Ionicons name="ios-undo" size={28} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
+              <Ionicons name="ios-image" size={26} color="#0095ff" style={styles.mr3} onPress={pickImage}></Ionicons>
+              <Ionicons name="ios-camera" size={26} color="#0095ff" style={styles.mr3} onPress={pickCamera}></Ionicons>
+              <Ionicons name="ios-undo" size={26} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
             </View>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
               <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16 }} title="标识完成"></Button>
