@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Text, View } from './Themed';
 import 'moment/locale/zh-cn'
 import moment from 'moment';
@@ -10,10 +10,9 @@ import { imgPath } from '../services/core/image.service';
 import { parseChatData, isEmoji, getEmojiPath } from './chat/ChatHelper';
 moment.locale('zh-cn');
 
-export default function ChatItem({ chat, doctor, icon }: { chat: Chat, doctor: Doctor, icon: string }) {
+export default function ChatItem({ chat, doctor, icon, onImgView }: { chat: Chat, doctor: Doctor, icon: string, onImgView: any }) {
 
   return (
-
     <View style={chat.sender === doctor._id ? styles.alignRight : styles.alignLeft}>
       {!!icon &&
         <Avatar
@@ -30,7 +29,9 @@ export default function ChatItem({ chat, doctor, icon }: { chat: Chat, doctor: D
                 <Image
                   source={{ uri: imgPath(chat.data) }}
                   style={{ width: 200, height: 200 }}
-                />)
+                  onPress={() => onImgView(chat.data ? imgPath(chat.data) : '')}
+                />
+              )
             case ChatType.text:
               return (
                 <View style={{ flex: 1, flexDirection: 'row', backgroundColor: 'transparent' }}>

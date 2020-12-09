@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button, Input } from 'react-native-elements';
 import { useRoute } from '@react-navigation/native';
@@ -21,6 +21,7 @@ import { NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'react-native-elements';
+import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
@@ -175,6 +176,17 @@ export default function ChatScreen() {
     }
   };
 
+  const [isOpenViewer, setIsOpenViewer] = useState(false);
+  const [viewerImg, setViewerImg] = useState('');
+  const openViewer = useCallback((img: string) => {
+    setIsOpenViewer(true);
+    setViewerImg(img);
+  }, []);
+  const closeViewer = () => {
+    setIsOpenViewer(false);
+    setViewerImg('');
+  }
+
   if (!doctor?._id || loading) {
     return <Spinner />;
   } else {
@@ -186,14 +198,14 @@ export default function ChatScreen() {
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
-              <ChatItem key={i} chat={chat} doctor={doctor} icon={imgPath(doctor.icon)}></ChatItem>
+              <ChatItem key={i} chat={chat} doctor={doctor} icon={imgPath(doctor.icon)} onImgView={openViewer} ></ChatItem>
               :
-              <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''}></ChatItem>
+              <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></ChatItem>
             ))
             }
           </View>
-          <>{image &&
-            <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />
+          <>{!!image &&
+            <Image source={{ uri: image || '' }} style={{ width: 200, height: 200 }} />
           }</>
         </ ScrollView>
         <SafeAreaView style={styles.fixBottom}>
@@ -227,6 +239,7 @@ export default function ChatScreen() {
           {!!isShortcutsMenuVisible &&
             <ShortcutBottomMenu shortcuts={doctor.shortcuts || ''} onSelect={onShortcutSelected}></ShortcutBottomMenu>
           }
+          <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
         </SafeAreaView>
 
       </KeyboardAvoidingView>

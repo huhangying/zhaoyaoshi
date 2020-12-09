@@ -16,7 +16,7 @@ export default function App() {
   const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
-    return (<Spinner/>);
+    return (<Spinner />);
   } else {
     return (
       <Provider store={store}>
