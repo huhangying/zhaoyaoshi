@@ -12,7 +12,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
     if (noti) {
       switch (noti.type) {
         case NotificationType.chat:
-          navigate('ChatScreen', { pid: noti.patientId, type: noti.type });
+          navigate('ChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '免费咨询' });
           break;
         case NotificationType.consultChat:
         case NotificationType.consultPhone:

@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button, Input } from 'react-native-elements';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
 import { Chat, ChatType } from '../../models/io/chat.model';
@@ -39,6 +39,7 @@ export default function ChatScreen() {
   const [isShortcutsMenuVisible, setIsShortcutsMenuVisible] = useState(false);
   const [inputText, setInputText] = useState('')
   const [showEmojis, setShowEmojis] = useState(false)
+  const navigation = useNavigation();
 
   // 监听呼入消息
   const start = ioService?.onChat((msg: Chat) => {
@@ -52,6 +53,8 @@ export default function ChatScreen() {
 
   useEffect(() => {
     const pid = route.params?.pid;
+    const title = route.params?.title;
+    navigation.setOptions({headerTitle: title});
     if (doctor?._id) {
       setLoading(true);
       setType(route.params?.type);
