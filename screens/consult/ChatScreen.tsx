@@ -75,7 +75,11 @@ export default function ChatScreen() {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
         if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
+          alert('您禁止使用本地图片功能');
+        }
+        const permission = await ImagePicker.requestCameraPermissionsAsync();
+        if (permission.status !== 'granted') {
+          alert('您禁止使用照相机功能');
         }
       }
     })();
