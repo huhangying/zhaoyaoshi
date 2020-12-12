@@ -25,8 +25,8 @@ export const getAuthState = () => {
 }
 
 export const refreshPage = () => {
-  window.location.reload();
-  // RNRestart.Restart();
+  // window.location.reload();
+  RNRestart.Restart();
 }
 
 export function logout() {

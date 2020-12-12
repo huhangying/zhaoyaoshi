@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
+import { Dimensions, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button, Input } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -26,6 +26,7 @@ import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 export default function ChatScreen() {
   const scrollViewRef = useRef();
   const route = useRoute();
+  const dimensions = useWindowDimensions();
   const doctor = useSelector((state: AppState) => state.doctor);
   const ioService = useSelector((state: AppState) => state.ioService);
   const [type, setType] = useState(NotificationType.chat);
@@ -94,7 +95,7 @@ export default function ChatScreen() {
       Keyboard.removeListener("keyboardDidShow", scrollToEnd);
       dispatch(UpdateHideBottomBar(false));
     }
-  }, [doctor, doctor?._id, route.params?.pid, route.params?.type, dispatch, start]);
+  }, [doctor, doctor?._id, route.params?.pid, route.params?.type, route.params?.title, navigation, dispatch, start]);
 
   const scrollToEnd = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
@@ -205,10 +206,10 @@ export default function ChatScreen() {
     return <Spinner />;
   } else {
     return (
-      <KeyboardAvoidingView
+      <KeyboardAvoidingView style={{flex: 1}}
         behavior={Platform.OS === "ios" ? "position" : 'height'}
         keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 96} >
-        <ScrollView ref={scrollViewRef} style={{ marginBottom: Platform.OS === "ios" ? 116 : 88 }}
+        <ScrollView ref={scrollViewRef} style={{ marginBottom: Platform.OS === "ios" ? 116 : 88, minHeight: dimensions.height-190 }}
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
@@ -236,7 +237,7 @@ export default function ChatScreen() {
               />}
           />
 
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -27, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -28, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
             <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightgray' }}>
               <Ionicons name="ios-happy" size={26} color="#0095ff"
                 style={{ marginRight: 22, color: !showEmojis ? '#0095ff' : 'orange' }} onPress={toggleEmojis}></Ionicons>
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   chats: {
-    // flex: 1,
+    flex: 1,
     flexDirection: 'column-reverse',
   },
   fixBottom: {

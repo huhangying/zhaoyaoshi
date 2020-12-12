@@ -19,7 +19,7 @@ export function updateDoctorShortcuts(did: string, shortcuts: string) {
 
 
 export function doctorLogin(user_id: string, password: string) {
-  return patchApi<Doctor>('app-login/doctor', { user_id, password, hid: 2 });
+  return patchApi<Doctor>('app-login/doctor', { user_id, password, hid: 3 });
 }
 
 // use for populating groups in relationships
