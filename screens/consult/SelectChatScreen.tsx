@@ -22,11 +22,6 @@ export default function SelectChatScreen() {
 
   return (
     <>
-      {/* <Header
-        leftComponent={{ icon: 'menu', color: '#fff' }}
-        centerComponent={{ text: 'select chat', style: { color: '#fff' } }}
-        rightComponent={{ icon: 'home', color: '#fff' }}
-      /> */}
       <SelectPatient doctorId={doctor?._id} onSelect={onSelectPatient}></SelectPatient>
     </>
   );

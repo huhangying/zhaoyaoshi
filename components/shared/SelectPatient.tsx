@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Text } from '../../components/Themed';
 import { getDoctorGroups, getPatientGroupedRelationships } from '../../services/doctor.service';
 import { GroupedRelationship, Relationship } from '../../models/crm/relationship.model';
 import { tap } from 'rxjs/operators';
-import { AppState } from '../../models/app-state.model';
 import { List } from 'react-native-paper';
 import { DoctorGroup } from '../../models/crm/doctor-group.model';
-import { User } from '../../models/crm/user.model';
 
 export default function SelectPatient({ doctorId, onSelect }: { doctorId?: string, onSelect: any }) {
   const [groupedRelationships, setGroupedRelationships] = useState([]);
@@ -52,8 +49,6 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
     return data;
   }
 
-  const [user, setUser] = useState({ _id: '' })
-
   const [expandId, setExpandId] = React.useState(-1);
   const handlePress = (i: number, group: DoctorGroup) => {
     if (expandId !== i) {
@@ -67,7 +62,7 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
 
   return (
     <>
-      <Text style={styles.m3}>用户群组</Text>
+      <Text style={styles.m3}>从用户群组中选择</Text>
       <ScrollView ref={scrollViewRef}>
         {doctorGroups.map((group: DoctorGroup, i) => (
           <List.Accordion
