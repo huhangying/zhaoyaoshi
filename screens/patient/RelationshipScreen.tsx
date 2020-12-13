@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Text } from '../../components/Themed';
 import { getDoctorGroups, getPatientGroupedRelationships } from '../../services/doctor.service';
@@ -17,7 +17,10 @@ export default function RelationshipScreen() {
   // const initGroupedRelationship: GroupedRelationship[] = []; //{ user: { _id: '' }, relationships: [] };
   const [groupedRelationships, setGroupedRelationships] = useState([]);
   const initDoctorGroup: DoctorGroup = { _id: '', name: '' };
-  const [doctorGroups, setDoctorGroups] = useState([initDoctorGroup])
+  const [doctorGroups, setDoctorGroups] = useState([initDoctorGroup]);
+  const scrollViewRef = useRef();
+  const initRrelationshipList: Relationship[] = [];
+  const [relationshipList, setRrelationshipList] = useState(initRrelationshipList)
 
   useEffect(() => {
     if (doctor?._id) {
@@ -63,12 +66,20 @@ export default function RelationshipScreen() {
   }
 
   const [expandId, setExpandId] = React.useState(-1);
-  const handlePress = (i: number) => setExpandId(i);
+  const handlePress = (i: number, group: DoctorGroup) => {
+    if (expandId !== i) {
+      setExpandId(i);
+    } else {
+      setExpandId(-1);
+    }
+    setRrelationshipList(loadData(group._id));
+    scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
+  }
 
   return (
     <>
       <Text style={styles.m3}>用户群组</Text>
-      <ScrollView>
+      <ScrollView ref={scrollViewRef}>
         {doctorGroups.map((group: DoctorGroup, i) => (
           <List.Accordion
             style={styles.group}
@@ -76,14 +87,18 @@ export default function RelationshipScreen() {
             title={group.name}
             id={i} key={i}
             expanded={i === expandId}
-            onPress={() => handlePress(i)}>
+            onPress={() => handlePress(i, group)}>
 
-            {loadData(group._id).map((relationship: Relationship, k) => (
-              <TouchableOpacity key={`${i}-${k}`} onPress={() => openPatientDetails(relationship.user)} style={styles.item}>
-                <List.Item
-                  title={relationship.user?.name} />
-              </TouchableOpacity>
-            ))
+            {relationshipList?.length ? (
+              relationshipList.map((relationship: Relationship, k) => (
+                <TouchableOpacity key={`${i}-${k}`} onPress={() => openPatientDetails(relationship.user)} style={styles.item}>
+                  <List.Item
+                    title={relationship.user?.name} />
+                </TouchableOpacity>
+              ))
+            ) : (
+                <Text style={{backgroundColor: 'lightyellow', paddingTop: 14, paddingBottom: 16, color: 'gray' }}>没有数据</Text>
+              )
             }
           </List.Accordion>
         ))
@@ -109,7 +124,9 @@ const styles = StyleSheet.create({
   },
   group: {
     backgroundColor: 'lightskyblue',
-    marginBottom: 1,
+    marginVertical: 1,
+    paddingVertical: 0,
+    marginHorizontal: 6,
   },
   item: {
     backgroundColor: 'ivory',
