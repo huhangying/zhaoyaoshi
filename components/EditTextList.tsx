@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Button, Dialog, Divider, FAB, Paragraph, TextInput } from 'react-native-paper';
 
@@ -42,7 +42,7 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
 
       default:
         break;
-    }    
+    }
     onListSave(list);
     setVisible(false);
   }
@@ -51,7 +51,7 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
     <>
       <ScrollView>
         {
-          list.map((l, i) => (
+          list.map((l, i) => (l ? (
             <ListItem key={i} bottomDivider containerStyle={i === selectIndex ? styles.highlight : styles.normal}>
               <ListItem.Content>
                 <ListItem.Title>{l}</ListItem.Title>
@@ -59,11 +59,13 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
               <ListItem.Chevron type='ionicon' name="ios-create" size={24} color="royalblue" style={styles.mr2} onPress={() => openSelect(l, i)} />
               <ListItem.Chevron type='ionicon' name="ios-trash" size={24} color="tomato" style={styles.mr2} onPress={() => deleteConfirm(l, i)} />
             </ListItem>
+          ) :
+            (<Text style={{paddingHorizontal: 20, paddingBottom: 10, color: 'gray'}}> 请点击 + 增加快捷回复。</Text>)
           ))
         }
       </ScrollView>
 
-      <Dialog visible={visible} style={{marginBottom: 136}}>
+      <Dialog visible={visible} style={{  position: 'absolute', top: 100, right: 0, left: 0, marginBottom: 136 }}>
         <Dialog.Title>{action === 'delete' ? '确认删除' :
           (action === 'add' ? '新增' : '编辑')}</Dialog.Title>
         <Divider></Divider>
