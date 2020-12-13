@@ -20,7 +20,6 @@ import EmojiMenu from '../../components/chat/emojiMenu';
 import { NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
 import * as ImagePicker from 'expo-image-picker';
-import { Image } from 'react-native-elements';
 import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 import { createBlobFormData, uploadDoctorDir } from '../../services/core/upload.service';
 

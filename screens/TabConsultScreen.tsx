@@ -37,7 +37,7 @@ export default function TabConsultScreen() {
     return (
       <>
         <Text> </Text>
-        <ListItem key={0} bottomDivider onPress={() => navigate('BookingsScreen')}>
+        <ListItem key={0} bottomDivider onPress={() => navigate('SelectChatScreen')}>
           <Ionicons name="ios-chatbubbles" size={24} color="limegreen" />
           <ListItem.Content>
             <ListItem.Title>在线咨询</ListItem.Title>

@@ -10,6 +10,8 @@ export default {
             screens: {
               TabConsultScreen: 'consult',
               ConsultChatScreen: 'consult-chat',
+              ChatScreen: 'chat',
+              SelectChatScreen: 'select-chat',
             },
           },                      
           TabFeedback: {

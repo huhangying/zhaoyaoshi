@@ -23,6 +23,7 @@ import AboutScreen from '../screens/settings/AboutScreen';
 import RelationshipScreen from '../screens/patient/RelationshipScreen';
 import PatientAuditScreen from '../screens/patient/PatientAuditScreen';
 import FeedbackChatScreen from '../screens/feedback/FeedbackChatScreen';
+import SelectChatScreen from '../screens/consult/SelectChatScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -90,6 +91,11 @@ function TabConsultNavigator() {
         name="TabConsult"
         component={TabConsultScreen}
         options={{ headerTitle: '药师咨询' }}
+      />
+      <TabConsultStack.Screen
+        name="SelectChatScreen"
+        component={SelectChatScreen}
+        options={{ headerTitle: '药师咨询 - 病患选择' }}
       />
       <TabConsultStack.Screen
         name="ChatScreen"
