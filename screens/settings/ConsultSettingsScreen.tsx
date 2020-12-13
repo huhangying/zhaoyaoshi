@@ -27,7 +27,7 @@ export default function ConsultSettingsScreen() {
 
     return () => {
     }
-  }, [doctor])
+  }, [doctor?.prices])
 
   // Tags
   const [tagsVisible, setTagsVisible] = useState(false);
@@ -85,8 +85,8 @@ export default function ConsultSettingsScreen() {
         }
       </Card>
 
-      {doctor?.prices?.length &&
-        <>
+      {(doctor?.prices?.length && doctor.prices.length > 0) ?
+        (<>
           <Caption style={styles.m3}>设置病患微信端显示内容</Caption>
           <ListItem key={1} bottomDivider onPress={openConsultTags}>
             <Ionicons name="ios-pricetags" size={24} color="sandybrown" />
@@ -110,7 +110,7 @@ export default function ConsultSettingsScreen() {
           <Modal visible={diseaseTypesVisible} animationType="slide" onDismiss={closeConsultDiseaseTypes}>
             <ConsultDiseaseTypes doctorid={doctor._id} onClose={onCloseConsultDiseaseTypes}></ConsultDiseaseTypes>
           </Modal>
-        </>
+        </>): (<Text> </Text>)
       }
     </>
   );
