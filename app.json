@@ -18,6 +18,15 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "permissions": [
+        "CAMERA",
+        "CAMERA_ROLL",
+        "READ_INTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "zhaoyaoshi"

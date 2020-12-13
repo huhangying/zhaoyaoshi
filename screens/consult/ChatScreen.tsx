@@ -22,6 +22,7 @@ import Spinner from '../../components/shared/Spinner';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'react-native-elements';
 import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
+import { createBlobFormData, uploadDoctorDir } from '../../services/core/upload.service';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef();
@@ -55,7 +56,7 @@ export default function ChatScreen() {
   useEffect(() => {
     const pid = route.params?.pid;
     const title = route.params?.title;
-    navigation.setOptions({headerTitle: title});
+    navigation.setOptions({ headerTitle: title });
     if (doctor?._id) {
       setLoading(true);
       setType(route.params?.type);
@@ -163,33 +164,46 @@ export default function ChatScreen() {
     ioService?.sendChat(doctor._id, chat);
     sendChat(chat).subscribe(); // chatService
   }
-  const [image, setImage] = useState(null);
+
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
+      aspect: [4, 4],
+      quality: 0.7,
     });
 
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
+    await setAndUploadImage(result);
   };
 
   const pickCamera = async () => {
     const result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 0.7,
     });
 
-    if (!result.cancelled) {
-      setImage(result.uri);
-    }
+    await setAndUploadImage(result);
   };
-  
+
+  const setAndUploadImage = async (result: ImagePicker.ImagePickerResult) => {
+    if (!result.cancelled) {
+      const formData = await createBlobFormData(result);
+      uploadDoctorDir(pid, 'chat', formData).pipe(
+        tap((result: { path: string }) => {
+          if (result?.path) {
+            sendChatMsg(result.path, true); // send chat imagePath
+          }
+        })
+      ).subscribe(() => {
+        scrollToEnd();
+      });
+    }
+  }
+
+
+
 
   const [isOpenViewer, setIsOpenViewer] = useState(false);
   const [viewerImg, setViewerImg] = useState('');
@@ -206,10 +220,10 @@ export default function ChatScreen() {
     return <Spinner />;
   } else {
     return (
-      <KeyboardAvoidingView style={{flex: 1}}
+      <KeyboardAvoidingView style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "position" : 'height'}
         keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 96} >
-        <ScrollView ref={scrollViewRef} style={{ marginBottom: Platform.OS === "ios" ? 116 : 88, minHeight: dimensions.height-190 }}
+        <ScrollView ref={scrollViewRef} style={{ marginBottom: Platform.OS === "ios" ? 116 : 88, minHeight: dimensions.height - 190 }}
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
@@ -219,10 +233,10 @@ export default function ChatScreen() {
             ))
             }
           </View>
-          <>{!!image &&
-            <Image source={{ uri: image || '' }} style={{ width: 200, height: 200 }} 
-            onPress={() => openViewer(image || '')} />
-          }</>
+          {/* <>{!!image &&
+            <Image source={{ uri: image || '' }} style={{ width: 200, height: 200 }}
+              onPress={() => openViewer(image || '')} />
+          }</> */}
         </ ScrollView>
         <SafeAreaView style={styles.fixBottom}>
           <Input
