@@ -1,9 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { Text, ListItem, Header, Button } from 'react-native-elements';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
+import Constants from "expo-constants";
 
 export default function NotificationList({ list, title, onClose }: { list: Notification[], title: string, onClose: any }) {
   const { navigate } = useNavigation();
@@ -28,7 +29,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'whitesmoke' }}>
+    <View style={styles.container}>
       <Header
         leftComponent={{ icon: 'notifications', color: '#fff' }}
         centerComponent={{ text: title, style: { color: '#fff' } }}
@@ -60,6 +61,12 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1, 
+    marginTop: Platform.OS === 'ios' ? 0 : -Constants.statusBarHeight,
+    backgroundColor: 'whitesmoke',
+    // height: '100%'
+  },
   px3: {
     paddingHorizontal: 16
   },
