@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, Platform, SafeAreaView, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button, Input } from 'react-native-elements';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -24,7 +24,7 @@ import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 import { createBlobFormData, uploadDoctorDir } from '../../services/core/upload.service';
 
 export default function ChatScreen() {
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<ScrollView>();
   const route = useRoute();
   const dimensions = useWindowDimensions();
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -55,10 +55,11 @@ export default function ChatScreen() {
   useEffect(() => {
     const pid = route.params?.pid;
     const title = route.params?.title;
+    const type = route.params?.type;
     navigation.setOptions({ headerTitle: title });
     if (doctor?._id) {
       setLoading(true);
-      setType(route.params?.type);
+      setType(type);
       setPid(pid);
       getChatHistory(doctor._id, pid).pipe(
         take(1),
@@ -232,10 +233,6 @@ export default function ChatScreen() {
             ))
             }
           </View>
-          {/* <>{!!image &&
-            <Image source={{ uri: image || '' }} style={{ width: 200, height: 200 }}
-              onPress={() => openViewer(image || '')} />
-          }</> */}
         </ ScrollView>
         <SafeAreaView style={styles.fixBottom}>
           <Input
