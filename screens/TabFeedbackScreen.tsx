@@ -5,10 +5,11 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { Badge, ListItem } from 'react-native-elements';
 import { Fontisto, Ionicons } from '@expo/vector-icons';
-import { Text, Caption } from 'react-native-paper';
+import { Text, Caption, Snackbar } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import Spinner from '../components/shared/Spinner';
+import { useState } from 'react';
 
 export default function TabFeedbackScreen() {
   const { navigate } = useNavigation();
@@ -23,6 +24,10 @@ export default function TabFeedbackScreen() {
 
   const closeNotification = () => setNotiVisible(false);
   const openNotification = (title: string, notiList: Notification[]) => {
+    if(notiList.length < 1) {
+      openSnackbar('您暂无病患反馈提醒')
+      return;
+    }
     setNotiVisible(true);
     setNotiTitle(title);
     setNotiList(notiList);
@@ -32,6 +37,14 @@ export default function TabFeedbackScreen() {
   }
   const getAdverseReactionNotis = () => {
     return store.feedbackNotifications?.filter((_: Notification) => _.type === NotificationType.adverseReaction) || [];
+  }
+
+  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const onDismissSnackBar = () => setSnackbarVisible(false);
+  const openSnackbar = (msg: string) => {
+    setSnackbarVisible(true);
+    setSnackbarMessage(msg);
   }
 
 
@@ -48,13 +61,13 @@ export default function TabFeedbackScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <Caption style={styles.m3}>门诊病患用药反馈</Caption>
+        <Caption style={styles.m3}>门诊病患用药反馈提醒</Caption>
         <ListItem key={1} bottomDivider
           onPress={() => openNotification('联合用药反馈', getDoseCombinationNotis())}>
           <Fontisto name="pills" size={24} color="lightblue"></Fontisto>
           <ListItem.Content>
             <ListItem.Title>
-              联合用药反馈&nbsp;&nbsp;
+              联合用药反馈提醒&nbsp;&nbsp;
               <Badge status="success" value={getDoseCombinationNotis()?.length}></Badge>
             </ListItem.Title>
           </ListItem.Content>
@@ -66,7 +79,7 @@ export default function TabFeedbackScreen() {
           <Fontisto name="frowning" size={24} color="gray"></Fontisto>
           <ListItem.Content>
             <ListItem.Title>
-              不良反应反馈&nbsp;&nbsp;
+              不良反应反馈提醒&nbsp;&nbsp;
               <Badge status="success" value={getAdverseReactionNotis()?.length}></Badge>
             </ListItem.Title>
           </ListItem.Content>
@@ -76,6 +89,12 @@ export default function TabFeedbackScreen() {
         <Modal visible={notiVisible} animationType="slide" transparent={true} onDismiss={closeNotification}>
           <NotificationList list={notiList} title={notiTitle} onClose={onNotiModalClose} />
         </Modal>
+        <Snackbar
+          visible={snackbarVisible}
+          duration={3000}
+          onDismiss={onDismissSnackBar}>
+          {snackbarMessage}
+        </Snackbar>
       </>
     );
   }

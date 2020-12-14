@@ -7,11 +7,12 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { Badge, ListItem } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, Caption } from 'react-native-paper';
+import { Text, Caption, Snackbar } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification } from '../models/io/notification.model';
 import { getUnreadCount } from '../services/notification.service';
 import Spinner from '../components/shared/Spinner';
+import { useState } from 'react';
 
 export default function TabConsultScreen() {
   const { navigate } = useNavigation();
@@ -26,9 +27,21 @@ export default function TabConsultScreen() {
 
   const closeNotification = () => setNotiVisible(false);
   const openNotification = (title: string, notiList: Notification[]) => {
+    if(notiList.length < 1) {
+      openSnackbar('您暂无病患消息提醒')
+      return;
+    }
     setNotiVisible(true);
     setNotiTitle(title);
     setNotiList(notiList);
+  }
+
+  const [snackbarVisible, setSnackbarVisible] = useState(false)
+  const [snackbarMessage, setSnackbarMessage] = useState('')
+  const onDismissSnackBar = () => setSnackbarVisible(false);
+  const openSnackbar = (msg: string) => {
+    setSnackbarVisible(true);
+    setSnackbarMessage(msg);
   }
 
   if (!doctor) {
@@ -68,16 +81,22 @@ export default function TabConsultScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <Text style={styles.m3}>
+        {/* <Text style={styles.m3}>
           {getUnreadCount(chatNotifications)} |
           {getUnreadCount(feedbackNotifications)} |
           {getUnreadCount(consultNotifications)} |
           {doctor?.title} |
-        </Text>
+        </Text> */}
 
         <Modal visible={notiVisible} animationType="slide" transparent={true} onDismiss={closeNotification}>
           <NotificationList list={notiList} title={notiTitle} onClose={onNotiModalClose} />
         </Modal>
+        <Snackbar
+          visible={snackbarVisible}
+          duration={3000}
+          onDismiss={onDismissSnackBar}>
+          {snackbarMessage}
+        </Snackbar>
       </>
     );
   }
