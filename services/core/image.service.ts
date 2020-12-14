@@ -13,5 +13,5 @@ export const wxImgPath = (path?: string) => {
     return require('../../assets/images/noimage.jpg');
   }
   
-  return path;
+  return { uri: path };
 }
