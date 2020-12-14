@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   sender: {
     paddingTop: 10,
     paddingBottom: 4,
-    paddingHorizontal: 14,
+    paddingHorizontal: 10,
     backgroundColor: 'lightblue',
     marginVertical: 4,
     marginRight: 2,
