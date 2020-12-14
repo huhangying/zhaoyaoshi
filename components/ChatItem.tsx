@@ -6,7 +6,7 @@ import moment from 'moment';
 import { Chat, ChatCommandTypeMap, ChatType } from '../models/io/chat.model';
 import { Doctor } from '../models/crm/doctor.model';
 import { Avatar, Image } from 'react-native-elements';
-import { imgPath } from '../services/core/image.service';
+import { imgPath, imgSource } from '../services/core/image.service';
 import { parseChatData, isEmoji, getEmojiPath } from './chat/ChatHelper';
 moment.locale('zh-cn');
 
@@ -27,7 +27,7 @@ export default function ChatItem({ chat, doctor, icon, onImgView }: { chat: Chat
             case ChatType.picture:
               return (!!chat.data &&
                 <Image
-                  source={{ uri: imgPath(chat.data) }}
+                  source={imgSource(chat.data)}
                   style={{ width: 200, height: 200 }}
                   onPress={() => onImgView(chat.data ? imgPath(chat.data) : '')}
                 />

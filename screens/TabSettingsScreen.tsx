@@ -2,11 +2,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import { Avatar, Divider, ListItem } from 'react-native-elements';
+import { Avatar, ListItem } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { logout } from '../services/core/auth';
-import { imgPath } from '../services/core/image.service';
+import { imgSource } from '../services/core/image.service';
 import { Text } from 'react-native-paper';
 import Spinner from '../components/shared/Spinner';
 
@@ -14,13 +14,13 @@ export default function TabSettingsScreen() {
   const { navigate } = useNavigation();
   const doctor = useSelector((state: AppState) => state.doctor);
   if (!doctor) {
-    return (<Spinner/>);
+    return (<Spinner />);
   } else {
     return (
       <>
         <Text> </Text>
         <ListItem key={0} bottomDivider onPress={() => navigate('ProfileScreen')}>
-          <Avatar size="medium" source={{ uri: imgPath(doctor?.icon) }} />
+          <Avatar size="medium" source={imgSource(doctor?.icon)} />
           <ListItem.Content>
             <ListItem.Title>{doctor?.name}{doctor?.title}</ListItem.Title>
             <ListItem.Subtitle>{doctor?.department?.name}</ListItem.Subtitle>

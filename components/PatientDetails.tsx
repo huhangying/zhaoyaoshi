@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { User } from '../models/crm/user.model';
 import { Text, View } from './Themed';
 import { Avatar, Button, Dialog, Divider, List, Title } from 'react-native-paper';
-import { wxImgPath } from '../services/core/image.service';
+import { wxImgSource } from '../services/core/image.service';
 import Spinner from './shared/Spinner';
 import { getDateFormat } from '../services/core/moment';
 
@@ -14,7 +14,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
     }
   }, [user])
 
-  
+
   if (!user?._id) {
     return (<Spinner />);
   } else {
@@ -23,7 +23,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
         <Dialog.Title >
           <List.Item
             style={styles.header}
-            left={() => (<><Avatar.Image size={52} source={ wxImgPath(user.icon) } /><Title style={styles.headerTitle}>{user.name}</Title></>)}
+            left={() => (<><Avatar.Image size={52} source={ wxImgSource(user.icon) } /><Title style={styles.headerTitle}>{user.name}</Title></>)}
             title={''}
           />
         </Dialog.Title>

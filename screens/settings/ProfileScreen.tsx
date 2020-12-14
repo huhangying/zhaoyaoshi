@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Avatar, Card } from 'react-native-elements';
-import { imgPath } from '../../services/core/image.service';
+import { imgSource } from '../../services/core/image.service';
 import { useEffect } from 'react';
-import { useSelector, useStore } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Text } from '../../components/Themed';
 import { AppState } from '../../models/app-state.model';
 import { DataTable } from 'react-native-paper';
@@ -19,7 +19,7 @@ export default function ProfileScreen() {
   }, [])
 
   if (!doctor) {
-    return (<Spinner/>);
+    return (<Spinner />);
   } else {
     return (
       <ScrollView>
@@ -27,7 +27,7 @@ export default function ProfileScreen() {
 
           <Avatar
             rounded size="large"
-            source={{ uri: imgPath(doctor?.icon) }}
+            source={imgSource(doctor?.icon)}
           />
           <Text style={{ marginVertical: 12, }}>
             {doctor?.name}{doctor?.title}</Text>
