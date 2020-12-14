@@ -12,7 +12,7 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
   const [groupedRelationships, setGroupedRelationships] = useState([]);
   const initDoctorGroup: DoctorGroup = { _id: '', name: '' };
   const [doctorGroups, setDoctorGroups] = useState([initDoctorGroup]);
-  const scrollViewRef = useRef();
+  const scrollViewRef = useRef<ScrollView>();
   const initRrelationshipList: Relationship[] = [];
   const [relationshipList, setRrelationshipList] = useState(initRrelationshipList)
 
