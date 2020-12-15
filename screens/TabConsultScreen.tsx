@@ -2,7 +2,6 @@ import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Modal, StyleSheet } from 'react-native';
 
-import { View } from '../components/Themed';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { Badge, ListItem } from 'react-native-elements';
@@ -16,7 +15,7 @@ import { useState } from 'react';
 
 export default function TabConsultScreen() {
   const { navigate } = useNavigation();
-  const { doctor, chatNotifications, feedbackNotifications, consultNotifications } = useSelector((state: AppState) => state);
+  const { doctor, chatNotifications, consultNotifications } = useSelector((state: AppState) => state);
 
   const [notiVisible, setNotiVisible] = React.useState(false);
   const [notiTitle, setNotiTitle] = React.useState('');
