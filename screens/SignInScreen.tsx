@@ -33,7 +33,7 @@ export default function SignInScreen() {
       map(results => {
         // convert to {label: string;  value: any;}
         if (results?.length) {
-          const items = results.map(hospital => ({label: hospital.name, value: hospital.hid} as Item));
+          const items = results.map(hospital => ({ label: hospital.name, value: hospital.hid } as Item));
           setHospitalList(items);
         }
       })
@@ -102,10 +102,10 @@ export default function SignInScreen() {
                   color: '#8EA0A4',
                 }}
                 items={hospitalList}
-                onValueChange={(value) => {setHid(value);console.log(value)}}
+                onValueChange={(value) => { setHid(value); }}
                 InputAccessoryView={() => null}
                 style={{
-                  ...styles,
+                  ...pickerSelectStyles,
                   iconContainer: {
                     top: 14,
                     right: 10,
@@ -192,6 +192,9 @@ const styles = StyleSheet.create({
     color: 'red',
     paddingHorizontal: 30,
   },
+});
+
+const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     fontSize: 18,
     paddingVertical: 5,
