@@ -25,7 +25,7 @@ export default function TabFeedbackScreen() {
   const closeNotification = () => setNotiVisible(false);
   const openNotification = (title: string, notiList: Notification[]) => {
     if(notiList.length < 1) {
-      openSnackbar('您暂无病患反馈提醒')
+      openSnackbar(`您暂无${title}提醒`)
       return;
     }
     setNotiVisible(true);
