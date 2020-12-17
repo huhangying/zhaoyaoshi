@@ -1,5 +1,5 @@
 export interface UserFeedback {
-  _id: string;
+  _id?: string;
   doctor: string; //id
   user: string; // id
   senderName: string;

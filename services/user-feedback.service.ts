@@ -5,7 +5,7 @@ import { AppStoreService } from './core/app-store.service';
 
 
 // feedback
-export function getByUserIdDoctorId(did: string, uid: string, type: number) {
+export function getByFeedbacksByUserIdDoctorId(did: string, uid: string, type: number) {
   return getApi<UserFeedback[]>(`feedbacks/user/${type}/${uid}/${did}`);
 }
 

@@ -95,8 +95,8 @@ export default function ChatInputs({ pid, doctor, onSend }: { pid: string, docto
 
   const send = (msg: string) => {
     setShowEmojis(false);
-    onSend(msg);
     setInputText('');
+    onSend(msg);
   }
 
   return (

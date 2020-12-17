@@ -1,97 +1,163 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { View } from '../../components/Themed';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
-import { Text, View } from '../../components/Themed';
-import { getAllBookingsByDoctorId, getPeriods } from '../../services/booking.service';
-import { tap } from 'rxjs/operators';
-import { List, Subheading, Switch } from 'react-native-paper';
-import moment from 'moment';
-import { Booking } from '../../models/reservation/booking.model';
-import { Period } from '../../models/reservation/schedule.model';
-import { forkJoin } from 'rxjs';
-import { useRoute } from '@react-navigation/native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { take, tap } from 'rxjs/operators';
+import { getUserDetailsById } from '../../services/user.service';
+import { User } from '../../models/crm/user.model';
+import { imgPath } from '../../services/core/image.service';
+import { UpdateHideBottomBar } from '../../services/core/app-store.actions';
+import { NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
+import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
+import ChatInputs from '../../components/shared/ChatInputs';
+import { getByFeedbacksByUserIdDoctorId, sendFeedback } from '../../services/user-feedback.service';
+import { UserFeedback } from '../../models/io/user-feedback.model';
+import FeedbackItem from '../../components/FeedbackItem';
 
 export default function FeedbackChatScreen() {
-  const doctor = useSelector((state: AppState) => state.doctor);
+  const scrollViewRef = useRef<ScrollView>();
   const route = useRoute();
-
-  const initBooking: Booking = { _id: '', doctor: '', status: 0 };
-  const [bookings, setBookings] = useState([initBooking]);
-  const [filterBookings, setFilterBookings] = useState([initBooking]);
-  const initPeriod: Period = { _id: '', name: '', from: 0 };
-  const [periods, setPeriods] = useState([initPeriod]);
+  const dimensions = useWindowDimensions();
+  const doctor = useSelector((state: AppState) => state.doctor);
+  const ioService = useSelector((state: AppState) => state.ioService);
+  const [type, setType] = useState(NotificationType.chat);
+  const [pid, setPid] = useState('');
   const [loading, setLoading] = useState(false);
+  const initFeedbacks: UserFeedback[] = [];
+  const [feedbacks, setFeedbacks] = useState(initFeedbacks);
+  const initUser: User = { _id: '' };
+  const [user, setUser] = useState(initUser);
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
-  const [isSwitchOn, setIsSwitchOn] = React.useState(true);
-  const onToggleSwitch = () => {
-    const current = !isSwitchOn;
-    setIsSwitchOn(current);
-    const filtered = current ?
-      bookings.filter(_ => moment(_.date).isSameOrAfter(moment().add(-1, 'd'))) :
-      bookings.filter(_ => moment(_.date).isBefore(moment().add(-1, 'd')));
-    setFilterBookings(filtered);
-  };
+  // 监听呼入消息
+  const start = ioService?.onFeedback((msg: UserFeedback) => {
+    if (msg.doctor === pid) {
+      const _feedbacks = [...feedbacks];
+      _feedbacks.unshift(msg);
+      setFeedbacks(_feedbacks);
+      scrollToEnd();
+    }
+  });
 
   useEffect(() => {
+    const pid = route.params?.pid;
+    const title = route.params?.title;
+    const type = route.params?.type;
+    navigation.setOptions({ headerTitle: title });
     if (doctor?._id) {
       setLoading(true);
-      forkJoin({
-        bookings: getAllBookingsByDoctorId(doctor._id),
-        periods: getPeriods()
-      }).pipe(
-        tap(({ bookings, periods }) => {
-          setBookings(bookings);
-          setPeriods(periods);
+      setType(type);
+      setPid(pid);
+
+      // get history
+      getByFeedbacksByUserIdDoctorId(doctor._id, pid, type).pipe(
+        take(1),
+        tap(_feedbacks => {
+          setFeedbacks(_feedbacks);
           setLoading(false);
-          // init
-          setIsSwitchOn(true);
-          setFilterBookings(bookings.filter(_ => moment(_.date).isSameOrAfter(moment().add(-1, 'd'))));
+        })
+      ).subscribe();
+
+      getUserDetailsById(pid).pipe(
+        take(1),
+        tap(_user => {
+          setUser(_user);
         })
       ).subscribe();
     }
+
+    Keyboard.addListener("keyboardDidShow", scrollToEnd);
+    dispatch(UpdateHideBottomBar(true));
+
     return () => {
+      Keyboard.removeListener("keyboardDidShow", scrollToEnd);
+      dispatch(UpdateHideBottomBar(false));
     }
-  }, [doctor?._id])
+  }, [doctor, doctor?._id, route.params?.pid, route.params?.type, route.params?.title, navigation, dispatch, start]);
+
+  const scrollToEnd = () => {
+    scrollViewRef.current?.scrollToEnd({ animated: true });
+  }
+
+  const onSend = useCallback((data: string, isImg = false) => {
+    if (!doctor) {
+      return;
+    }
+    const feedback: UserFeedback = isImg ? {
+      // room: doctor._id,
+      doctor: doctor._id || '',
+      senderName: doctor.name || '',
+      user: pid,
+      type: type,
+      name: '请参阅图片',
+      upload: data,
+      status: 2,
+      createdAt: new Date()
+    } : { // text
+      user: pid,
+      doctor: doctor._id,
+      senderName: doctor.name || '',
+      type: type,
+      name: data,
+      status: 2,
+      createdAt: new Date()
+    };
+    const _feedbacks = [...feedbacks];
+    _feedbacks.push(feedback);
+    setFeedbacks(_feedbacks);    
+
+    ioService?.sendFeedback(doctor._id, feedback);
+    sendFeedback(feedback).subscribe(); // chatService
+    scrollToEnd();
+    Keyboard.dismiss();
+  }, [feedbacks, doctor, ioService, pid, type]);
+
+
+  const [isOpenViewer, setIsOpenViewer] = useState(false);
+  const [viewerImg, setViewerImg] = useState('');
+  const openViewer = useCallback((img: string) => {
+    setIsOpenViewer(true);
+    setViewerImg(img);
+  }, []);
+  const closeViewer = () => {
+    setIsOpenViewer(false);
+    setViewerImg('');
+  }
 
   if (!doctor?._id || loading) {
-    return (<Spinner/>);
+    return <Spinner />;
   } else {
     return (
-      <>
-        <Subheading style={styles.headline}>
-          <Text>{route.params?.type}</Text>
-          <Text style={styles.mx3}>{isSwitchOn ? '当前门诊预约' : '已过期门诊预约（一个月内）'}</Text>
-          <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
-        </Subheading>
-        <ScrollView>
-          <List.Item style={styles.tableHeader}
-            title="预约"
-            right={() => <Subheading style={{ paddingTop: 4 }}>状态</Subheading>}
-          />
-        </ScrollView>
-      </>
+      <KeyboardAvoidingView style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "position" : 'height'}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 96} >
+        <ScrollView ref={scrollViewRef} style={{ marginBottom: Platform.OS === "ios" ? 118 : 95, minHeight: dimensions.height - 190 }}
+          onContentSizeChange={scrollToEnd}>
+          <View style={styles.feedbacks}>
+            {feedbacks.map((feedback, i) => (feedback.status >= 2 ?
+              <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={imgPath(doctor.icon)} onImgView={openViewer} ></FeedbackItem>
+              :
+              <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></FeedbackItem>
+            ))
+            }
+          </View>
+        </ ScrollView>
+        <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
+        <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
+
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  headline: {
-    margin: 16,
-    marginVertical: 16,
+  feedbacks: {
+    flex: 1,
+    flexDirection: 'column',
   },
-  mx3: {
-    marginHorizontal: 14,
-  },
-  tableHeader: {
-    backgroundColor: 'lightskyblue',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-  },
-  status: {
-    margin: 10,
-    marginVertical: 16,
-  }
 });

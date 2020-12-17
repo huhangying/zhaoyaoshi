@@ -67,7 +67,7 @@ export default function SignInScreen() {
       return;
     }
 
-    doctorLogin(hid, username, password).pipe(
+    doctorLogin(hid, username.toLowerCase(), password).pipe(
       tap(async result => {
         await setToken(result.token);
         delete result.token;

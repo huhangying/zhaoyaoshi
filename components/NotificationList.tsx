@@ -17,11 +17,13 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
           break;
         case NotificationType.consultChat:
         case NotificationType.consultPhone:
-          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type });
+          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '付费咨询' });
           break;
         case NotificationType.doseCombination:
+          navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '联合用药反馈' });
+          break;
         case NotificationType.adverseReaction:
-          navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type });
+          navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '不良反应反馈' });
           break;
       }
       onClose(); // close noti modal

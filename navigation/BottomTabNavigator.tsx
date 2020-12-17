@@ -101,6 +101,7 @@ function TabConsultNavigator() {
         name="ChatScreen"
         component={ChatScreen}
         options={{ headerTitle: '免费咨询' }}
+        initialParams={{type: '', title: '', pid: ''}}
       />
       <TabConsultStack.Screen
         name="ConsultScreen"
