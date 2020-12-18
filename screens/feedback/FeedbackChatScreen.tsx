@@ -17,6 +17,7 @@ import ChatInputs from '../../components/shared/ChatInputs';
 import { getByFeedbacksByUserIdDoctorId, sendFeedback } from '../../services/user-feedback.service';
 import { UserFeedback } from '../../models/io/user-feedback.model';
 import FeedbackItem from '../../components/FeedbackItem';
+import { Header } from 'react-native-elements';
 
 export default function FeedbackChatScreen() {
   const scrollViewRef = useRef<ScrollView>();
@@ -33,6 +34,7 @@ export default function FeedbackChatScreen() {
   const [user, setUser] = useState(initUser);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [title, setTitle] = useState('')
 
   // 监听呼入消息
   const start = ioService?.onFeedback((msg: UserFeedback) => {
@@ -48,6 +50,7 @@ export default function FeedbackChatScreen() {
     const pid = route.params?.pid;
     const title = route.params?.title;
     const type = route.params?.type;
+    setTitle(title);
     navigation.setOptions({ headerTitle: title });
     if (doctor?._id) {
       setLoading(true);
@@ -99,17 +102,17 @@ export default function FeedbackChatScreen() {
       status: 2,
       createdAt: new Date()
     } : { // text
-      user: pid,
-      doctor: doctor._id,
-      senderName: doctor.name || '',
-      type: type,
-      name: data,
-      status: 2,
-      createdAt: new Date()
-    };
+        user: pid,
+        doctor: doctor._id,
+        senderName: doctor.name || '',
+        type: type,
+        name: data,
+        status: 2,
+        createdAt: new Date()
+      };
     const _feedbacks = [...feedbacks];
     _feedbacks.push(feedback);
-    setFeedbacks(_feedbacks);    
+    setFeedbacks(_feedbacks);
 
     ioService?.sendFeedback(doctor._id, feedback);
     sendFeedback(feedback).subscribe(); // chatService
@@ -134,9 +137,16 @@ export default function FeedbackChatScreen() {
   } else {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "position" : 'height'}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 96} >
-        <ScrollView ref={scrollViewRef} style={{ marginBottom: Platform.OS === "ios" ? 118 : 95, minHeight: dimensions.height - 190 }}
+        behavior={Platform.OS === "ios" ? "height" : 'height'}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0} >
+        <Header
+          placement="left"
+          leftComponent={{ icon: 'chevron-left', color: '#fff', onPress: navigation.goBack }}
+          centerComponent={{ text: title, style: { color: '#fff' } }}
+          rightComponent={{ icon: 'menu', color: '#fff' }}
+        />
+        <ScrollView ref={scrollViewRef} 
+          style={{ marginBottom: Platform.OS === "ios" ? 119 : 88, maxHeight: dimensions.height - 145 }}
           onContentSizeChange={scrollToEnd}>
           <View style={styles.feedbacks}>
             {feedbacks.map((feedback, i) => (feedback.status >= 2 ?

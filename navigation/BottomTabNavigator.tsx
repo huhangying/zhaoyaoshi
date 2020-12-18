@@ -100,7 +100,7 @@ function TabConsultNavigator() {
       <TabConsultStack.Screen
         name="ChatScreen"
         component={ChatScreen}
-        options={{ headerTitle: '免费咨询' }}
+        options={{ headerTitle: '免费咨询', headerShown: false  }}
         initialParams={{type: '', title: '', pid: ''}}
       />
       <TabConsultStack.Screen
@@ -130,7 +130,7 @@ function TabFeedbackNavigator() {
       <TabConsultStack.Screen
         name="FeedbackChatScreen"
         component={FeedbackChatScreen}
-        options={{ headerTitle: '门诊反馈' }}
+        options={{ headerTitle: '门诊反馈', headerShown: false }}
       />
     </TabFeedbackStack.Navigator>
   );

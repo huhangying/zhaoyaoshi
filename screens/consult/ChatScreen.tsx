@@ -17,6 +17,7 @@ import { NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
 import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 import ChatInputs from '../../components/shared/ChatInputs';
+import { Header } from 'react-native-elements';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef<ScrollView>();
@@ -33,6 +34,7 @@ export default function ChatScreen() {
   const [user, setUser] = useState(initUser);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const [title, setTitle] = useState('')
 
   // 监听呼入消息
   const start = ioService?.onChat((msg: Chat) => {
@@ -48,7 +50,8 @@ export default function ChatScreen() {
     const pid = route.params?.pid;
     const title = route.params?.title;
     const type = route.params?.type;
-    navigation.setOptions({ headerTitle: title });
+    setTitle(title);
+    // navigation.setOptions({ headerTitle: title });
     if (doctor?._id) {
       setLoading(true);
       setType(type);
@@ -122,9 +125,16 @@ export default function ChatScreen() {
   } else {
     return (
       <KeyboardAvoidingView style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "position" : 'height'}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 88 : 96} >
-        <ScrollView ref={scrollViewRef} style={{ marginBottom: Platform.OS === "ios" ? 102 : 88, minHeight: dimensions.height - 190 }}
+        behavior={Platform.OS === "ios" ? "height" : 'height'}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0} >
+        <Header
+          placement="left"
+          leftComponent={{ icon: 'chevron-left', color: '#fff', onPress: navigation.goBack }}
+          centerComponent={{ text: title, style: { color: '#fff' } }}
+          rightComponent={{ icon: 'menu', color: '#fff' }}
+        />
+        <ScrollView ref={scrollViewRef} 
+          style={{ marginBottom: Platform.OS === "ios" ? 119 : 88, maxHeight: dimensions.height - 145 }}
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
@@ -135,6 +145,7 @@ export default function ChatScreen() {
             }
           </View>
         </ ScrollView>
+
         <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
 

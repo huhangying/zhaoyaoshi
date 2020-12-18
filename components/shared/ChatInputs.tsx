@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback, useEffect, useState } from "react";
-import { Platform, SafeAreaView, StyleSheet } from "react-native";
+import { Keyboard, Platform, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { tap } from "rxjs/operators";
 import { Doctor } from "../../models/crm/doctor.model";
@@ -53,6 +53,11 @@ export default function ChatInputs({ pid, doctor, onSend }: { pid: string, docto
 
   const toggleEmojis = () => {
     setShowEmojis(!showEmojis);
+    Keyboard.dismiss();
+  }
+
+  const hideEmojis = () => {
+    setShowEmojis(false);
   }
 
   const pickImage = async () => {
@@ -105,6 +110,7 @@ export default function ChatInputs({ pid, doctor, onSend }: { pid: string, docto
       placeholder="请输入..."
       value={inputText}
       onChangeText={setInputText}
+      onFocus={hideEmojis}
       style={styles.bottomInput}
       multiline={true}
       rightIcon={

@@ -7,6 +7,7 @@ import { imgPath, imgSource } from '../services/core/image.service';
 import { UserFeedback } from '../models/io/user-feedback.model';
 import { getDateFormat, getDateTimeFormat } from '../services/core/moment';
 import { Divider } from 'react-native-paper';
+import TextAndEmoji from './shared/TextAndEmoji';
 
 export default function FeedbackItem({ feedback, doctor, icon, onImgView }: { feedback: UserFeedback, doctor: Doctor, icon: string, onImgView: any }) {
 
@@ -21,9 +22,14 @@ export default function FeedbackItem({ feedback, doctor, icon, onImgView }: { fe
       }
       <View style={feedback.status >= 2 ? styles.sender : styles.to}>
 
-        <Text style={{ paddingBottom: 10 }}>{feedback.name}</Text>
-        {(feedback.type === 2 && !!feedback.how) &&
-          <Text style={{ paddingBottom: 10 }}>{feedback.how} </Text>
+        <View style={{ paddingBottom: 10, backgroundColor: 'transparent' }}>
+          <TextAndEmoji data={feedback.name} />
+        </View>
+        {(feedback.type === 2 && !!feedback.how) && (
+          <View style={{ paddingBottom: 10, backgroundColor: 'transparent' }}>
+            <TextAndEmoji data={feedback.how} />
+          </View>
+        )
         }
         {feedback.startDate &&
           <Text style={styles.chatDate}>开始日期：{getDateFormat(feedback.startDate) || '未设置'}</Text>
