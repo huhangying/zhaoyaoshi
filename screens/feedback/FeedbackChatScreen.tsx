@@ -38,9 +38,7 @@ export default function FeedbackChatScreen() {
 
   // 监听呼入消息
   const start = ioService?.onFeedback((msg: UserFeedback) => {
-    console.log(msg);
-    if (msg.doctor === pid) {
-      
+    if (msg.doctor === doctor?._id && msg.user === pid) {
       const _feedbacks = [...feedbacks];
       _feedbacks.push(msg);
       setFeedbacks(_feedbacks);

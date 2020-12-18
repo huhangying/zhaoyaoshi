@@ -9,18 +9,17 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text, Caption, Snackbar } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification } from '../models/io/notification.model';
-import { getUnreadCount } from '../services/notification.service';
 import Spinner from '../components/shared/Spinner';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 export default function TabConsultScreen() {
   const { navigate } = useNavigation();
   const { doctor, chatNotifications, consultNotifications } = useSelector((state: AppState) => state);
 
-  const [notiVisible, setNotiVisible] = React.useState(false);
-  const [notiTitle, setNotiTitle] = React.useState('');
-  const [notiList, setNotiList] = React.useState([{}]);
-  const onNotiModalClose = React.useCallback(() => {
+  const [notiVisible, setNotiVisible] = useState(false);
+  const [notiTitle, setNotiTitle] = useState('');
+  const [notiList, setNotiList] = useState([{}]);
+  const onNotiModalClose = useCallback(() => {
     setNotiVisible(false);
   }, []);
 

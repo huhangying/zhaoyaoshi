@@ -52,6 +52,7 @@ export default function BottomTabNavigator() {
         options={{
           title: '门诊',
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-medkit" color={color} />,
+          tabBarBadge: getUnreadCount(state.feedbackNotifications),
         }}
       />
       <BottomTab.Screen
