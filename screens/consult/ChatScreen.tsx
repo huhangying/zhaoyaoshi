@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
-import { View } from '../../components/Themed';
+import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
@@ -18,6 +17,7 @@ import Spinner from '../../components/shared/Spinner';
 import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 import ChatInputs from '../../components/shared/ChatInputs';
 import { Header } from 'react-native-elements';
+import ChatMenuActions from '../../components/ChatMenuActions';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef<ScrollView>();
@@ -130,9 +130,10 @@ export default function ChatScreen() {
           placement="left"
           leftComponent={{ icon: 'chevron-left', color: '#fff', onPress: navigation.goBack }}
           centerComponent={{ text: title, style: { color: '#fff' } }}
-          rightComponent={{ icon: 'menu', color: '#fff' }}
+        // rightComponent={<ChatMenuActions type={type} doctor={doctor} />}
         />
-        <ScrollView ref={scrollViewRef} 
+
+        <ScrollView ref={scrollViewRef}
           style={{ marginBottom: Platform.OS === "ios" ? 119 : 88, maxHeight: dimensions.height - 145 }}
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
@@ -147,7 +148,8 @@ export default function ChatScreen() {
 
         <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
-
+        <ChatMenuActions type={type} doctor={doctor} />
+        
       </KeyboardAvoidingView>
     );
   }

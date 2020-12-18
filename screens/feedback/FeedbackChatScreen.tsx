@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Keyboard, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
-import { View } from '../../components/Themed';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
@@ -18,6 +17,8 @@ import { getByFeedbacksByUserIdDoctorId, sendFeedback } from '../../services/use
 import { UserFeedback } from '../../models/io/user-feedback.model';
 import FeedbackItem from '../../components/FeedbackItem';
 import { Header } from 'react-native-elements';
+import ChatMenuActions from '../../components/ChatMenuActions';
+import { View } from 'react-native';
 
 export default function FeedbackChatScreen() {
   const scrollViewRef = useRef<ScrollView>();
@@ -143,9 +144,8 @@ export default function FeedbackChatScreen() {
           placement="left"
           leftComponent={{ icon: 'chevron-left', color: '#fff', onPress: navigation.goBack }}
           centerComponent={{ text: title, style: { color: '#fff' } }}
-          rightComponent={{ icon: 'menu', color: '#fff' }}
         />
-        <ScrollView ref={scrollViewRef} 
+        <ScrollView ref={scrollViewRef}
           style={{ marginBottom: Platform.OS === "ios" ? 119 : 88, maxHeight: dimensions.height - 145 }}
           onContentSizeChange={scrollToEnd}>
           <View style={styles.feedbacks}>
@@ -159,6 +159,7 @@ export default function FeedbackChatScreen() {
         </ ScrollView>
         <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
+        <ChatMenuActions type={type} doctor={doctor} />
 
       </KeyboardAvoidingView>
     );
