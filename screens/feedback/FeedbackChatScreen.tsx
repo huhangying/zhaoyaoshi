@@ -38,9 +38,11 @@ export default function FeedbackChatScreen() {
 
   // 监听呼入消息
   const start = ioService?.onFeedback((msg: UserFeedback) => {
+    console.log(msg);
     if (msg.doctor === pid) {
+      
       const _feedbacks = [...feedbacks];
-      _feedbacks.unshift(msg);
+      _feedbacks.push(msg);
       setFeedbacks(_feedbacks);
       scrollToEnd();
     }
@@ -51,7 +53,7 @@ export default function FeedbackChatScreen() {
     const title = route.params?.title;
     const type = route.params?.type;
     setTitle(title);
-    navigation.setOptions({ headerTitle: title });
+    navigation.setOptions({ headerTitle: title }); // to remove
     if (doctor?._id) {
       setLoading(true);
       setType(type);

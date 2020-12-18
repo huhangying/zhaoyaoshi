@@ -88,6 +88,7 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
       <FAB
         style={styles.fab}
         icon="plus"
+        color="white"
         onPress={() => openSelect('')}
       />
     </>

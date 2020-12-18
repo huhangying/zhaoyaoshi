@@ -100,7 +100,6 @@ export default function ChatScreen() {
     const _chats = [...chats];
     _chats.unshift(chat);
     setChats(_chats);
-    // setChats([...chats, chat]);
 
     ioService?.sendChat(doctor._id, chat);
     sendChat(chat).subscribe(); // chatService
