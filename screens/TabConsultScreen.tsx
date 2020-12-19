@@ -48,7 +48,7 @@ export default function TabConsultScreen() {
     return (
       <>
         <Text> </Text>
-        <ListItem key={0} bottomDivider onPress={() => navigate('SelectChatScreen')}>
+        <ListItem key={'noti-consult' + 0} bottomDivider onPress={() => navigate('SelectChatScreen')}>
           <Ionicons name="ios-chatbubbles" size={24} color="limegreen" />
           <ListItem.Content>
             <ListItem.Title>在线咨询</ListItem.Title>
@@ -56,7 +56,7 @@ export default function TabConsultScreen() {
           <ListItem.Chevron />
         </ListItem>
         <Caption style={styles.m3}>咨询消息提醒</Caption>
-        <ListItem key={1} bottomDivider
+        <ListItem key={'noti-consult' + 1} bottomDivider
           onPress={() => openNotification('付费咨询消息提醒', consultNotifications || [])}>
           <Ionicons name="ios-megaphone" size={24} color="coral"></Ionicons>
           <ListItem.Content>
