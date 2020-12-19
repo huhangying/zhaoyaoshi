@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import EditTextList from '../../components/EditTextList';
@@ -8,6 +8,7 @@ import { tap } from 'rxjs/operators';
 import { updateDoctor } from '../../services/core/app-store.actions';
 import { Caption } from 'react-native-paper';
 import { AppState } from '../../models/app-state.model';
+import Constants from "expo-constants";
 
 export default function ShortcutSettingsScreen() {
   const [shortcuts, setShortcuts] = React.useState([''])
@@ -36,18 +37,18 @@ export default function ShortcutSettingsScreen() {
   }, [doctor, shortcuts, dispatch]);
 
   return (
-    <>
+    <View style={styles.container}>
       <Caption style={styles.m3}>快捷回复列表</Caption>
       <EditTextList key="edit-shortcuts" list={shortcuts} onListSave={onListSave} />
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: Platform.OS === 'ios' ? 0 : -Constants.statusBarHeight,
+    backgroundColor: 'whitesmoke',
   },
   title: {
     fontSize: 20,

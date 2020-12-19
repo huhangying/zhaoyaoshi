@@ -1,7 +1,8 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Button, Dialog, Divider, FAB, Paragraph, TextInput } from 'react-native-paper';
+import Constants from "expo-constants";
 
 export default function EditTextList({ list, onListSave }: { list: string[], onListSave: any }) {
   const [action, setAction] = React.useState('');
@@ -99,6 +100,7 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    marginTop: Platform.OS === 'ios' ? 0 : -Constants.statusBarHeight,
     backgroundColor: '#fff',
   },
   fab: {

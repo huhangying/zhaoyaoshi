@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { useEffect, useState } from 'react';
+import { Platform, StyleSheet, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
 import { Caption } from 'react-native-paper';
 import EditTextList from '../../../components/EditTextList';
 import { getDoctorConsultByDoctorId, updateDoctorConsult } from '../../../services/consult.service';
 import { tap } from 'rxjs/operators';
 import { Header } from 'react-native-elements';
+import Constants from "expo-constants";
 
 export default function ConsultDiseaseTypes({ doctorid, onClose }: { doctorid: string, onClose: any }) {
   const [diseaseTypes, setDiseaseTypes] = useState([''])
@@ -24,7 +25,7 @@ export default function ConsultDiseaseTypes({ doctorid, onClose }: { doctorid: s
     }
   }, [doctorid]);
 
-  const onListSave = React.useCallback(() => {
+  const onListSave = useCallback(() => {
     const newDiseaseTypes = diseaseTypes.join('|');
     if (doctorid) {
       updateDoctorConsult(doctorid, {doctor_id: doctorid, disease_types: newDiseaseTypes}).pipe(
@@ -37,7 +38,7 @@ export default function ConsultDiseaseTypes({ doctorid, onClose }: { doctorid: s
   }, [doctorid, diseaseTypes]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'whitesmoke'}}>
+    <View style={styles.container}>
       <Header
         centerComponent={{ text: '编辑疾病类型', style: { color: '#fff' } }}
         rightComponent={{ icon: 'close', color: '#fff', onPress: onClose }}
@@ -51,8 +52,8 @@ export default function ConsultDiseaseTypes({ doctorid, onClose }: { doctorid: s
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: Platform.OS === 'ios' ? 0 : -Constants.statusBarHeight,
+    backgroundColor: 'whitesmoke',
   },
   title: {
     fontSize: 20,
