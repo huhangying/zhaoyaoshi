@@ -43,7 +43,7 @@ export default function TabSettingsScreen() {
           <ListItem.Chevron />
         </ListItem>
         <ListItem key={3} bottomDivider onPress={() => navigate('ShortcutSettingsScreen')}>
-          <Ionicons name="ios-undo" color="seagreen" size={24} />
+          <Ionicons name="ios-arrow-undo" color="seagreen" size={24} />
           <ListItem.Content>
             <ListItem.Title>快捷回复设置</ListItem.Title>
           </ListItem.Content>

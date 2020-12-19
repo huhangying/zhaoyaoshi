@@ -68,7 +68,7 @@ export default function BottomTabNavigator() {
         component={TabSettingsNavigator}
         options={{
           title: '个人中心',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-contact" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="ios-person-circle" color={color} />,
         }}
       />
     </BottomTab.Navigator>

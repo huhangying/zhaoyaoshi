@@ -20,7 +20,7 @@ export default function ChatInputs({ pid, doctor, onSend }: { pid: string, docto
 
     (async () => {
       if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
           alert('您禁止使用本地图片功能');
         }
@@ -125,7 +125,7 @@ export default function ChatInputs({ pid, doctor, onSend }: { pid: string, docto
           style={{ marginRight: 22, color: !showEmojis ? '#0095ff' : 'orange' }} onPress={toggleEmojis}></Ionicons>
         <Ionicons name="ios-image" size={26} color="#0095ff" style={styles.mr3} onPress={pickImage}></Ionicons>
         <Ionicons name="ios-camera" size={26} color="#0095ff" style={styles.mr3} onPress={pickCamera}></Ionicons>
-        <Ionicons name="ios-undo" size={26} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
+        <Ionicons name="ios-arrow-undo" size={26} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
       </View>
       <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
         <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16 }} title="标识完成"></Button>

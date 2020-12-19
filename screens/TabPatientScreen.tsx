@@ -33,7 +33,7 @@ export default function TabPatientScreen() {
       <>
         <Caption style={styles.m3}> 您现有 {count} 个已关注病患。 </Caption>
         <ListItem key={1} bottomDivider onPress={() => navigate('RelationshipScreen')}>
-          <Ionicons name="ios-filing" size={24} color="sandybrown" />
+          <Ionicons name="ios-file-tray-full" size={24} color="sandybrown" />
           <ListItem.Content>
             <ListItem.Title>查看已关注患者</ListItem.Title>
           </ListItem.Content>
@@ -41,14 +41,13 @@ export default function TabPatientScreen() {
         </ListItem>
         <Text> </Text>
         <ListItem key={2} bottomDivider onPress={() => navigate('PatientAuditScreen')}>
-          <Ionicons name="ios-switch" size={24} color="royalblue"/>
+          <Ionicons name="ios-trail-sign" size={24} color="royalblue"/>
           <ListItem.Content>
             <ListItem.Title>病患审核</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <Text> </Text>
-
       </>
     );
   }
