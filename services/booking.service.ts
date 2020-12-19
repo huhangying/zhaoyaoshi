@@ -1,6 +1,6 @@
 import { Booking } from "../models/reservation/booking.model";
 import { Period } from "../models/reservation/schedule.model";
-import { getApi, patchApi } from "./core/api.service";
+import { getApi } from "./core/api.service";
 import moment from 'moment';
 
 export function getBookingStatus(status: number) {

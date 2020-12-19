@@ -1,14 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { View } from './Themed';
-import 'moment/locale/zh-cn'
-import moment from 'moment';
 import { Chat, ChatCommandTypeMap, ChatType } from '../models/io/chat.model';
 import { Doctor } from '../models/crm/doctor.model';
 import { Avatar, Image } from 'react-native-elements';
 import { imgPath, imgSource } from '../services/core/image.service';
 import TextAndEmoji from './shared/TextAndEmoji';
-moment.locale('zh-cn');
+import { getDateTimeFormat } from '../services/core/moment';
 
 export default function ChatItem({ chat, doctor, icon, onImgView }: { chat: Chat, doctor: Doctor, icon: string, onImgView: any }) {
 
@@ -46,7 +44,7 @@ export default function ChatItem({ chat, doctor, icon, onImgView }: { chat: Chat
         })()}
         <Text style={styles.chatTimestamp}>
           {/* {moment(chat.created).fromNow()} */}
-          {moment(chat.created).format('LL a h:mm')}
+          {getDateTimeFormat(chat.created)}
         </Text>
       </View>
     </View>

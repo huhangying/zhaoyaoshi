@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
-import { Text, View } from '../../components/Themed';
+import { Text } from '../../components/Themed';
 import { getAllBookingsByDoctorId, getBookingStatus, getPeriods } from '../../services/booking.service';
 import { tap } from 'rxjs/operators';
 import { List, Subheading, Switch } from 'react-native-paper';
