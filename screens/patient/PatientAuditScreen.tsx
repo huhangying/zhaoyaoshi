@@ -6,7 +6,7 @@ import { Text } from '../../components/Themed';
 import { getRelationshipsByDoctorId } from '../../services/doctor.service';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../../models/app-state.model';
-import { Button, DataTable, Dialog, Divider, Headline, Searchbar, Snackbar, Subheading, Switch, Title } from 'react-native-paper';
+import { Button, DataTable, Searchbar, Snackbar, Subheading, Switch } from 'react-native-paper';
 import { User } from '../../models/crm/user.model';
 import { Relationship } from '../../models/crm/relationship.model';
 import moment from 'moment';
@@ -110,7 +110,8 @@ export default function PatientAuditScreen() {
               <DataTable.Title numeric>操作</DataTable.Title>
             </DataTable.Header>
             {filterRelationships?.length ? (
-              filterRelationships.map((rel, i) => (
+              filterRelationships.filter(_ => _.user?.name?.match(search))
+              .map((rel, i) => (
                 <DataTable.Row key={i} onPress={() => openPatientDetails(rel.user)}>
                   <DataTable.Cell key={i + '-1'}>
                     <Text>
