@@ -24,7 +24,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
           <List.Item
             style={styles.header}
             left={() => (<><Avatar.Image size={52} source={ wxImgSource(user.icon) } /><Title style={styles.headerTitle}>{user.name}</Title></>)}
-            title={''}
+            title=""
           />
         </Dialog.Title>
         <Divider></Divider>
@@ -49,7 +49,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
           </ScrollView>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button mode="outlined" style={{ flex: 1 }} onPress={onClose}>
+          <Button mode="contained" style={{ flex: 1 }} onPress={onClose}>
             关闭</Button>
         </Dialog.Actions>
       </Dialog>

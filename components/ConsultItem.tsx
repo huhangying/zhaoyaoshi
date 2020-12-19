@@ -1,6 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text } from 'react-native';
-import { View } from './Themed';
+import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Doctor } from '../models/crm/doctor.model';
 import { Avatar, Image } from 'react-native-elements';
 import { imgPath, imgSource } from '../services/core/image.service';
@@ -10,6 +9,7 @@ import TextAndEmoji from './shared/TextAndEmoji';
 import { Consult } from '../models/consult/consult.model';
 
 export default function ConsultItem({ consult, doctor, icon, onImgView }: { consult: Consult, doctor: Doctor, icon: string, onImgView: any }) {
+  const screenWidth = useWindowDimensions().width;
 
   return (
     <View style={(consult.status && consult.status >= 2) ? styles.alignRight : styles.alignLeft}>
@@ -22,22 +22,22 @@ export default function ConsultItem({ consult, doctor, icon, onImgView }: { cons
       }
       <View style={(consult.status && consult.status >= 2) ? styles.sender : styles.to}>
         {(!!consult.disease_types?.length) && (
-          <Text style={{ paddingBottom: 10, backgroundColor: 'transparent' }}>
+          <Text style={{ paddingBottom: 10, maxWidth: screenWidth - 100 }}>
             {consult.cell}
           </Text>
         )
         }
-        <View style={{ paddingBottom: 10, backgroundColor: 'transparent' }}>
+        <View style={{ paddingBottom: 10 }}>
           <TextAndEmoji data={consult.content || ''} />
         </View>
         {(consult.type === 1 && !!consult.cell) && (
-          <Text style={{ paddingBottom: 10, backgroundColor: 'transparent' }}>
+          <Text style={{ paddingBottom: 10 }}>
             {consult.cell}
           </Text>
         )
         }
         {(!!consult.address) && (
-          <Text style={{ paddingBottom: 10, backgroundColor: 'transparent' }}>
+          <Text style={{ paddingBottom: 10, maxWidth: screenWidth - 100 }}>
             {consult.address}
           </Text>
         )
