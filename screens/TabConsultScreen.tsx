@@ -26,7 +26,7 @@ export default function TabConsultScreen() {
   const closeNotification = () => setNotiVisible(false);
   const openNotification = (title: string, notiList: Notification[]) => {
     if(notiList.length < 1) {
-      openSnackbar('您暂无病患消息提醒')
+      openSnackbar('您暂无病患' + title)
       return;
     }
     setNotiVisible(true);

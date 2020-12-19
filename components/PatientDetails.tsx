@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { User } from '../models/crm/user.model';
-import { Text, View } from './Themed';
+import { Text } from './Themed';
 import { Avatar, Button, Dialog, Divider, List, Title } from 'react-native-paper';
 import { wxImgSource } from '../services/core/image.service';
 import Spinner from './shared/Spinner';

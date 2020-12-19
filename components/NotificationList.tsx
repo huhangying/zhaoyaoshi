@@ -16,8 +16,10 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
           navigate('ChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '免费咨询' });
           break;
         case NotificationType.consultChat:
+          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '付费图文咨询' });
+          break;
         case NotificationType.consultPhone:
-          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '付费咨询' });
+          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '付费电话咨询' });
           break;
         case NotificationType.doseCombination:
           navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '联合用药反馈' });
@@ -30,6 +32,25 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
     }
   }
 
+  const renderNotiTitle = (noti: Notification) => {
+    let msgTypeTitle = '条新消息';
+    switch (noti.type) {
+      case NotificationType.consultChat:
+        msgTypeTitle = '个图文咨询';
+        break;
+      case NotificationType.consultPhone:
+        msgTypeTitle = '个电话咨询';
+        break;
+      case NotificationType.adverseReaction:
+        msgTypeTitle = '个不良反应反馈';
+        break;
+      case NotificationType.doseCombination:
+        msgTypeTitle = '个联合用药反馈';
+        break;
+    }
+    return <ListItem.Title>{noti.name}发送了 {noti.count} {msgTypeTitle}</ListItem.Title>;
+  }
+
   return (
     <View style={styles.container}>
       <Header
@@ -40,11 +61,15 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
       <ScrollView>
         {
           list.map((noti, i) => (
-            <ListItem key={i} bottomDivider onPress={() => chatNavigate(noti)}>
+            <ListItem key={i} bottomDivider 
+            style={{marginTop: 4}}
+            onPress={() => chatNavigate(noti)}>
               <ListItem.Content>
-                <ListItem.Title>{noti.name}发送了 {noti.count} 条新消息</ListItem.Title>
+                {
+                  renderNotiTitle(noti)
+                }
                 <ListItem.Content>
-                  <Text style={[styles.textHint, styles.px3]}>发送于{moment(noti.created).format('YYYY年MM月DD日')}</Text>
+                  <Text style={styles.textHint}>发送于{moment(noti.created).format('YYYY年MM月DD日')}</Text>
                 </ListItem.Content>
               </ListItem.Content>
               <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" />
@@ -64,17 +89,16 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
+    flex: 1,
     marginTop: Platform.OS === 'ios' ? 0 : -Constants.statusBarHeight,
     backgroundColor: 'whitesmoke',
     // height: '100%'
   },
-  px3: {
-    paddingHorizontal: 16
-  },
   textHint: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
     color: 'gray',
-    fontSize: 12
+    fontSize: 12,
   },
   fixBottom: {
     position: 'absolute',
