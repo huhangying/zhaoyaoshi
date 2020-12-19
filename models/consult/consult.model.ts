@@ -16,4 +16,6 @@ export interface Consult {
   finished?: boolean;
   createdAt?: Date;
   // updatedAt?: Date;
+
+  status?: number;
 }

@@ -43,7 +43,7 @@ export default function ConsultTags({ doctorid, onClose }: { doctorid: string, o
         rightComponent={{ icon: 'close', color: '#fff', onPress: onClose }}
       />
       <Caption style={styles.m3}>自定义标签列表</Caption>
-      <EditTextList list={tags} onListSave={onListSave} />
+      <EditTextList key="edit-tags" list={tags} onListSave={onListSave} />
     </View>
   );
 }

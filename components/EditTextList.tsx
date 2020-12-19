@@ -60,7 +60,7 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
               <ListItem.Chevron type='ionicon' name="ios-trash" size={24} color="tomato" style={styles.mr2} onPress={() => deleteConfirm(l, i)} />
             </ListItem>
           ) :
-            (<Text style={{paddingHorizontal: 20, paddingBottom: 10, color: 'gray'}}> 请点击 + 增加快捷回复。</Text>)
+            (<Text key="nodata" style={{paddingHorizontal: 20, paddingBottom: 10, color: 'gray'}}> 请点击 + 增加快捷回复。</Text>)
           ))
         }
       </ScrollView>

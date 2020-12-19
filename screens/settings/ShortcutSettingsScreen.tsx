@@ -38,7 +38,7 @@ export default function ShortcutSettingsScreen() {
   return (
     <>
       <Caption style={styles.m3}>快捷回复列表</Caption>
-      <EditTextList list={shortcuts} onListSave={onListSave} />
+      <EditTextList key="edit-shortcuts" list={shortcuts} onListSave={onListSave} />
     </>
   );
 }

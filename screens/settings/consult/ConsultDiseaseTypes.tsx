@@ -43,7 +43,7 @@ export default function ConsultDiseaseTypes({ doctorid, onClose }: { doctorid: s
         rightComponent={{ icon: 'close', color: '#fff', onPress: onClose }}
       />
       <Caption style={styles.m3}>疾病类型列表</Caption>
-      <EditTextList list={diseaseTypes} onListSave={onListSave} />
+      <EditTextList key="edit-disease-types" list={diseaseTypes} onListSave={onListSave} />
     </View>
   );
 }
