@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Text, View } from './Themed';
+import { Text, StyleSheet } from 'react-native';
+import { View } from './Themed';
 import { Doctor } from '../models/crm/doctor.model';
 import { Avatar, Image } from 'react-native-elements';
 import { imgPath, imgSource } from '../services/core/image.service';

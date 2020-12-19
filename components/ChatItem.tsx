@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Text, View } from './Themed';
+import { StyleSheet, Text } from 'react-native';
+import { View } from './Themed';
 import 'moment/locale/zh-cn'
 import moment from 'moment';
 import { Chat, ChatCommandTypeMap, ChatType } from '../models/io/chat.model';

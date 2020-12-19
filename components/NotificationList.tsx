@@ -13,19 +13,19 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
     if (noti) {
       switch (noti.type) {
         case NotificationType.chat:
-          navigate('ChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '免费咨询' });
+          navigate('ChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 免费咨询' });
           break;
         case NotificationType.consultChat:
-          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '付费图文咨询' });
+          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 付费图文咨询' });
           break;
         case NotificationType.consultPhone:
-          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '付费电话咨询' });
+          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 付费电话咨询' });
           break;
         case NotificationType.doseCombination:
-          navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '联合用药反馈' });
+          navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 联合用药反馈' });
           break;
         case NotificationType.adverseReaction:
-          navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + '不良反应反馈' });
+          navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 不良反应反馈' });
           break;
       }
       onClose(); // close noti modal

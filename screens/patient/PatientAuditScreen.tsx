@@ -88,7 +88,7 @@ export default function PatientAuditScreen() {
   }
 
   if (!doctor?._id || loading) {
-    return (<Spinner/>);
+    return (<Spinner />);
   } else {
     return (
       <>
@@ -121,8 +121,8 @@ export default function PatientAuditScreen() {
                   <DataTable.Cell numeric key={i + '-2'}>
                     <Text>{moment(rel.user?.created).format('YYYY年MM月DD日')}</Text>
                   </DataTable.Cell>
-                  <DataTable.Cell numeric key={i + '-3'}>{
-                    rel.user?.role === 1 ? (
+                  <DataTable.Cell numeric key={i + '-3'} style={{marginRight: -15}}>
+                    {rel.user?.role === 1 ? (
                       <Button mode="contained" icon="marker-cancel" dark={true} color="tomato" compact
                         onPress={() => auditUser(0, rel.user?._id)}>
                         取消审核</Button>
@@ -131,7 +131,7 @@ export default function PatientAuditScreen() {
                           onPress={() => auditUser(1, rel.user?._id)}>
                           审核通过</Button>
                       )
-                  }
+                    }
                   </DataTable.Cell>
                 </DataTable.Row>
               ))
