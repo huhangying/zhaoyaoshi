@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { logout } from '../services/core/auth';
 import { imgSource } from '../services/core/image.service';
-import { Text } from 'react-native-paper';
+import { Text } from '../components/Themed';
 import Spinner from '../components/shared/Spinner';
 
 export default function TabSettingsScreen() {

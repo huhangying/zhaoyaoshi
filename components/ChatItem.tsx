@@ -43,7 +43,6 @@ export default function ChatItem({ chat, doctor, icon, onImgView }: { chat: Chat
           }
         })()}
         <Text style={styles.chatTimestamp}>
-          {/* {moment(chat.created).fromNow()} */}
           {getDateTimeFormat(chat.created)}
         </Text>
       </View>

@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Doctor } from '../models/crm/doctor.model';
-import { Divider, Menu, Provider } from 'react-native-paper';
+import { Menu, Provider } from 'react-native-paper';
 import { NotificationType } from '../models/io/notification.model';
-import { Button, Icon } from 'react-native-elements';
+import { Button, Divider, Icon } from 'react-native-elements';
 
 export default function ChatMenuActions({ type, doctor }: { type: NotificationType, doctor: Doctor }) {
   const [visible, setVisible] = React.useState(false);

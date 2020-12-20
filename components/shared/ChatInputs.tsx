@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback, useEffect, useState } from "react";
+import { Switch } from "react-native";
 import { Keyboard, Platform, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { tap } from "rxjs/operators";
@@ -127,9 +128,8 @@ export default function ChatInputs({ pid, doctor, onSend }: { pid: string, docto
         <Ionicons name="ios-camera" size={26} color="#0095ff" style={styles.mr3} onPress={pickCamera}></Ionicons>
         <Ionicons name="ios-arrow-undo" size={26} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
       </View>
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
-        <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16 }} title="标识完成"></Button>
-        <Button type="outline" raised={true} buttonStyle={{ paddingVertical: 2, paddingHorizontal: 16 }} title="返回付费咨询"></Button>
+      <View style={{ flex: 1, flexDirection: 'row-reverse', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
+        <Switch value={true} onValueChange={()=>{}} />
       </View>
     </View>
     {!!showEmojis &&
