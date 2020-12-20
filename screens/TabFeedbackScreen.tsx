@@ -24,7 +24,7 @@ export default function TabFeedbackScreen() {
 
   const closeNotification = () => setNotiVisible(false);
   const openNotification = (title: string, notiList: Notification[]) => {
-    if(notiList.length < 1) {
+    if (notiList.length < 1) {
       openSnackbar(`您暂无${title}提醒`)
       return;
     }
@@ -49,7 +49,7 @@ export default function TabFeedbackScreen() {
 
 
   if (!store?.doctor) {
-    return (<Spinner/>);
+    return (<Spinner />);
   } else {
     return (
       <>
@@ -86,7 +86,11 @@ export default function TabFeedbackScreen() {
           <ListItem.Chevron />
         </ListItem>
 
-        <Modal visible={notiVisible} animationType="slide" transparent={true} onDismiss={closeNotification}>
+        <Modal visible={notiVisible}
+          animationType="slide" transparent={true}
+          statusBarTranslucent={true}
+          hardwareAccelerated={true}
+          onDismiss={closeNotification}>
           <NotificationList list={notiList} title={notiTitle} onClose={onNotiModalClose} />
         </Modal>
         <Snackbar
