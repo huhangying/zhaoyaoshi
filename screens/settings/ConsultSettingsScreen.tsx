@@ -56,7 +56,8 @@ export default function ConsultSettingsScreen() {
           <List.Section>
             <List.Subheader>您的付费咨询已经开通</List.Subheader>
             {textPrice ? (
-              <List.Item key="textConsult"
+              <List.Item 
+                key="textConsult"
                 title="图文咨询"
                 description={`服务价格 ${textPrice.amount}元/${textPrice.unit_count}分钟`}
                 left={() => <List.Icon icon="chat-processing" color="steelblue" />} />
@@ -65,7 +66,8 @@ export default function ConsultSettingsScreen() {
               )
             }
             {phonePrice ? (
-              <List.Item key="phoneConsult"
+              <List.Item 
+                key="phoneConsult"
                 title={`电话咨询`}
                 description={`服务价格 ${phonePrice.amount}元/次`}
                 left={() => <List.Icon icon="phone" color="teal" />} />
@@ -104,13 +106,19 @@ export default function ConsultSettingsScreen() {
             <ListItem.Chevron />
           </ListItem>
 
-          <Modal visible={tagsVisible} animationType="slide" onDismiss={closeConsultTags}>
+          <Modal visible={tagsVisible} animationType="slide"
+            statusBarTranslucent={true}
+            hardwareAccelerated={true}
+            onDismiss={closeConsultTags}>
             <ConsultTags doctorid={doctor._id} onClose={onCloseConsultTags}></ConsultTags>
           </Modal>
-          <Modal visible={diseaseTypesVisible} animationType="slide" onDismiss={closeConsultDiseaseTypes}>
+          <Modal visible={diseaseTypesVisible} animationType="slide" 
+                      statusBarTranslucent={true}
+                      hardwareAccelerated={true}
+                      onDismiss={closeConsultDiseaseTypes}>
             <ConsultDiseaseTypes doctorid={doctor._id} onClose={onCloseConsultDiseaseTypes}></ConsultDiseaseTypes>
           </Modal>
-        </>): (<Text> </Text>)
+        </>) : (<Text> </Text>)
       }
     </>
   );

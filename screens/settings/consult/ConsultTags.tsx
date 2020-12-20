@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Caption } from 'react-native-paper';
 import EditTextList from '../../../components/EditTextList';
 import { getDoctorConsultByDoctorId, updateDoctorConsult } from '../../../services/consult.service';
 import { tap } from 'rxjs/operators';
 import { Header } from 'react-native-elements';
-import Constants from "expo-constants";
 
 export default function ConsultTags({ doctorid, onClose }: { doctorid: string, onClose: any }) {
   const [tags, setTags] = useState([''])
@@ -52,7 +51,6 @@ export default function ConsultTags({ doctorid, onClose }: { doctorid: string, o
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -Constants.statusBarHeight,
     backgroundColor: 'whitesmoke',
   },
   title: {

@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Modal, StyleSheet } from 'react-native';
-
+import { StyleSheet, Modal } from 'react-native';
+import { Text } from '../components/Themed';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { Badge, ListItem } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
-import { Text, Caption, Snackbar } from 'react-native-paper';
+import { Caption, Snackbar } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification } from '../models/io/notification.model';
 import Spinner from '../components/shared/Spinner';
@@ -25,7 +25,7 @@ export default function TabConsultScreen() {
 
   const closeNotification = () => setNotiVisible(false);
   const openNotification = (title: string, notiList: Notification[]) => {
-    if(notiList.length < 1) {
+    if (notiList.length < 1) {
       openSnackbar('您暂无病患' + title)
       return;
     }
@@ -43,7 +43,7 @@ export default function TabConsultScreen() {
   }
 
   if (!doctor) {
-    return (<Spinner/>);
+    return (<Spinner />);
   } else {
     return (
       <>
@@ -79,14 +79,12 @@ export default function TabConsultScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        {/* <Text style={styles.m3}>
-          {getUnreadCount(chatNotifications)} |
-          {getUnreadCount(feedbackNotifications)} |
-          {getUnreadCount(consultNotifications)} |
-          {doctor?.title} |
-        </Text> */}
 
-        <Modal visible={notiVisible} animationType="slide" transparent={true} onDismiss={closeNotification}>
+        <Modal visible={notiVisible} 
+          animationType="slide" transparent={true}
+          statusBarTranslucent={true}
+          hardwareAccelerated={true}
+          onDismiss={closeNotification}>
           <NotificationList list={notiList} title={notiTitle} onClose={onNotiModalClose} />
         </Modal>
         <Snackbar
