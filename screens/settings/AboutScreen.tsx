@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
-import Config from '../../constants/config';
+import Constants from 'expo-constants';
 
 export default function AboutScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{Config.appName}</Text>
+      <Text style={styles.title}>{Constants.manifest.name}</Text>
       <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <Text>版本号：{Config.version}</Text>
+      <Text>版本号：{Constants.manifest.version}</Text>
       <Text> </Text>
-      <Text>发布时间：{Config.versionDate}</Text>
+      <Text>发布时间：{Constants.manifest.extra.versionDate}</Text>
       <Text> </Text>
-      <Text>开发：{Config.company}</Text>
+      <Text>开发：{Constants.manifest.extra.company}</Text>
     </View>
   );
 }

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "zhaoyaoshi",
+    "name": "找药师APP",
     "slug": "zhaoyaoshi",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -35,6 +35,13 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "versionDate": "2020年12月31日",
+      "company": "惠宏医药信息技术服务（上海）有限公司",
+      "baseUrl": "http://timebox.i234.me/api/",
+      "imageServer": "http://timebox.i234.me/images/",
+      "socketUrl": "http://timebox.i234.me:3000"
     }
   }
 }

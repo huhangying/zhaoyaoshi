@@ -1,10 +1,10 @@
 import { getToken } from "./local.store";
+import Constants from 'expo-constants';
 import Axios from "axios-observable";
 import { EMPTY, from } from "rxjs";
 import { catchError, map, switchMap } from "rxjs/operators";
 import { AxiosResponse, AxiosError } from "axios";
-Axios.defaults.baseURL = 'http://timebox.i234.me/api/';
-
+Axios.defaults.baseURL = Constants.manifest.extra.baseUrl;
 // const baseUrl = 'http://timebox.i234.me/api/';
 
 // export const patchApi = (path: string, data: any) => {

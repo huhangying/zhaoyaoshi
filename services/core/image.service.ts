@@ -1,11 +1,11 @@
-import * as Config from './../../constants/config';
+import Constants from 'expo-constants';
 
 export const imgPath = (path?: string) => {
   if (!path) {
     return require('../../assets/images/noimage.jpg');
   }
 
-  return Config.default.imageServer + path;
+  return Constants.manifest.extra.imageServer + path;
 }
 
 export const imgSource = (path?: string) => {
@@ -13,7 +13,7 @@ export const imgSource = (path?: string) => {
     return require('../../assets/images/noimage.jpg');
   }
 
-  return { uri: Config.default.imageServer + path };
+  return { uri: Constants.manifest.extra.imageServer + path };
 }
 
 export const wxImgSource = (path?: string) => {
