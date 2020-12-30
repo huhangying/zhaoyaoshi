@@ -8,7 +8,7 @@ export default function NotFoundScreen() {
 
   React.useEffect(() => {
     getAuthState().then(_ => {
-      if (_.isLoggedIn) {
+      if (_.doctor && _.token) {
         navigation.reset({ index: 0, routes: [{ name: 'Root' }] });
       } else {
         navigation.navigate('SignIn');

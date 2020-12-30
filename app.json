@@ -19,13 +19,15 @@
       "**/*"
     ],
     "android": {
+      "useNextNotificationsApi": true,
       "permissions": [
         "CAMERA",
         "CAMERA_ROLL",
         "READ_INTERNAL_STORAGE",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "package": "com.harryhu.zhaoyaoshi"
     },
     "ios": {
       "supportsTablet": true,

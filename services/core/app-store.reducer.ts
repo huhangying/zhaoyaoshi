@@ -15,6 +15,9 @@ export function appStoreReducer(state: AppState = appStoreInitialState, action: 
       setToken(action.payload);
       return { ...state, token: action.payload };
 
+    case AppStoreActionType.UpdateIsLoggedIn:
+      return { ...state, isLoggedIn: action.payload };
+
     case AppStoreActionType.UpdateChatNotifications:
       return { ...state, chatNotifications: action.payload };
 

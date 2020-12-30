@@ -6,6 +6,7 @@ export class AppState {
   constructor(
     public readonly doctor?: Doctor,
     public readonly token?: string,
+    public readonly isLoggedIn?: boolean,
 
     public readonly loading?: boolean,
     public readonly errorMessage?: string,

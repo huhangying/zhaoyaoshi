@@ -4,27 +4,27 @@ import { Text, View } from '../components/Themed';
 import { Input, Button } from 'react-native-elements';
 import { doctorLogin } from '../services/doctor.service';
 import { setDoctor, setToken } from '../services/core/local.store';
-import { getAuthState, refreshPage } from '../services/core/auth';
+import { getAuthState } from '../services/core/auth';
 import { catchError, map, tap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
-import { useNavigation } from '@react-navigation/native';
 import Spinner from '../components/shared/Spinner';
 import { useEffect, useState } from 'react';
 import RNPickerSelect, { Item } from 'react-native-picker-select';
 import { Ionicons } from '@expo/vector-icons';
 import { getHospitalList } from '../services/hospital.service';
-import { Hospital } from '../models/hospital/hospital.model';
+import { useDispatch } from 'react-redux';
+import { updateDoctor, updateIsLoggedIn } from '../services/core/app-store.actions';
 
 export default function SignInScreen() {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [hasError, setHasError] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
-  const { reset } = useNavigation();
   const [loggedin, setLoggedin] = useState(true)
   const [hid, setHid] = useState(0);
   const initHospitalList: Item[] = [];
-  const [hospitalList, setHospitalList] = useState(initHospitalList)
+  const [hospitalList, setHospitalList] = useState(initHospitalList);
+  const dispatch = useDispatch()
 
   const prepareData = () => {
     setLoggedin(false)
@@ -42,9 +42,9 @@ export default function SignInScreen() {
 
   useEffect(() => {
     getAuthState().then(_ => {
-      if (_?.isLoggedIn) {
+      if (_?.doctor && _.token) {
         setLoggedin(true)
-        reset({ index: 0, routes: [{ name: 'Root' }] });
+        dispatch(updateIsLoggedIn(true))
       } else {
         prepareData();
       }
@@ -53,7 +53,7 @@ export default function SignInScreen() {
     })
     return () => {
     }
-  }, [reset])
+  }, [dispatch])
 
   const login = (hid: number, username: string, password: string) => {
     if (!hid) {
@@ -72,7 +72,9 @@ export default function SignInScreen() {
         await setToken(result.token);
         delete result.token;
         await setDoctor(result);
-        refreshPage();
+        dispatch(updateIsLoggedIn(true));
+        dispatch(updateDoctor(result));
+
       }),
       catchError(err => {
         setHasError(true);
@@ -147,7 +149,7 @@ export default function SignInScreen() {
           />
           <Input
             placeholder="密码"
-            leftIcon={{ type: 'ionicon', name: 'md-lock', color: '#2f95dc', size: 30 }}
+            leftIcon={{ type: 'ionicon', name: 'md-lock-closed', color: '#2f95dc', size: 30 }}
             style={styles.inputPadding}
             value={password}
             onChangeText={setPassword}

@@ -8,13 +8,12 @@ import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
 import SignInScreen from '../screens/SignInScreen';
 import { getAuthState } from '../services/core/auth';
-import { Auth } from '../models/auth.model';
 import { SocketioService } from '../services/core/socketio.service';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import { tap } from 'rxjs/operators';
 import { connect, useStore } from 'react-redux';
 import { useDispatch } from 'react-redux'
-import { updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, UpdateIoService, updateToken } from '../services/core/app-store.actions';
+import { updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, UpdateIoService, updateIsLoggedIn, updateToken } from '../services/core/app-store.actions';
 import { AppState } from "../models/app-state.model";
 
 const Stack = createStackNavigator();
@@ -23,16 +22,15 @@ const Stack = createStackNavigator();
 export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
 
   const store = useStore();
-  const [auth, setAuth] = React.useState({} as Auth);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     // const _auth = await getAuthState();
     getAuthState().then(_auth => {
-      setAuth(_auth);
       if (_auth?.doctor?._id) {
         dispatch(updateDoctor(_auth.doctor));
         dispatch(updateToken(_auth.token));
+        // dispatch(updateIsLoggedIn(true));
 
         // inital store data, only once
         const socketio = new SocketioService(_auth.doctor._id);
@@ -83,7 +81,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}>
-        {!auth?.isLoggedIn ?
+        { !store.getState().isLoggedIn ?
           (
             <Stack.Screen name="SignIn" component={SignInScreen} />
           )
@@ -101,6 +99,7 @@ const mapState = (state: AppState) => {
   return {
     doctor: state.doctor,
     token: state.token,
+    isLoggedIn: state.isLoggedIn,
     chatNotifications: state.chatNotifications,
     feedbackNotifications: state.feedbackNotifications,
     consultNotifications: state.consultNotifications,
@@ -110,6 +109,7 @@ const mapState = (state: AppState) => {
 const mapDispatch = {
   updateDoctor,
   updateToken,
+  updateIsLoggedIn,
   updateChatNotifications,
   updateFeedbackNotifications,
   updateConsultNotifications,

@@ -6,6 +6,7 @@ import { SocketioService } from "./socketio.service";
 export enum AppStoreActionType {
   UpdateLoading,
   UpdateErrorMessage,
+  UpdateIsLoggedIn,
 
   UpdateDoctor,
   UpdateToken,
@@ -69,6 +70,13 @@ export const UpdateErrorMessage = (errorMessage: string) => (
   {
     type: AppStoreActionType.UpdateErrorMessage,
     payload: errorMessage,
+  }
+);
+
+export const updateIsLoggedIn = (isLoggedIn: boolean) => (
+  {
+    type: AppStoreActionType.UpdateIsLoggedIn,
+    payload: isLoggedIn,
   }
 );
 

@@ -82,6 +82,13 @@ export class AppStoreService extends Store<AppState> {
     });
   }
 
+  updateIsLoggedIn(isLoggedIn: boolean) {
+    this.setState({
+      ...this.state,
+      isLoggedIn,
+    });
+  }
+
   updateHideBottomBar(hideBottomBar: boolean) {
     this.setState({
       ...this.state,
