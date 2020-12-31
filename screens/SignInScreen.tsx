@@ -164,7 +164,7 @@ export default function SignInScreen() {
             <Button title="登录" onPress={() => login(hid, username, password)} />
           </View>
         </View>
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <View style={ styles.fixBottom }>
           <Text>hwem</Text>
         </View>
       </>
@@ -193,6 +193,12 @@ const styles = StyleSheet.create({
   errorMsg: {
     color: 'red',
     paddingHorizontal: 30,
+  },
+  fixBottom: {
+    flex: 0.1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    bottom: 10,
   },
 });
 
