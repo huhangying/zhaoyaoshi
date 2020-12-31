@@ -1,7 +1,7 @@
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { ColorSchemeName } from 'react-native';
+import { Alert, ColorSchemeName } from 'react-native';
 
 import NotFoundScreen from '../screens/NotFoundScreen';
 import BottomTabNavigator from './BottomTabNavigator';
@@ -47,14 +47,12 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
     await Notifications.scheduleNotificationAsync({
       content: {
         title: `${noti.count} 个${getNotificationNameByType(noti.type || 0)}`,
-        // body:  `${noti.name} 发送于${getDateTimeFormat(noti.created)}`,
-        // body:  JSON.stringify(store.getState().notiPage),
         data: {
           data: noti.patientId,
           link: noti.keyId
         },
       },
-      trigger: { seconds: 1 },
+      trigger: { seconds: 2 },
     });
     // }
   }
@@ -124,6 +122,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
 
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
           // console.log(response);
+          alert(JSON.stringify(response))
         });
       }
     });
@@ -202,6 +201,7 @@ async function registerForPushNotificationsAsync() {
       importance: Notifications.AndroidImportance.MAX,
       vibrationPattern: [0, 250, 250, 250],
       lightColor: '#FF231F7C',
+      // enableVibrate: false,
     });
   }
 

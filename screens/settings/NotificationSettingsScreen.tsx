@@ -1,7 +1,17 @@
+import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
-import { Text, View } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
+import { ListItem } from 'react-native-elements';
+import { Caption, Switch } from 'react-native-paper';
+import * as Notifications from 'expo-notifications';
 
 export default function NotificationsSettingsScreen() {
+
+  const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+
+  const onToggleVibration = () => {
+    setIsSwitchOn(!isSwitchOn);
+  };
 
   useEffect(() => {
 
@@ -10,14 +20,21 @@ export default function NotificationsSettingsScreen() {
   }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}>
-      <Text>under construction</Text>
-
-    </View>
+    <>
+      <Caption style={styles.m3}>消息提醒设置</Caption>
+      <ListItem key={1} bottomDivider >
+        <ListItem.Content>
+          <ListItem.Title>新消息提醒时震动</ListItem.Title>
+        </ListItem.Content>
+        <Switch value={isSwitchOn} onValueChange={onToggleVibration} />
+      </ListItem>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  m3: {
+    margin: 18,
+    marginVertical: 16
+  },
+});
