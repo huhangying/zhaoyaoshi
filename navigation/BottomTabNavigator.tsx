@@ -24,6 +24,7 @@ import RelationshipScreen from '../screens/patient/RelationshipScreen';
 import PatientAuditScreen from '../screens/patient/PatientAuditScreen';
 import FeedbackChatScreen from '../screens/feedback/FeedbackChatScreen';
 import SelectChatScreen from '../screens/consult/SelectChatScreen';
+import NotificationSettingsScreen from '../screens/settings/NotificationSettingsScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -180,6 +181,11 @@ function TabSettingsNavigator() {
         name="ConsultSettingsScreen"
         component={ConsultSettingsScreen}
         options={{ headerTitle: '付费咨询设置' }}
+      />
+      <TabConsultStack.Screen
+        name="NotificationSettingsScreen"
+        component={NotificationSettingsScreen}
+        options={{ headerTitle: 'Notification设置' }}
       />
       <TabConsultStack.Screen
         name="ShortcutSettingsScreen"

@@ -23,9 +23,11 @@
       "permissions": [
         "CAMERA",
         "CAMERA_ROLL",
+        "MEDIA_LIBRARY",
         "READ_INTERNAL_STORAGE",
         "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "NOTIFICATIONS"
       ],
       "package": "com.harryhu.zhaoyaoshi"
     },
@@ -37,6 +39,7 @@
       "favicon": "./assets/images/favicon.png"
     },
     "extra": {
+      "id": "zhaoyaoshi",
       "versionDate": "2020年12月31日",
       "company": "惠宏医药信息技术服务（上海）有限公司",
       "baseUrl": "http://timebox.i234.me/api/",

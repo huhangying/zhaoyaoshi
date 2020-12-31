@@ -4,6 +4,7 @@ import { clearLocalStorage, setDoctor, setToken } from "./local.store";
 import { Store } from "./store";
 import { Notification } from "../../models/io/notification.model";
 import { SocketioService } from "./socketio.service";
+import { NotiPage } from "../../models/io/noti-page.model";
 
 export class AppStoreService extends Store<AppState> {
   constructor(initState?: AppState) {
@@ -24,6 +25,7 @@ export class AppStoreService extends Store<AppState> {
 
   get loading() { return this.state?.loading || false; }
   get errorMessage() { return this.state?.errorMessage || ''; }
+  get notiPage() { return this.state?.notiPage; }
   get hideBottomBar() { return this.state?.hideBottomBar || false; }
   get ioService() { return this.state?.ioService || null; }
 
@@ -86,6 +88,13 @@ export class AppStoreService extends Store<AppState> {
     this.setState({
       ...this.state,
       isLoggedIn,
+    });
+  }
+
+  updateNotiPage(notiPage: NotiPage) {
+    this.setState({
+      ...this.state,
+      notiPage,
     });
   }
 

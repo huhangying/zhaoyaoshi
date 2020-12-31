@@ -1,5 +1,6 @@
 import { AppState } from "../../models/app-state.model";
 import { Doctor } from "../../models/crm/doctor.model";
+import { NotiPage } from "../../models/io/noti-page.model";
 import { Notification } from "../../models/io/notification.model";
 import { SocketioService } from "./socketio.service";
 
@@ -7,6 +8,7 @@ export enum AppStoreActionType {
   UpdateLoading,
   UpdateErrorMessage,
   UpdateIsLoggedIn,
+  UpdateNotiPage,
 
   UpdateDoctor,
   UpdateToken,
@@ -77,6 +79,13 @@ export const updateIsLoggedIn = (isLoggedIn: boolean) => (
   {
     type: AppStoreActionType.UpdateIsLoggedIn,
     payload: isLoggedIn,
+  }
+);
+
+export const updateNotiPage = (notiPage?: NotiPage) => (
+  {
+    type: AppStoreActionType.UpdateNotiPage,
+    payload: notiPage,
   }
 );
 

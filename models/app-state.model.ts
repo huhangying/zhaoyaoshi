@@ -1,5 +1,6 @@
 import { SocketioService } from "../services/core/socketio.service";
 import { Doctor } from "./crm/doctor.model";
+import { NotiPage } from "./io/noti-page.model";
 import { Notification } from "./io/notification.model";
 
 export class AppState {
@@ -17,5 +18,7 @@ export class AppState {
 
     public readonly hideBottomBar?: boolean,
     public readonly ioService?: SocketioService,
+
+    public readonly notiPage?: NotiPage,
   ) { }
 }

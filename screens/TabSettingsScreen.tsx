@@ -44,7 +44,7 @@ export default function TabSettingsScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem key={2} bottomDivider>
+        <ListItem key={2} bottomDivider onPress={() => navigate('NotificationSettingsScreen')}>
           <Ionicons name="ios-color-palette" size={24} color="purple" />
           <ListItem.Content>
             <ListItem.Title>设置</ListItem.Title>

@@ -33,6 +33,7 @@ export default {
               TabSettingsScreen: 'settings',
               ProfileScreen: 'profile',
               ConsultSettingsScreen: 'consult-settings',
+              NotificationSettingsScreen: 'notification-settings',
               ShortcutSettingsScreen: 'shortcut-settings',
               AboutScreen: 'about'
             },

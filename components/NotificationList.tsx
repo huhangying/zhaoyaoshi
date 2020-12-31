@@ -3,8 +3,8 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { Text } from '../components/Themed';
 import { ListItem, Header, Button } from 'react-native-elements';
 import { Notification, NotificationType } from '../models/io/notification.model';
-import moment from 'moment';
 import { useNavigation } from '@react-navigation/native';
+import { getDateTimeFormat } from '../services/core/moment';
 
 export default function NotificationList({ list, title, onClose }: { list: Notification[], title: string, onClose: any }) {
   const { navigate } = useNavigation();
@@ -69,7 +69,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
                   renderNotiTitle(noti)
                 }
                 <ListItem.Content>
-                  <Text style={styles.textHint}>发送于{moment(noti.created).format('YYYY年MM月DD日')}</Text>
+                  <Text style={styles.textHint}>发送于{getDateTimeFormat(noti.created)}</Text>
                 </ListItem.Content>
               </ListItem.Content>
               <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" />

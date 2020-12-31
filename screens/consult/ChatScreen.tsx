@@ -11,7 +11,7 @@ import ChatItem from '../../components/ChatItem';
 import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
 import { imgPath } from '../../services/core/image.service';
-import { UpdateHideBottomBar } from '../../services/core/app-store.actions';
+import { UpdateHideBottomBar, updateNotiPage } from '../../services/core/app-store.actions';
 import { NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
 import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
@@ -73,10 +73,12 @@ export default function ChatScreen() {
 
     Keyboard.addListener("keyboardDidShow", scrollToEnd);
     dispatch(UpdateHideBottomBar(true));
+    dispatch(updateNotiPage({patientId: pid, type, doctorId: doctor?._id})); // set noti page
 
     return () => {
       Keyboard.removeListener("keyboardDidShow", scrollToEnd);
       dispatch(UpdateHideBottomBar(false));
+      dispatch(updateNotiPage()); // clean noti page
     }
   }, [doctor, doctor?._id, route.params?.pid, route.params?.type, route.params?.title, navigation, dispatch, start]);
 
