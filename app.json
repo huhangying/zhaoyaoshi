@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "找药师APP",
+    "name": "找药师",
     "slug": "zhaoyaoshi",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -29,11 +29,13 @@
         "WRITE_EXTERNAL_STORAGE",
         "NOTIFICATIONS"
       ],
-      "package": "com.harryhu.zhaoyaoshi"
+      "package": "com.harryhu.zhaoyaoshi",
+      "versionCode": 1
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "zhaoyaoshi"
+      "bundleIdentifier": "zhaoyaoshi",
+      "buildNumber": "1.0.0"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"

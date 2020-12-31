@@ -1,7 +1,7 @@
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { Alert, ColorSchemeName } from 'react-native';
+import { ColorSchemeName } from 'react-native';
 
 import NotFoundScreen from '../screens/NotFoundScreen';
 import BottomTabNavigator from './BottomTabNavigator';
@@ -19,9 +19,8 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { Platform } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getNotificationNameByType } from '../services/notification.service';
-import { getDateTimeFormat } from '../services/core/moment';
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -38,18 +37,15 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const dispatch = useDispatch();
 
   const [expoPushToken, setExpoPushToken] = useState('');
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
 
   const pushLocalNotification = async (noti: Notification, doctorId: string) => {
     // if (noti.room === doctorId) {
+    const notiName = getNotificationNameByType(noti.type || 0);
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: `${noti.count} 个${getNotificationNameByType(noti.type || 0)}`,
+        title: `${noti.count} 个${notiName}`,
         data: {
-          data: noti.patientId,
-          link: noti.keyId
+          url: `/chat?pid=${noti.patientId}&title=${noti.name} ${notiName}&type=${noti.type}`
         },
       },
       trigger: { seconds: 2 },
@@ -112,24 +108,13 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
               break;
           }
         });
-
-        // push notification
-        registerForPushNotificationsAsync().then(token => setExpoPushToken(token || ''));
-
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-          setNotification(notification);
-        });
-
-        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-          // console.log(response);
-          alert(JSON.stringify(response))
-        });
       }
     });
 
+    // push notification
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token || ''));
+
     return () => {
-      Notifications.removeNotificationSubscription(notificationListener);
-      Notifications.removeNotificationSubscription(responseListener);
     }
   }, [store, dispatch]);
 
