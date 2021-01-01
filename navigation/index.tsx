@@ -152,7 +152,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
                 navigationRef.current?.navigate('FeedbackChatScreen', queryParams || {})
                 break;
               case 'consult/consult-chat':
-                navigationRef.current?.navigate('ConsultChatScreen', queryParams || {})
+                navigationRef.current?.navigate('ConsultScreen', queryParams || {})
                 break;
               default:
                 break;
@@ -163,7 +163,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
 
           return () => {
             // Clean up the event listeners
-            Linking.removeEventListener('url', onReceiveURL);
+            Linking.removeEventListener && Linking.removeEventListener('url', onReceiveURL);
             subscription.remove();
           };
         },
