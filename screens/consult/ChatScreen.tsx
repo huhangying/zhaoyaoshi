@@ -20,7 +20,7 @@ import { Header } from 'react-native-elements';
 import ChatMenuActions from '../../components/ChatMenuActions';
 
 export default function ChatScreen() {
-  const scrollViewRef = useRef<ScrollView>();
+  const scrollViewRef = useRef<ScrollView>(null);
   const route = useRoute();
   const dimensions = useWindowDimensions();
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -131,8 +131,7 @@ export default function ChatScreen() {
         <Header
           placement="left"
           leftComponent={{ icon: 'chevron-left', color: '#fff', onPress: navigation.goBack }}
-          centerComponent={{ text: title, style: { color: '#fff' } }}
-        // rightComponent={<ChatMenuActions type={type} doctor={doctor} />}
+          centerComponent={{ text: decodeURIComponent(title), style: { color: '#fff' } }}
         />
 
         <ScrollView ref={scrollViewRef}

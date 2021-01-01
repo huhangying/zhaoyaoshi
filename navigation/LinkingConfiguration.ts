@@ -1,37 +1,41 @@
 import * as Linking from 'expo-linking';
-import * as Notifications from 'expo-notifications';
 
 export default {
   prefixes: [Linking.makeUrl('/')],
   config: {
     screens: {
       Root: {
+        initialRouteName: "TabConsultScreen",
         screens: {
-          TabConsult:  {
+          consult: {
+            path: 'consult',
             screens: {
-              TabConsultScreen: 'consult',
+              TabConsultScreen: '',
               ConsultChatScreen: 'consult-chat',
               ChatScreen: 'chat',
               SelectChatScreen: 'select-chat',
             },
-          },                      
-          TabFeedback: {
+          },
+          feedback: {
+            path: 'feedback',
             screens: {
-              TabFeedbackScreen: 'feedback',
+              TabFeedbackScreen: '',
               BookingsScreen: 'bookings',
               FeedbackChatScreen: 'feedback-chat',
             },
           },
-          TabPatient: {
+          patient: {
+            path: 'patient',
             screens: {
-              TabPatientScreen: 'patient',
+              TabPatientScreen: '',
               RelationshipScreen: 'relationship',
               PatientAuditScreen: 'patient-audit',
             },
           },
-          TabSettings: {
+          settings: {
+            path: 'settings',
             screens: {
-              TabSettingsScreen: 'settings',
+              TabSettingsScreen: '',
               ProfileScreen: 'profile',
               ConsultSettingsScreen: 'consult-settings',
               NotificationSettingsScreen: 'notification-settings',
@@ -44,28 +48,5 @@ export default {
       SignInScreen: 'signin',
       NotFound: '*',
     },
-  },
-  subscribe(listener) {
-    const onReceiveURL = ({ url }: { url: string }) => listener(url);
-
-    // Listen to incoming links from deep linking
-    Linking.addEventListener('url', onReceiveURL);
-
-    // Listen to expo push notifications
-    const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-      const url = response.notification.request.content.data.url;
-
-      // Any custom logic to see whether the URL needs to be handled
-      //...
-      // alert(JSON.stringify(response.notification.request.content.data))
-      // Let React Navigation handle the URL
-      listener(url);
-    });
-
-    return () => {
-      // Clean up the event listeners
-      Linking.removeEventListener('url', onReceiveURL);
-      subscription.remove();
-    };
   },
 };

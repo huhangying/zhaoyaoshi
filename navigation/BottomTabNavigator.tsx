@@ -34,7 +34,6 @@ export default function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="consult"
       activeColor={Colors[colorScheme].tint}
       inactiveColor={Colors[colorScheme].text}
       barStyle={{ backgroundColor: Colors[colorScheme].background, display: state.hideBottomBar ? 'none' : 'flex' }}  >
@@ -90,7 +89,7 @@ function TabConsultNavigator() {
   return (
     <TabConsultStack.Navigator>
       <TabConsultStack.Screen
-        name="TabConsult"
+        name="TabConsultScreen"
         component={TabConsultScreen}
         options={{ headerTitle: '药师咨询' }}
       />

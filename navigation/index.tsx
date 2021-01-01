@@ -16,11 +16,13 @@ import { useDispatch } from 'react-redux'
 import { updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, UpdateIoService, updateIsLoggedIn, updateNotiPage, updateToken } from '../services/core/app-store.actions';
 import { AppState } from "../models/app-state.model";
 import Constants from 'expo-constants';
+import * as Linking from 'expo-linking';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { Platform } from 'react-native';
 import { useEffect, useState } from 'react';
 import { getNotificationNameByType } from '../services/notification.service';
+import { getDateTimeFormat } from '../services/core/moment';
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -35,17 +37,22 @@ const Stack = createStackNavigator();
 export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const store = useStore();
   const dispatch = useDispatch();
+  const navigationRef = React.useRef(null);
+
 
   const [expoPushToken, setExpoPushToken] = useState('');
 
-  const pushLocalNotification = async (noti: Notification, doctorId: string) => {
+  const pushLocalNotification = async (noti: Notification, path: string) => {
     // if (noti.room === doctorId) {
     const notiName = getNotificationNameByType(noti.type || 0);
     await Notifications.scheduleNotificationAsync({
       content: {
         title: `${noti.count} 个${notiName}`,
+        body: `${noti.name} 发送于${getDateTimeFormat(noti.created)}`,
         data: {
-          url: `/chat?pid=${noti.patientId}&title=${noti.name} ${notiName}&type=${noti.type}`
+          // url: `exp://192.168.87.35:19006/consult/chat?pid=${noti.patientId}&title=${noti.name} ${notiName}&type=${noti.type}`
+          url: Linking.makeUrl(path, { pid: noti.patientId, title: noti.name + ' ' + notiName, type: '' + noti.type })
+          // url: `zhaoyaoshi://chat?pid=${noti.patientId}&title=${noti.name} ${notiName}&type=${noti.type}`
         },
       },
       trigger: { seconds: 2 },
@@ -85,7 +92,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
               notifications = socketio.addNotiToExisted(state.chatNotifications, noti);
               dispatch(updateChatNotifications(notifications));
               if (!state.notiPage?.patientId || state.notiPage.patientId !== noti.patientId) {
-                pushLocalNotification(noti, state.doctor?._id);
+                pushLocalNotification(noti, 'consult/chat');
               }
               break;
 
@@ -94,7 +101,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
               notifications = socketio.addNotiToExisted(state.feedbackNotifications, noti);
               dispatch(updateFeedbackNotifications(notifications));
               if (!state.notiPage?.patientId || state.notiPage.patientId !== noti.patientId) {
-                pushLocalNotification(noti, state.doctor?._id);
+                pushLocalNotification(noti, 'feedback/feedback-chat');
               }
               break;
 
@@ -103,7 +110,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
               notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
               dispatch(updateConsultNotifications(notifications));
               if (!state.notiPage?.patientId || state.notiPage.patientId !== noti.patientId) {
-                pushLocalNotification(noti, state.doctor?._id);
+                pushLocalNotification(noti, 'consult/consult-chat');
               }
               break;
           }
@@ -121,7 +128,46 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
 
   return (
     <NavigationContainer
-      linking={LinkingConfiguration}
+      ref={navigationRef}
+      linking={{
+        ...LinkingConfiguration,
+        subscribe(listener) {
+          const onReceiveURL = ({ url }: { url: string }) => listener(url);
+          // const linkTo = useLinkTo();
+
+          // Listen to incoming links from deep linking
+          Linking.addEventListener('url', onReceiveURL);
+
+          // Listen to expo push notifications
+          const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+            const url = response.notification.request.content.data.url as string;
+
+            // Let React Navigation handle the URL
+            const { path, queryParams } = Linking.parse(url);
+            switch (path) {
+              case 'consult/chat':
+                navigationRef.current?.navigate('ChatScreen', queryParams || {})
+                break;
+              case 'feedback/feedback-chat':
+                navigationRef.current?.navigate('FeedbackChatScreen', queryParams || {})
+                break;
+              case 'consult/consult-chat':
+                navigationRef.current?.navigate('ConsultChatScreen', queryParams || {})
+                break;
+              default:
+                break;
+            }
+
+            listener(url);
+          });
+
+          return () => {
+            // Clean up the event listeners
+            Linking.removeEventListener('url', onReceiveURL);
+            subscription.remove();
+          };
+        },
+      }}
       theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}>
