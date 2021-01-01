@@ -30,6 +30,10 @@ export function GetConsultsByDoctorIdUserIdAndType(doctorId: string, userId: str
   return getApi<Consult[]>(`consults/get-history/${doctorId}/${userId}/${type}`);
 }
 
+export function GetConsultsByDoctorIdAndUserId(doctorId: string, userId: string) {
+  return getApi<Consult[]>(`consults/get/${doctorId}/${userId}`);
+}
+
 export function updateConsultById(id: string, data: Consult) {
   return patchApi<Consult>('consult/' + id, data);
 }

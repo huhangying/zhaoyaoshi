@@ -1,10 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { Doctor } from '../models/crm/doctor.model';
-import { Avatar, Image } from 'react-native-elements';
+import { Avatar, Divider, Image } from 'react-native-elements';
 import { imgPath, imgSource } from '../services/core/image.service';
 import { getDateTimeFormat } from '../services/core/moment';
-import { Divider } from 'react-native-paper';
 import TextAndEmoji from './shared/TextAndEmoji';
 import { Consult } from '../models/consult/consult.model';
 

@@ -17,11 +17,11 @@ import { Header } from 'react-native-elements';
 import ChatMenuActions from '../../components/ChatMenuActions';
 import { View } from 'react-native';
 import { Consult } from '../../models/consult/consult.model';
-import { GetConsultsByDoctorIdUserIdAndType, sendConsult } from '../../services/consult.service';
+import { GetConsultsByDoctorIdAndUserId, GetConsultsByDoctorIdUserIdAndType, sendConsult } from '../../services/consult.service';
 import ConsultItem from '../../components/ConsultItem';
 
 export default function ConsultScreen() {
-  const scrollViewRef = useRef<ScrollView>();
+  const scrollViewRef = useRef<ScrollView>(null);
   const route = useRoute();
   const dimensions = useWindowDimensions();
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -58,13 +58,23 @@ export default function ConsultScreen() {
       setPid(pid);
 
       // get history
-      GetConsultsByDoctorIdUserIdAndType(doctor._id, pid, type).pipe(
-        take(1),
-        tap(_consults => {
-          setConsults(_consults);
-          setLoading(false);
-        })
-      ).subscribe();
+      if (type === NotificationType.consultChat) {
+        GetConsultsByDoctorIdAndUserId(doctor._id, pid).pipe(
+          take(1),
+          tap(_consults => {
+            setConsults(_consults);
+            setLoading(false);
+          })
+        ).subscribe();
+      }else { // ?
+        GetConsultsByDoctorIdUserIdAndType(doctor._id, pid, type).pipe(
+          take(1),
+          tap(_consults => {
+            setConsults(_consults);
+            setLoading(false);
+          })
+        ).subscribe();
+      }
 
       getUserDetailsById(pid).pipe(
         take(1),
@@ -149,7 +159,7 @@ export default function ConsultScreen() {
         <ScrollView ref={scrollViewRef}
           style={{ marginBottom: Platform.OS === "ios" ? 119 : 88, maxHeight: dimensions.height - 145 }}
           onContentSizeChange={scrollToEnd}>
-          <View style={styles.feedbacks}>
+          <View style={styles.item}>
             {consults.map((consult, i) => (consult.status && consult.status >= 2 ?
               <ConsultItem key={i} consult={consult} doctor={doctor} icon={imgPath(doctor.icon)} onImgView={openViewer} ></ConsultItem>
               :
@@ -168,7 +178,7 @@ export default function ConsultScreen() {
 }
 
 const styles = StyleSheet.create({
-  feedbacks: {
+  item: {
     flex: 1,
     flexDirection: 'column',
   },
