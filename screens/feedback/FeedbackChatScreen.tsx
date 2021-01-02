@@ -39,7 +39,8 @@ export default function FeedbackChatScreen() {
 
   // 监听呼入消息
   const start = ioService?.onFeedback((msg: UserFeedback) => {
-    if (msg.doctor === doctor?._id && msg.user === pid) {
+    if ((type === NotificationType.adverseReaction || type === NotificationType.doseCombination) &&
+      msg.doctor === doctor?._id && msg.user === pid) {
       const _feedbacks = [...feedbacks];
       _feedbacks.push(msg);
       setFeedbacks(_feedbacks);
@@ -77,7 +78,7 @@ export default function FeedbackChatScreen() {
 
     Keyboard.addListener("keyboardDidShow", scrollToEnd);
     dispatch(UpdateHideBottomBar(true));
-    dispatch(updateNotiPage({patientId: pid, type, doctorId: doctor?._id})); // set noti page
+    dispatch(updateNotiPage({ patientId: pid, type, doctorId: doctor?._id })); // set noti page
 
     return () => {
       Keyboard.removeListener("keyboardDidShow", scrollToEnd);

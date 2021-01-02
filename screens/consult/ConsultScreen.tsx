@@ -39,7 +39,8 @@ export default function ConsultScreen() {
 
   // 监听呼入消息
   const start = ioService?.onConsult((msg: Consult) => {
-    if (msg.doctor === doctor?._id && msg.user === pid) {
+    if ((type === NotificationType.consultChat || type === NotificationType.consultPhone) &&
+      msg.doctor === doctor?._id && msg.user === pid) {
       const _consults = [...consults];
       _consults.push(msg);
       setConsults(_consults);
@@ -66,7 +67,7 @@ export default function ConsultScreen() {
             setLoading(false);
           })
         ).subscribe();
-      }else { // ?
+      } else { // ?
         GetConsultsByDoctorIdUserIdAndType(doctor._id, pid, type).pipe(
           take(1),
           tap(_consults => {
@@ -86,7 +87,7 @@ export default function ConsultScreen() {
 
     Keyboard.addListener("keyboardDidShow", scrollToEnd);
     dispatch(UpdateHideBottomBar(true));
-    dispatch(updateNotiPage({patientId: pid, type, doctorId: doctor?._id})); // set noti page
+    dispatch(updateNotiPage({ patientId: pid, type, doctorId: doctor?._id })); // set noti page
 
     return () => {
       Keyboard.removeListener("keyboardDidShow", scrollToEnd);

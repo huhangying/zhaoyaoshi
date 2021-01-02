@@ -38,7 +38,8 @@ export default function ChatScreen() {
 
   // 监听呼入消息
   const start = ioService?.onChat((msg: Chat) => {
-    if (msg.to === doctor?._id && msg.sender === pid) {
+    if (type === NotificationType.chat && 
+      msg.to === doctor?._id && msg.sender === pid) {
       const _chats = [...chats];
       _chats.unshift(msg);
       setChats(_chats);
