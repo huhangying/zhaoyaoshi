@@ -48,9 +48,7 @@ export default function ChatScreen() {
   });
 
   useEffect(() => {
-    const pid = route.params?.pid;
-    const title = route.params?.title;
-    const type = route.params?.type;
+    const {pid, title, type} = route.params as {pid: string; title: string; type: number};
     setTitle(title);
     // navigation.setOptions({ headerTitle: title });
     if (doctor?._id) {
@@ -81,7 +79,7 @@ export default function ChatScreen() {
       dispatch(UpdateHideBottomBar(false));
       dispatch(updateNotiPage()); // clean noti page
     }
-  }, [doctor, doctor?._id, route.params?.pid, route.params?.type, route.params?.title, navigation, dispatch, start]);
+  }, [doctor, doctor?._id, route.params, navigation, dispatch, start]);
 
   const scrollToEnd = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });

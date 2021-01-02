@@ -49,9 +49,7 @@ export default function ConsultScreen() {
   });
 
   useEffect(() => {
-    const pid = route.params?.pid;
-    const title = route.params?.title;
-    const type = route.params?.type;
+    const {pid, title, type} = route.params as {pid: string; title: string; type: number};
     setTitle(title);
     if (doctor?._id) {
       setLoading(true);
@@ -94,7 +92,7 @@ export default function ConsultScreen() {
       dispatch(UpdateHideBottomBar(false));
       dispatch(updateNotiPage()); // clean noti page
     }
-  }, [doctor, doctor?._id, route.params?.pid, route.params?.type, route.params?.title, navigation, dispatch, start]);
+  }, [doctor, doctor?._id, route.params, navigation, dispatch, start]);
 
   const scrollToEnd = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });

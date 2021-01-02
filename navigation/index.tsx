@@ -37,8 +37,8 @@ const Stack = createStackNavigator();
 export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const store = useStore();
   const dispatch = useDispatch();
-  const navigationRef = React.useRef(null);
-
+  const initNavigation: any = null;
+  const navigationRef = React.useRef(initNavigation);
 
   const [expoPushToken, setExpoPushToken] = useState('');
 
@@ -145,18 +145,20 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
 
             // Let React Navigation handle the URL
             const { path, queryParams } = Linking.parse(url);
-            switch (path) {
-              case 'consult/chat':
-                navigationRef.current?.navigate('ChatScreen', queryParams || {})
-                break;
-              case 'feedback/feedback-chat':
-                navigationRef.current?.navigate('FeedbackChatScreen', queryParams || {})
-                break;
-              case 'consult/consult-chat':
-                navigationRef.current?.navigate('ConsultScreen', queryParams || {})
-                break;
-              default:
-                break;
+            if (navigationRef?.current?.navigate) {
+              switch (path) {
+                case 'consult/chat':
+                  navigationRef.current.navigate('ChatScreen', queryParams || {})
+                  break;
+                case 'feedback/feedback-chat':
+                  navigationRef.current.navigate('FeedbackChatScreen', queryParams || {})
+                  break;
+                case 'consult/consult-chat':
+                  navigationRef.current.navigate('ConsultScreen', queryParams || {})
+                  break;
+                default:
+                  break;
+              }
             }
 
             listener(url);

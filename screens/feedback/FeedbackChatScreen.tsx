@@ -21,7 +21,7 @@ import ChatMenuActions from '../../components/ChatMenuActions';
 import { View } from 'react-native';
 
 export default function FeedbackChatScreen() {
-  const scrollViewRef = useRef<ScrollView>();
+  const scrollViewRef = useRef<ScrollView>(null);
   const route = useRoute();
   const dimensions = useWindowDimensions();
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -49,9 +49,7 @@ export default function FeedbackChatScreen() {
   });
 
   useEffect(() => {
-    const pid = route.params?.pid;
-    const title = route.params?.title;
-    const type = route.params?.type;
+    const {pid, title, type} = route.params as {pid: string; title: string; type: number};
     setTitle(title);
     navigation.setOptions({ headerTitle: title }); // to remove
     if (doctor?._id) {
@@ -85,7 +83,7 @@ export default function FeedbackChatScreen() {
       dispatch(UpdateHideBottomBar(false));
       dispatch(updateNotiPage()); // clean noti page
     }
-  }, [doctor, doctor?._id, route.params?.pid, route.params?.type, route.params?.title, navigation, dispatch, start]);
+  }, [doctor, doctor?._id, route.params, navigation, dispatch, start]);
 
   const scrollToEnd = () => {
     scrollViewRef.current?.scrollToEnd({ animated: true });
