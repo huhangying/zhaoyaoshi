@@ -83,6 +83,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
         // io.onChat()
         socketio.onNotification(async (noti: Notification) => {
           const state = store.getState();
+          const notiPage = state.notiPage;
           // if (state.doctor?._id === noti.doctorId) return; // skip self-send noti (在不同手机上打开两个相同的app)
           // add the following line if 已经在chat/feedback 页面同病患交互不算新消息。
           // if (noti.patientId === this.pid && noti.type === +this.notiType) return; // skip
@@ -91,7 +92,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
             case NotificationType.chat:
               notifications = socketio.addNotiToExisted(state.chatNotifications, noti);
               dispatch(updateChatNotifications(notifications));
-              if (!state.notiPage?.patientId || state.notiPage.patientId !== noti.patientId) {
+              if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
                 pushLocalNotification(noti, 'consult/chat');
               }
               break;
@@ -100,7 +101,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
             case NotificationType.doseCombination:
               notifications = socketio.addNotiToExisted(state.feedbackNotifications, noti);
               dispatch(updateFeedbackNotifications(notifications));
-              if (!state.notiPage?.patientId || state.notiPage.patientId !== noti.patientId) {
+              if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
                 pushLocalNotification(noti, 'feedback/feedback-chat');
               }
               break;
@@ -109,7 +110,7 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
             case NotificationType.consultPhone:
               notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
               dispatch(updateConsultNotifications(notifications));
-              if (!state.notiPage?.patientId || state.notiPage.patientId !== noti.patientId) {
+              if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
                 pushLocalNotification(noti, 'consult/consult-chat');
               }
               break;
