@@ -16,10 +16,16 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
           navigate('ChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 免费咨询' });
           break;
         case NotificationType.consultChat:
-          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 付费图文咨询' });
+          navigate('ConsultScreen', {
+            pid: noti.patientId, type: noti.type,
+            title: noti.name + ' 付费图文咨询', id: noti.keyId
+          });
           break;
         case NotificationType.consultPhone:
-          navigate('ConsultScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 付费电话咨询' });
+          navigate('ConsultScreen', {
+            pid: noti.patientId, type: noti.type,
+            title: noti.name + ' 付费电话咨询', id: noti.keyId
+          });
           break;
         case NotificationType.doseCombination:
           navigate('FeedbackChatScreen', { pid: noti.patientId, type: noti.type, title: noti.name + ' 联合用药反馈' });
@@ -69,9 +75,9 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
       <ScrollView>
         {
           list.map((noti, i) => (
-            <ListItem key={i} bottomDivider 
-            style={{marginTop: 4}}
-            onPress={() => chatNavigate(noti)}>
+            <ListItem key={i} bottomDivider
+              style={{ marginTop: 4 }}
+              onPress={() => chatNavigate(noti)}>
               <ListItem.Content>
                 {
                   renderNotiTitle(noti)

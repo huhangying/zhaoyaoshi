@@ -9,7 +9,7 @@ import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
 import { imgPath } from '../../services/core/image.service';
 import { UpdateHideBottomBar, updateNotiPage } from '../../services/core/app-store.actions';
-import { NotificationType } from '../../models/io/notification.model';
+import { NotificationParams, NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
 import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 import ChatInputs from '../../components/shared/ChatInputs';
@@ -28,6 +28,7 @@ export default function ConsultScreen() {
   const ioService = useSelector((state: AppState) => state.ioService);
   const [type, setType] = useState(NotificationType.chat);
   const [pid, setPid] = useState('');
+  const [consultId, setConsultId] = useState('')
   const [loading, setLoading] = useState(false);
   const initConsults: Consult[] = [];
   const [consults, setConsults] = useState(initConsults);
@@ -49,12 +50,13 @@ export default function ConsultScreen() {
   });
 
   useEffect(() => {
-    const {pid, title, type} = route.params as {pid: string; title: string; type: number};
+    const {pid, title, type, id} = route.params as NotificationParams;
     setTitle(title);
     if (doctor?._id) {
       setLoading(true);
       setType(type);
       setPid(pid);
+      setConsultId(id || '');
 
       // get history
       if (type === NotificationType.consultChat) {
@@ -169,7 +171,7 @@ export default function ConsultScreen() {
         </ ScrollView>
         <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
-        <ChatMenuActions type={type} doctor={doctor} />
+        <ChatMenuActions pid={pid} type={type} doctor={doctor} id={consultId} />
 
       </KeyboardAvoidingView>
     );

@@ -7,7 +7,7 @@ import { ListItem } from 'react-native-elements';
 import { Caption } from 'react-native-paper';
 import { useSelector } from 'react-redux';
 import Spinner from '../components/shared/Spinner';
-import { Text, View } from '../components/Themed';
+import { Text } from '../components/Themed';
 import { AppState } from '../models/app-state.model';
 import { getUserCountByDoctorId } from '../services/user.service';
 

@@ -21,3 +21,10 @@ export enum NotificationType {
   consultChat = 5,      // 付费图文咨询
   consultPhone = 6,     // 付费电话咨询
 }
+
+export interface NotificationParams {
+  pid: string; 
+  title: string; 
+  type: number;
+  id?: string; // used for consult chat
+}

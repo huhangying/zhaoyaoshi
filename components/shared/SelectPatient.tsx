@@ -76,12 +76,11 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
             {relationshipList?.length ? (
               relationshipList.map((relationship: Relationship, k) => (
                 <TouchableOpacity key={`${i}-${k}`} onPress={() => onSelect(relationship.user)} style={styles.item}>
-                  <List.Item
-                    title={relationship.user?.name} />
+                  <List.Item title={relationship.user?.name} />
                 </TouchableOpacity>
               ))
             ) : (
-                <Text style={{backgroundColor: 'lightyellow', paddingTop: 14, paddingBottom: 16, color: 'gray' }}>没有数据</Text>
+                <Text style={{ backgroundColor: 'lightyellow', paddingTop: 14, paddingBottom: 16, color: 'gray' }}>没有数据</Text>
               )
             }
           </List.Accordion>

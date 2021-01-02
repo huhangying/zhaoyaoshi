@@ -5,7 +5,8 @@ import { Menu, Provider } from 'react-native-paper';
 import { NotificationType } from '../models/io/notification.model';
 import { Button, Divider, Icon } from 'react-native-elements';
 
-export default function ChatMenuActions({ type, doctor }: { type: NotificationType, doctor: Doctor }) {
+export default function ChatMenuActions({ pid, type, doctor, id }:
+  { pid: string, type: NotificationType, doctor: Doctor, id?: string }) {
   const [visible, setVisible] = React.useState(false);
 
   const openMenu = () => {
