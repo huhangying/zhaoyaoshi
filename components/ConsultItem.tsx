@@ -6,12 +6,15 @@ import { imgPath, imgSource } from '../services/core/image.service';
 import { getDateTimeFormat } from '../services/core/moment';
 import TextAndEmoji from './shared/TextAndEmoji';
 import { Consult } from '../models/consult/consult.model';
+import { NotificationType } from '../models/io/notification.model';
 
 export default function ConsultItem({ consult, doctor, icon, onImgView }: { consult: Consult, doctor: Doctor, icon: string, onImgView: any }) {
-  const screenWidth = useWindowDimensions().width;
+  // const screenWidth = useWindowDimensions().width;
+  const isDoctor = consult.status && consult.status >= 2;
+  const isConsultRequest = consult.disease_types && consult.disease_types?.length > 0;
 
   return (
-    <View style={(consult.status && consult.status >= 2) ? styles.alignRight : styles.alignLeft}>
+    <View style={isDoctor ? styles.alignRight : styles.alignLeft}>
       {!!icon &&
         <Avatar
           containerStyle={styles.icon}
@@ -19,28 +22,47 @@ export default function ConsultItem({ consult, doctor, icon, onImgView }: { cons
           source={{ uri: icon }}
         />
       }
-      <View style={(consult.status && consult.status >= 2) ? styles.sender : styles.to}>
-        {(!!consult.disease_types?.length) && (
-          <Text style={{ paddingBottom: 10, maxWidth: screenWidth - 100 }}>
-            {consult.cell}
-          </Text>
-        )
-        }
-        <View style={{ paddingBottom: 10 }}>
-          <TextAndEmoji data={consult.content || ''} />
-        </View>
-        {(consult.type === 1 && !!consult.cell) && (
-          <Text style={{ paddingBottom: 10 }}>
-            {consult.cell}
-          </Text>
-        )
-        }
-        {(!!consult.address) && (
-          <Text style={{ paddingBottom: 10, maxWidth: screenWidth - 100 }}>
-            {consult.address}
-          </Text>
-        )
-        }
+
+      <View style={isDoctor ? styles.sender : styles.to}>
+        {isConsultRequest ? (
+          <>
+            <Text style={styles.consultType}>
+              ***
+              {consult.type === NotificationType.consultChat ? ' 付费图文咨询 ' : ' 付费电话咨询 '}
+              {consult.finished ? ' (已完成) ' : ''}
+              ***
+            </Text>
+            <Text style={styles.consultItem}>
+              <Text style={styles.consultItemLabel}>咨询人：</Text>
+              {consult.userName}
+            </Text>
+            <Text style={styles.consultItem}>
+              <Text style={styles.consultItemLabel}>疾病类型：</Text>
+              {consult.disease_types}
+            </Text>
+            {(consult.type === 1 && !!consult.cell) && (
+              <Text style={styles.consultItem}>
+                <Text style={styles.consultItemLabel}>手机：</Text>
+                {consult.cell}
+              </Text>
+            )}
+            {(!!consult.address) && (
+              <Text style={styles.consultItem}>
+                <Text style={styles.consultItemLabel}>地址：</Text>
+                {consult.address}
+              </Text>
+            )}
+            <View style={styles.consultItem}>
+              <Text style={{ color: 'gray', paddingBottom: 8 }}>问题描述：</Text>
+              <TextAndEmoji data={consult.content || ''} />
+            </View>
+          </>
+        ) : (
+            <View style={styles.consultItem}>
+              <TextAndEmoji data={consult.content || ''} />
+            </View>
+          )}
+
 
         {consult.upload &&
           <Image
@@ -104,6 +126,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
     paddingTop: 0,
     paddingBottom: 5,
+  },
+  consultType: {
+    color: '#007bff',
+    paddingBottom: 10,
+  },
+  consultItem: {
+    paddingBottom: 6,
+  },
+  consultItemLabel: {
+    color: 'gray',
   }
 
 });
