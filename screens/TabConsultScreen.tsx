@@ -4,13 +4,14 @@ import { StyleSheet, Modal } from 'react-native';
 import { Text } from '../components/Themed';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
-import { Badge, ListItem } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Caption, Snackbar } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification } from '../models/io/notification.model';
 import Spinner from '../components/shared/Spinner';
 import { useCallback, useState } from 'react';
+import NotificationBadge from '../components/shared/NotificationBadge';
 
 export default function TabConsultScreen() {
   const { navigate } = useNavigation();
@@ -61,8 +62,8 @@ export default function TabConsultScreen() {
           <Ionicons name="ios-megaphone" size={24} color="coral"></Ionicons>
           <ListItem.Content>
             <ListItem.Title>
-              付费咨询消息提醒&nbsp;&nbsp;
-              <Badge status="success" value={consultNotifications?.length}></Badge>
+              付费咨询消息提醒
+              <NotificationBadge notiLength={consultNotifications?.length}></NotificationBadge>
             </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
@@ -73,14 +74,14 @@ export default function TabConsultScreen() {
           <Ionicons name="ios-notifications" size={24} color="turquoise"></Ionicons>
           <ListItem.Content>
             <ListItem.Title>
-              免费咨询消息提醒&nbsp;&nbsp;
-              <Badge status="success" value={chatNotifications?.length}></Badge>
+              免费咨询消息提醒
+              <NotificationBadge notiLength={chatNotifications?.length}></NotificationBadge>
             </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
 
-        <Modal visible={notiVisible} 
+        <Modal visible={notiVisible}
           animationType="slide" transparent={true}
           statusBarTranslucent={true}
           hardwareAccelerated={true}

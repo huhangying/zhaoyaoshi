@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { Modal, StyleSheet } from 'react-native';
+import { Text, Modal, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
-import { Badge, ListItem } from 'react-native-elements';
+import { ListItem } from 'react-native-elements';
 import { Fontisto, Ionicons } from '@expo/vector-icons';
-import { Text, Caption, Snackbar } from 'react-native-paper';
+import { Caption, Snackbar } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import Spinner from '../components/shared/Spinner';
 import { useCallback, useState } from 'react';
+import NotificationBadge from '../components/shared/NotificationBadge';
 
 export default function TabFeedbackScreen() {
   const { navigate } = useNavigation();
@@ -67,8 +68,8 @@ export default function TabFeedbackScreen() {
           <Fontisto name="pills" size={24} color="lightblue"></Fontisto>
           <ListItem.Content>
             <ListItem.Title>
-              联合用药反馈提醒&nbsp;&nbsp;
-              <Badge status="success" value={getDoseCombinationNotis()?.length}></Badge>
+              联合用药反馈提醒
+              <NotificationBadge notiLength={getDoseCombinationNotis()?.length}></NotificationBadge>              
             </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
@@ -79,8 +80,8 @@ export default function TabFeedbackScreen() {
           <Fontisto name="frowning" size={24} color="gray"></Fontisto>
           <ListItem.Content>
             <ListItem.Title>
-              不良反应反馈提醒&nbsp;&nbsp;
-              <Badge status="success" value={getAdverseReactionNotis()?.length}></Badge>
+              不良反应反馈提醒
+              <NotificationBadge notiLength={getAdverseReactionNotis()?.length}></NotificationBadge>
             </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />

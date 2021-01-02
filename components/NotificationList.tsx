@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Text } from '../components/Themed';
 import { ListItem, Header, Button } from 'react-native-elements';
@@ -9,7 +9,7 @@ import { getDateTimeFormat } from '../services/core/moment';
 export default function NotificationList({ list, title, onClose }: { list: Notification[], title: string, onClose: any }) {
   const { navigate } = useNavigation();
 
-  const chatNavigate = (noti: Notification) => {
+  const chatNavigate = useCallback((noti: Notification) => {
     if (noti) {
       switch (noti.type) {
         case NotificationType.chat:
@@ -30,7 +30,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
       }
       onClose(); // close noti modal
     }
-  }
+  }, [navigate, onClose])
 
   const renderNotiTitle = (noti: Notification) => {
     let msgTypeTitle = '条新消息';
@@ -50,6 +50,14 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
     }
     return <ListItem.Title>{noti.name}发送了 {noti.count} {msgTypeTitle}</ListItem.Title>;
   }
+
+  useEffect(() => {
+    if (list && list.length === 1) {
+      chatNavigate(list[0])
+    }
+    return () => {
+    }
+  }, [list, chatNavigate])
 
   return (
     <View style={styles.container}>
