@@ -35,7 +35,7 @@ export default function BottomTabNavigator() {
   return (
     <BottomTab.Navigator
       activeColor={Colors[colorScheme].tint}
-      inactiveColor={Colors[colorScheme].text}
+      inactiveColor={Colors[colorScheme].tabIconDefault}
       barStyle={{ backgroundColor: Colors[colorScheme].background, display: state.hideBottomBar ? 'none' : 'flex' }}  >
       <BottomTab.Screen
         name="consult"
@@ -78,7 +78,7 @@ export default function BottomTabNavigator() {
 // You can explore the built-in icon families and icons on the web at:
 // https://icons.expo.fyi/
 function TabBarIcon(props: { name: string; color: string }) {
-  return <Ionicons size={26} style={{ marginBottom: -3 }} {...props} />;
+  return <Ionicons size={26} style={{ marginTop: -4 }} {...props} />;
 }
 
 // Each tab has its own navigation stack, you can read more about this pattern here:
