@@ -1,10 +1,9 @@
 import { DoctorConsult } from '../models/consult/doctor-consult.model';
 import { map } from 'rxjs/operators';
-import { Consult } from '../models/consult/consult.model';
+import { Consult, ExistedConsult } from '../models/consult/consult.model';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import { deleteApi, getApi, patchApi, postApi } from './core/api.service';
 import { DoctorConsultComment } from '../models/consult/doctor-consult-comment.model';
-import { AppStoreService } from './core/app-store.service';
 
 export const presetComments = [
   { type: 1, label: '建议非常有用' },
@@ -46,6 +45,11 @@ export function setConsultDoneByDocterUserAndType(doctorId: string, userId: stri
   return getApi(`consults/mark-done/${doctorId}/${userId}/${type}`);
 }
 
+export function checkConsultExistsByDoctorIdAndUserId(doctorId: string, userId: string) {
+  return getApi<ExistedConsult>(`consults/check-exists/${doctorId}/${userId}`);
+}
+
+
 // after app started
 export function convertConsultNotificationList(consults: Consult[]): Notification[] {
   if (!consults?.length) return [];
@@ -76,22 +80,6 @@ export function convertConsultNotificationList(consults: Consult[]): Notificatio
 
   return consultNotifications;
 }
-
-// 付费咨询：标记已读，并从提醒列表里去除
-export function removeConsultsFromNotificationList(doctorId: string, patientId: string, type: NotificationType, appStore: AppStoreService) {
-  // get from store
-  let notifications = appStore.state.consultNotifications;
-  if (!notifications?.length) return;
-  notifications = notifications.filter(_ => _.patientId !== patientId || _.type !== type); // type=5 or 6
-
-  // save back
-  appStore.updateConsultNotifications(notifications);
-
-  // mark done to db
-  setConsultDoneByDocterUserAndType(doctorId, patientId,
-    type === NotificationType.consultPhone ? 1 : 0).subscribe();  // type=0: 图文
-}
-
 
 // doctor consult
 

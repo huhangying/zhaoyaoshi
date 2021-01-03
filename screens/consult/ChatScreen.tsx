@@ -18,6 +18,8 @@ import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 import ChatInputs from '../../components/shared/ChatInputs';
 import { Header } from 'react-native-elements';
 import ChatMenuActions from '../../components/ChatMenuActions';
+import { checkConsultExistsByDoctorIdAndUserId } from '../../services/consult.service';
+import { ExistedConsult } from '../../models/consult/consult.model';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -35,10 +37,12 @@ export default function ChatScreen() {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [title, setTitle] = useState('')
+  const initExistedConsult: ExistedConsult = {exists: false};
+  const [existedConsult, setExistedConsult] = useState(initExistedConsult)
 
   // 监听呼入消息
   const start = ioService?.onChat((msg: Chat) => {
-    if (type === NotificationType.chat && 
+    if (type === NotificationType.chat &&
       msg.to === doctor?._id && msg.sender === pid) {
       const _chats = [...chats];
       _chats.unshift(msg);
@@ -48,13 +52,14 @@ export default function ChatScreen() {
   });
 
   useEffect(() => {
-    const {pid, title, type} = route.params as NotificationParams;
+    const { pid, title, type } = route.params as NotificationParams;
     setTitle(title);
     // navigation.setOptions({ headerTitle: title });
     if (doctor?._id) {
       setLoading(true);
       setType(type);
       setPid(pid);
+
       getChatHistory(doctor._id, pid).pipe(
         take(1),
         tap(_chats => {
@@ -62,17 +67,28 @@ export default function ChatScreen() {
           setLoading(false);
         })
       ).subscribe();
+
       getUserDetailsById(pid).pipe(
         take(1),
         tap(_user => {
           setUser(_user);
         })
       ).subscribe();
+
+      if (doctor.prices && doctor.prices?.length > 0) {
+        // 付费咨询正在进行中
+        checkConsultExistsByDoctorIdAndUserId(doctor._id, pid).pipe(
+          take(1),
+          tap((rsp: ExistedConsult) => {
+            setExistedConsult(rsp);
+          }),
+        ).subscribe();
+      }
     }
 
     Keyboard.addListener("keyboardDidShow", scrollToEnd);
     dispatch(UpdateHideBottomBar(true));
-    dispatch(updateNotiPage({patientId: pid, type, doctorId: doctor?._id})); // set noti page
+    dispatch(updateNotiPage({ patientId: pid, type, doctorId: doctor?._id })); // set noti page
 
     return () => {
       Keyboard.removeListener("keyboardDidShow", scrollToEnd);
@@ -129,7 +145,7 @@ export default function ChatScreen() {
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 0} >
         <Header
           placement="left"
-          leftComponent={{ icon: 'chevron-left', style: {marginTop: -4}, size: 28, color: '#fff', onPress: navigation.goBack }}
+          leftComponent={{ icon: 'chevron-left', style: { marginTop: -4 }, size: 28, color: '#fff', onPress: navigation.goBack }}
           centerComponent={{ text: title, style: { color: '#fff', fontSize: 18 }, onPress: navigation.goBack }}
         />
 
@@ -148,8 +164,8 @@ export default function ChatScreen() {
 
         <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
-        <ChatMenuActions pid={pid} type={type} doctor={doctor} />
-        
+        <ChatMenuActions pid={pid} type={type} doctorId={doctor?._id} existedConsult={existedConsult} userName={user?.name} />
+
       </KeyboardAvoidingView>
     );
   }

@@ -1,25 +1,111 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Doctor } from '../models/crm/doctor.model';
 import { Menu, Provider } from 'react-native-paper';
 import { NotificationType } from '../models/io/notification.model';
 import { Button, Divider, Icon } from 'react-native-elements';
+import { ExistedConsult } from '../models/consult/consult.model';
+import { useNavigation } from '@react-navigation/native';
+import { setReadByDocterAndPatient } from '../services/chat.service';
+import { setReadByDocterPatientAndType } from '../services/user-feedback.service';
+import { useDispatch, useSelector, useStore } from 'react-redux';
+import { AppState } from '../models/app-state.model';
+import { updateChatNotifications, updateConsultNotifications, updateFeedbackNotifications } from '../services/core/app-store.actions';
+import { setConsultDoneByDocterUserAndType } from '../services/consult.service';
 
-export default function ChatMenuActions({ pid, type, doctor, id }:
-  { pid: string, type: NotificationType, doctor: Doctor, id?: string }) {
+export default function ChatMenuActions({ type, pid, doctorId, openid, id, existedConsult, userName }:
+  {
+    pid: string, type: NotificationType, doctorId: string, openid?: string, id?: string,
+    existedConsult?: ExistedConsult, userName?: string
+  }) {
+  const state = useSelector((state: AppState) => state);
   const [visible, setVisible] = React.useState(false);
+  const { navigate } = useNavigation();
+  const dispatch = useDispatch()
 
   const openMenu = () => {
-    console.log('Pressed')
     setVisible(true);
   }
 
   const closeMenu = () => setVisible(false);
 
-  const selectItem = (action: string) => {
-    console.log(action);
+  const goBackConsult = () => {
+    const type = existedConsult?.type;
+    // 付费图文咨询 （共用chat）
+    if (type === 0) {
+      navigate('ConsultScreen', {
+        pid: pid, type: NotificationType.consultChat,
+        title: userName + ' 付费图文咨询', id: existedConsult?.consultId
+      });
+    } else if (type === 1) {
+      // 付费电话咨询，到说明页面
+      // navigate(['/main/consult-phone'], {
+      //   queryParams: {
+      //     pid: this.selectedPatient?._id,
+      //     id: this.existedConsultId
+      //   }
+      // });
+    }
     closeMenu();
+  }
 
+  // 药师标识完成
+  const markDone = () => {
+
+    switch (type) {
+      case NotificationType.chat: // NotificationType.customerService
+        if (state.chatNotifications?.length) {
+          const notifications = state.chatNotifications.filter(_ => _.patientId !== pid);
+          // save back
+          dispatch(updateChatNotifications(notifications));
+
+          // mark read in db
+          setReadByDocterAndPatient(doctorId, pid).subscribe();
+        }
+        break;
+
+      case NotificationType.adverseReaction:
+      case NotificationType.doseCombination:
+        if (state.feedbackNotifications?.length) {
+          const notifications = state.feedbackNotifications.filter(_ => _.patientId !== pid || _.type !== type);
+          // save back
+          dispatch(updateFeedbackNotifications(notifications));
+
+          // mark read in db
+          setReadByDocterPatientAndType(doctorId, pid, type).subscribe();
+        }
+        break;
+
+      case NotificationType.consultChat:
+        if (state.consultNotifications?.length) {
+          // 付费咨询：标记已读，并从提醒列表里去除
+          const notifications = state.consultNotifications.filter(_ => _.patientId !== pid || _.type !== type);// type=5 or 6
+          // save back
+          dispatch(updateConsultNotifications(notifications));
+
+          // mark read in db
+          setConsultDoneByDocterUserAndType(doctorId, pid, 0).subscribe();  // type=0: 图文
+
+            // 发送微信消息
+            // if (!noMessage) {
+            //   this.wxService.sendWechatMsg(this.selectedPatient.link_id,
+            //     '药师咨询完成',
+            //     `${this.doctor.name}${this.doctor.title}已完成咨询。请点击查看，并建议和评价药师。`,
+            //     `${this.doctor.wechatUrl}consult-finish?doctorid=${this.doctor._id}&openid=${this.selectedPatient.link_id}&state=${this.auth.hid}&id=${this.keyId}&type=0`,
+            //     '',
+            //     this.doctor._id,
+            //     this.selectedPatient.name
+            //   ).subscribe();
+            //   this.message.success('药师标记图文咨询已经完成！');
+            // }
+        }
+        return;
+
+      default:
+        return;
+    }
+    // this.message.success('药师标记消息已处理！');
+
+    closeMenu();
   }
 
   return (
@@ -48,12 +134,12 @@ export default function ChatMenuActions({ pid, type, doctor, id }:
             style={{ marginTop: 0, position: 'absolute', right: 0, left: 0, top: 40, zIndex: 99999, elevation: 9999 }}
           >
 
-            <Menu.Item icon="check-circle" onPress={() => { selectItem('itme 1') }} title="标识完成" />
+            <Menu.Item icon="check-circle" onPress={() => { markDone() }} title="标识完成" />
             <View style={{
-              display: [NotificationType.chat, NotificationType.consultPhone, NotificationType.consultChat].indexOf(type) > -1 ? 'flex' : 'none'
+              display: (existedConsult && existedConsult.exists) ? 'flex' : 'none'
             }}>
               <Divider />
-              <Menu.Item icon="keyboard-backspace" onPress={() => { selectItem('itme 3') }} title="返回付费咨询" />
+              <Menu.Item icon="keyboard-backspace" onPress={goBackConsult} title="返回付费咨询" />
             </View>
           </Menu>
         </View>

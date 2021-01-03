@@ -171,7 +171,7 @@ export default function ConsultScreen() {
         </ ScrollView>
         <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
-        <ChatMenuActions pid={pid} type={type} doctor={doctor} id={consultId} />
+        <ChatMenuActions pid={pid} type={type} doctorId={doctor?._id} openid={user.link_id} id={consultId} userName={user?.name} />
 
       </KeyboardAvoidingView>
     );

@@ -1,7 +1,6 @@
 import { Chat } from '../models/io/chat.model';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import { getApi, postApi } from './core/api.service';
-import { AppStoreService } from './core/app-store.service';
 
 
 export function getChatHistory(sender: string, to: string) {
@@ -54,18 +53,4 @@ export function convertChatNotificationList(chats: Chat[], notiType: Notificatio
   }, []);
 
   return chatNotifications;
-}
-
-// after chatroom loaded (once a time), after doctor mark it read
-export function removeChatsFromNotificationList(doctorId: string, patientId: string, appStore: AppStoreService) {
-  // get from store
-  let notifications = appStore.state.chatNotifications;
-  if (!notifications?.length) return;
-  notifications = notifications.filter(_ => _.patientId !== patientId);
-
-  // save back
-  appStore.updateChatNotifications(notifications);
-
-  // mark read in db
-  setReadByDocterAndPatient(doctorId, patientId).subscribe();
 }

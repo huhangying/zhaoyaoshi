@@ -19,3 +19,9 @@ export interface Consult {
 
   status?: number;
 }
+
+export interface ExistedConsult {
+  exists: boolean;
+  type?: number;
+  consultId?: string
+}

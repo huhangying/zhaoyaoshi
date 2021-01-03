@@ -1,7 +1,6 @@
 import { UserFeedback } from '../models/io/user-feedback.model';
 import { getApi, postApi } from './core/api.service';
-import { Notification, NotificationType } from '../models/io/notification.model';
-import { AppStoreService } from './core/app-store.service';
+import { Notification } from '../models/io/notification.model';
 
 
 // feedback
@@ -58,19 +57,4 @@ export function convertFeedbackNotificationList(feedbacks: UserFeedback[]): Noti
   }, []);
 
   return feedbackNotifications;
-}
-
-// after chatroom loaded (once a time)
-export function removeFeedbacksFromNotificationList(doctorId: string, patientId: string, type: number, appStore: AppStoreService) {
-  // get from store
-  let notifications = appStore.state.feedbackNotifications;
-  if (!notifications?.length) return;
-  const notiType = type;
-  notifications = notifications.filter(_ => _.patientId !== patientId || _.type !== notiType);
-
-  // save back
-  appStore.updateFeedbackNotifications(notifications);
-
-  // mark read in db
-  setReadByDocterPatientAndType(doctorId, patientId, type).subscribe();
 }

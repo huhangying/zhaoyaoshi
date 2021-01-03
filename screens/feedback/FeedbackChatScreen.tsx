@@ -160,7 +160,7 @@ export default function FeedbackChatScreen() {
         </ ScrollView>
         <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
-        <ChatMenuActions pid={pid} type={type} doctor={doctor} />
+        <ChatMenuActions pid={pid} type={type} doctorId={doctor?._id} />
 
       </KeyboardAvoidingView>
     );
