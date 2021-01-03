@@ -25,6 +25,7 @@ export class AppStoreService extends Store<AppState> {
 
   get loading() { return this.state?.loading || false; }
   get errorMessage() { return this.state?.errorMessage || ''; }
+  get snackbar() { return this.state?.snackbar || ''; }
   get notiPage() { return this.state?.notiPage; }
   get hideBottomBar() { return this.state?.hideBottomBar || false; }
   get ioService() { return this.state?.ioService || null; }
@@ -81,6 +82,13 @@ export class AppStoreService extends Store<AppState> {
     this.setState({
       ...this.state,
       errorMessage,
+    });
+  }
+
+  updateSnackbar(snackbar: string) {
+    this.setState({
+      ...this.state,
+      snackbar,
     });
   }
 

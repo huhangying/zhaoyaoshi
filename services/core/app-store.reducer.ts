@@ -2,7 +2,6 @@ import { AppState } from "../../models/app-state.model";
 import { AppStoreAction, AppStoreActionType } from "./app-store.actions";
 import { clearLocalStorage, setDoctor, setToken } from "./local.store";
 
-// export const AppContext = React.createContext(new AppStoreService());
 export const appStoreInitialState = new AppState();
 
 export function appStoreReducer(state: AppState = appStoreInitialState, action: AppStoreAction): AppState {
@@ -35,6 +34,9 @@ export function appStoreReducer(state: AppState = appStoreInitialState, action: 
 
     case AppStoreActionType.UpdateErrorMessage:
       return { ...state, errorMessage: action.payload };
+
+    case AppStoreActionType.UpdateSnackbar:
+      return { ...state, snackbar: action.payload };
 
     case AppStoreActionType.UpdateHideBottomBar:
       return { ...state, hideBottomBar: action.payload };

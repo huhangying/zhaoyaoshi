@@ -2,20 +2,22 @@ import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Modal } from 'react-native';
 import { Text } from '../components/Themed';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { ListItem } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
-import { Caption, Snackbar } from 'react-native-paper';
+import { Caption } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
 import { Notification } from '../models/io/notification.model';
 import Spinner from '../components/shared/Spinner';
 import { useCallback, useState } from 'react';
 import NotificationBadge from '../components/shared/NotificationBadge';
+import { updateSnackbar } from '../services/core/app-store.actions';
 
 export default function TabConsultScreen() {
   const { navigate } = useNavigation();
   const { doctor, chatNotifications, consultNotifications } = useSelector((state: AppState) => state);
+  const dispatch = useDispatch()
 
   const [notiVisible, setNotiVisible] = useState(false);
   const [notiTitle, setNotiTitle] = useState('');
@@ -27,20 +29,12 @@ export default function TabConsultScreen() {
   const closeNotification = () => setNotiVisible(false);
   const openNotification = (title: string, notiList: Notification[]) => {
     if (notiList.length < 1) {
-      openSnackbar('您暂无病患' + title)
+      dispatch(updateSnackbar('您暂无病患' + title))
       return;
     }
     setNotiVisible(true);
     setNotiTitle(title);
     setNotiList(notiList);
-  }
-
-  const [snackbarVisible, setSnackbarVisible] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState('')
-  const onDismissSnackBar = () => setSnackbarVisible(false);
-  const openSnackbar = (msg: string) => {
-    setSnackbarVisible(true);
-    setSnackbarMessage(msg);
   }
 
   if (!doctor) {
@@ -88,12 +82,6 @@ export default function TabConsultScreen() {
           onDismiss={closeNotification}>
           <NotificationList list={notiList} title={notiTitle} onClose={onNotiModalClose} />
         </Modal>
-        <Snackbar
-          visible={snackbarVisible}
-          duration={3000}
-          onDismiss={onDismissSnackBar}>
-          {snackbarMessage}
-        </Snackbar>
       </>
     );
   }

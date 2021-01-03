@@ -7,6 +7,7 @@ import { SocketioService } from "./socketio.service";
 export enum AppStoreActionType {
   UpdateLoading,
   UpdateErrorMessage,
+  UpdateSnackbar,
   UpdateIsLoggedIn,
   UpdateNotiPage,
 
@@ -72,6 +73,13 @@ export const UpdateErrorMessage = (errorMessage: string) => (
   {
     type: AppStoreActionType.UpdateErrorMessage,
     payload: errorMessage,
+  }
+);
+
+export const updateSnackbar = (snackbar: string) => (
+  {
+    type: AppStoreActionType.UpdateSnackbar,
+    payload: snackbar,
   }
 );
 

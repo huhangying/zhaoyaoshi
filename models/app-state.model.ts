@@ -11,6 +11,7 @@ export class AppState {
 
     public readonly loading?: boolean,
     public readonly errorMessage?: string,
+    public readonly snackbar?: string,
 
     public readonly chatNotifications?: Notification[],
     public readonly feedbackNotifications?: Notification[],

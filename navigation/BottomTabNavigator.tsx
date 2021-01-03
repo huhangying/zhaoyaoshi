@@ -14,7 +14,7 @@ import ConsultScreen from '../screens/consult/ConsultScreen';
 import ProfileScreen from '../screens/settings/ProfileScreen';
 import { getUnreadCount } from '../services/notification.service';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import ConsultSettingsScreen from '../screens/settings/ConsultSettingsScreen';
 import ShortcutSettingsScreen from '../screens/settings/ShortcutSettingsScreen';
@@ -25,12 +25,19 @@ import PatientAuditScreen from '../screens/patient/PatientAuditScreen';
 import FeedbackChatScreen from '../screens/feedback/FeedbackChatScreen';
 import SelectChatScreen from '../screens/consult/SelectChatScreen';
 import NotificationSettingsScreen from '../screens/settings/NotificationSettingsScreen';
+import { Snackbar } from 'react-native-paper';
+import { updateSnackbar } from '../services/core/app-store.actions';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
 export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
+  const dispatch = useDispatch()
   const state = useSelector((state: AppState) => state);
+
+  const onDismissSnackBar = () => {
+    dispatch(updateSnackbar(''));
+  };
 
   const getChatAndConsultUnreadCount = () => {
     const totalCount = (getUnreadCount(state.chatNotifications) || 0) +
@@ -39,45 +46,53 @@ export default function BottomTabNavigator() {
   }
 
   return (
-    <BottomTab.Navigator
-      activeColor={Colors[colorScheme].tint}
-      inactiveColor={Colors[colorScheme].tabIconDefault}
-      barStyle={{ backgroundColor: Colors[colorScheme].background, display: state.hideBottomBar ? 'none' : 'flex' }}  >
-      <BottomTab.Screen
-        name="consult"
-        component={TabConsultNavigator}
-        options={{
-          title: '咨询',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-chatbubbles" color={color} />,
-          tabBarBadge: getChatAndConsultUnreadCount(),
-        }}
-      />
-      <BottomTab.Screen
-        name="feedback"
-        component={TabFeedbackNavigator}
-        options={{
-          title: '门诊',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-medkit" color={color} />,
-          tabBarBadge: getUnreadCount(state.feedbackNotifications),
-        }}
-      />
-      <BottomTab.Screen
-        name="patient"
-        component={TabPatientNavigator}
-        options={{
-          title: '病患管理',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-people" color={color} />,
-        }}
-      />
-      <BottomTab.Screen
-        name="settings"
-        component={TabSettingsNavigator}
-        options={{
-          title: '个人中心',
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-person-circle" color={color} />,
-        }}
-      />
-    </BottomTab.Navigator>
+    <>
+      <BottomTab.Navigator
+        activeColor={Colors[colorScheme].tint}
+        inactiveColor={Colors[colorScheme].tabIconDefault}
+        barStyle={{ backgroundColor: Colors[colorScheme].background, display: state.hideBottomBar ? 'none' : 'flex' }}  >
+        <BottomTab.Screen
+          name="consult"
+          component={TabConsultNavigator}
+          options={{
+            title: '咨询',
+            tabBarIcon: ({ color }) => <TabBarIcon name="ios-chatbubbles" color={color} />,
+            tabBarBadge: getChatAndConsultUnreadCount(),
+          }}
+        />
+        <BottomTab.Screen
+          name="feedback"
+          component={TabFeedbackNavigator}
+          options={{
+            title: '门诊',
+            tabBarIcon: ({ color }) => <TabBarIcon name="ios-medkit" color={color} />,
+            tabBarBadge: getUnreadCount(state.feedbackNotifications),
+          }}
+        />
+        <BottomTab.Screen
+          name="patient"
+          component={TabPatientNavigator}
+          options={{
+            title: '病患管理',
+            tabBarIcon: ({ color }) => <TabBarIcon name="ios-people" color={color} />,
+          }}
+        />
+        <BottomTab.Screen
+          name="settings"
+          component={TabSettingsNavigator}
+          options={{
+            title: '个人中心',
+            tabBarIcon: ({ color }) => <TabBarIcon name="ios-person-circle" color={color} />,
+          }}
+        />
+      </BottomTab.Navigator>
+      <Snackbar
+        visible={!!state.snackbar}
+        duration={3000}
+        onDismiss={onDismissSnackBar}>
+        {state.snackbar}
+      </Snackbar>
+    </>
   );
 }
 

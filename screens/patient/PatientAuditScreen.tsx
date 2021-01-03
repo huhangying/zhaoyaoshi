@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Text } from '../../components/Themed';
 import { getRelationshipsByDoctorId } from '../../services/doctor.service';
 import { tap } from 'rxjs/operators';
 import { AppState } from '../../models/app-state.model';
-import { Button, DataTable, Searchbar, Snackbar, Subheading, Switch } from 'react-native-paper';
+import { Button, DataTable, Searchbar, Subheading, Switch } from 'react-native-paper';
 import { User } from '../../models/crm/user.model';
 import { Relationship } from '../../models/crm/relationship.model';
 import moment from 'moment';
 import { updateRoleById } from '../../services/user.service';
 import PatientDetails from '../../components/PatientDetails';
 import Spinner from '../../components/shared/Spinner';
+import { updateSnackbar } from '../../services/core/app-store.actions';
 
 export default function PatientAuditScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -20,6 +21,7 @@ export default function PatientAuditScreen() {
   const [relationships, setRelationships] = useState([initRelationsip]);
   const [filterRelationships, setFilterRelationships] = useState([initRelationsip]);
   const [loading, setLoading] = useState(false)
+  const dispatch = useDispatch()
 
   const [isSwitchOn, setIsSwitchOn] = React.useState(true);
   const onToggleSwitch = () => {
@@ -60,21 +62,13 @@ export default function PatientAuditScreen() {
             const filterUpdated = filterRelationships.map(r => (r.user?._id === user._id ? { ...r, user } : r));
             setFilterRelationships(filterUpdated);
             // success message
-            openSnackbar('操作成功！');
+            dispatch(updateSnackbar('操作成功！'));
           } else {
             // error message
           }
         })
       ).subscribe();
     }
-  }
-
-  const [snackbarVisible, setSnackbarVisible] = useState(false)
-  const [snackbarMessage, setSnackbarMessage] = useState('')
-  const onDismissSnackBar = () => setSnackbarVisible(false);
-  const openSnackbar = (msg: string) => {
-    setSnackbarVisible(true);
-    setSnackbarMessage(msg);
   }
 
   const [user, setUser] = useState({ _id: '' })
@@ -145,16 +139,9 @@ export default function PatientAuditScreen() {
           </DataTable>
         </ScrollView>
 
-        <Snackbar
-          visible={snackbarVisible}
-          onDismiss={onDismissSnackBar}>
-          {snackbarMessage}
-        </Snackbar>
-
         {!!visible &&
           <PatientDetails user={user} onClose={closePatientDetails} />
         }
-
       </>
     );
   }

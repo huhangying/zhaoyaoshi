@@ -13,7 +13,10 @@ import { Notification, NotificationType } from '../models/io/notification.model'
 import { tap } from 'rxjs/operators';
 import { connect, useStore } from 'react-redux';
 import { useDispatch } from 'react-redux'
-import { updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, UpdateIoService, updateIsLoggedIn, updateNotiPage, updateToken } from '../services/core/app-store.actions';
+import {
+  updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, 
+  UpdateIoService, updateIsLoggedIn, updateNotiPage, updateToken, updateSnackbar
+} from '../services/core/app-store.actions';
 import { AppState } from "../models/app-state.model";
 import Constants from 'expo-constants';
 import * as Linking from 'expo-linking';
@@ -194,6 +197,7 @@ const mapState = (state: AppState) => {
     token: state.token,
     isLoggedIn: state.isLoggedIn,
     notiPage: state.notiPage,
+    snackbar: state.snackbar,
     chatNotifications: state.chatNotifications,
     feedbackNotifications: state.feedbackNotifications,
     consultNotifications: state.consultNotifications,
@@ -205,6 +209,7 @@ const mapDispatch = {
   updateToken,
   updateIsLoggedIn,
   updateNotiPage,
+  updateSnackbar,
   updateChatNotifications,
   updateFeedbackNotifications,
   updateConsultNotifications,
