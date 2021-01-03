@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Text } from '../../components/Themed';
@@ -111,31 +111,33 @@ export default function PatientAuditScreen() {
             </DataTable.Header>
             {filterRelationships?.length ? (
               filterRelationships.filter(_ => _.user?.name?.match(search))
-              .map((rel, i) => (
-                <DataTable.Row key={i} onPress={() => openPatientDetails(rel.user)}>
-                  <DataTable.Cell key={i + '-1'}>
-                    <Text>
-                      {rel.user?.name}
-                      {rel.user?.gender === 'M' ? '(男)' : (rel.user?.gender === 'F' ? '(女)' : '')}
-                    </Text>
-                  </DataTable.Cell>
-                  <DataTable.Cell numeric key={i + '-2'}>
-                    <Text>{moment(rel.user?.created).format('YYYY年MM月DD日')}</Text>
-                  </DataTable.Cell>
-                  <DataTable.Cell numeric key={i + '-3'} style={{marginRight: -15}}>
-                    {rel.user?.role === 1 ? (
-                      <Button mode="contained" icon="marker-cancel" dark={true} color="tomato" compact
-                        onPress={() => auditUser(0, rel.user?._id)}>
-                        取消审核</Button>
-                    ) : (
-                        <Button mode="contained" icon="marker-check" compact
-                          onPress={() => auditUser(1, rel.user?._id)}>
-                          审核通过</Button>
-                      )
-                    }
-                  </DataTable.Cell>
-                </DataTable.Row>
-              ))
+                .map((rel, i) => (
+                  <DataTable.Row key={i} onPress={() => openPatientDetails(rel.user)}>
+                    <DataTable.Cell key={i + '-1'}>
+                      <Text>
+                        {rel.user?.name}
+                        {rel.user?.gender === 'M' ? '(男)' : (rel.user?.gender === 'F' ? '(女)' : '')}
+                      </Text>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric key={i + '-2'}>
+                      <Text>{moment(rel.user?.created).format('YYYY年MM月DD日')}</Text>
+                    </DataTable.Cell>
+                    <DataTable.Cell numeric key={i + '-3'} style={{ marginRight: -15 }}>
+                      {rel.user?.role === 1 ? (
+                        <Button mode="contained" icon="marker-cancel" dark={true} color="tomato" compact
+                          labelStyle={{ fontSize: 11 }}
+                          onPress={() => auditUser(0, rel.user?._id)}>
+                          取消审核</Button>
+                      ) : (
+                          <Button mode="contained" icon="marker-check" compact
+                            labelStyle={{ fontSize: 11 }}
+                            onPress={() => auditUser(1, rel.user?._id)}>
+                            审核通过</Button>
+                        )
+                      }
+                    </DataTable.Cell>
+                  </DataTable.Row>
+                ))
             ) : (
                 <Text style={styles.headline}>没有相关数据。</Text>
               )
