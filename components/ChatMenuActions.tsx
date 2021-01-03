@@ -7,15 +7,17 @@ import { ExistedConsult } from '../models/consult/consult.model';
 import { useNavigation } from '@react-navigation/native';
 import { setReadByDocterAndPatient } from '../services/chat.service';
 import { setReadByDocterPatientAndType } from '../services/user-feedback.service';
-import { useDispatch, useSelector, useStore } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
-import { updateChatNotifications, updateConsultNotifications, updateFeedbackNotifications } from '../services/core/app-store.actions';
+import { updateChatNotifications, updateConsultNotifications, updateFeedbackNotifications, updateSnackbar } from '../services/core/app-store.actions';
 import { setConsultDoneByDocterUserAndType } from '../services/consult.service';
+import { Doctor } from '../models/crm/doctor.model';
+import { sendWechatMsg } from '../services/weixin.service';
 
-export default function ChatMenuActions({ type, pid, doctorId, openid, id, existedConsult, userName }:
+export default function ChatMenuActions({ type, pid, doctorId, openid, id, existedConsult, doctor, userName }:
   {
     pid: string, type: NotificationType, doctorId: string, openid?: string, id?: string,
-    existedConsult?: ExistedConsult, userName?: string
+    existedConsult?: ExistedConsult, doctor?: Doctor, userName?: string
   }) {
   const state = useSelector((state: AppState) => state);
   const [visible, setVisible] = React.useState(false);
@@ -85,26 +87,27 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
           // mark read in db
           setConsultDoneByDocterUserAndType(doctorId, pid, 0).subscribe();  // type=0: 图文
 
-            // 发送微信消息
-            // if (!noMessage) {
-            //   this.wxService.sendWechatMsg(this.selectedPatient.link_id,
-            //     '药师咨询完成',
-            //     `${this.doctor.name}${this.doctor.title}已完成咨询。请点击查看，并建议和评价药师。`,
-            //     `${this.doctor.wechatUrl}consult-finish?doctorid=${this.doctor._id}&openid=${this.selectedPatient.link_id}&state=${this.auth.hid}&id=${this.keyId}&type=0`,
-            //     '',
-            //     this.doctor._id,
-            //     this.selectedPatient.name
-            //   ).subscribe();
-            //   this.message.success('药师标记图文咨询已经完成！');
-            // }
+          // 发送微信消息
+          if (doctor && openid && userName) {
+            sendWechatMsg(openid,
+              '药师咨询完成',
+              `${doctor.name}${doctor.title}已完成咨询。请点击查看，并建议和评价药师。`,
+              `${doctor.wechatUrl}consult-finish?doctorid=${doctor._id}&openid=${openid}&state=${doctor.hid}&id=${id}&type=0`,
+              '',
+              doctor._id,
+              userName
+            ).subscribe();
+          }
+          dispatch(updateSnackbar('药师标记图文咨询已经完成'))
         }
+        closeMenu();
         return;
 
       default:
         return;
     }
-    // this.message.success('药师标记消息已处理！');
 
+    dispatch(updateSnackbar('药师标记消息已处理！'))
     closeMenu();
   }
 

@@ -133,7 +133,7 @@ export default function PatientAuditScreen() {
                   </DataTable.Row>
                 ))
             ) : (
-                <Text style={styles.headline}>没有相关数据。</Text>
+                <Text style={{ backgroundColor: 'lightyellow', padding: 16, color: 'gray' }}>没有相关数据。</Text>
               )
             }
           </DataTable>
