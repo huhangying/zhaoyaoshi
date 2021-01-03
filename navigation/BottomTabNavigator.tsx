@@ -32,6 +32,12 @@ export default function BottomTabNavigator() {
   const colorScheme = useColorScheme();
   const state = useSelector((state: AppState) => state);
 
+  const getChatAndConsultUnreadCount = () => {
+    const totalCount = (getUnreadCount(state.chatNotifications) || 0) +
+      (getUnreadCount(state.consultNotifications) || 0);
+    return totalCount > 0 ? totalCount : undefined;
+  }
+
   return (
     <BottomTab.Navigator
       activeColor={Colors[colorScheme].tint}
@@ -43,7 +49,7 @@ export default function BottomTabNavigator() {
         options={{
           title: '咨询',
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-chatbubbles" color={color} />,
-          tabBarBadge: getUnreadCount(state.chatNotifications),
+          tabBarBadge: getChatAndConsultUnreadCount(),
         }}
       />
       <BottomTab.Screen
@@ -101,8 +107,8 @@ function TabConsultNavigator() {
       <TabConsultStack.Screen
         name="ChatScreen"
         component={ChatScreen}
-        options={{ headerTitle: '免费咨询', headerShown: false  }}
-        initialParams={{type: '', title: '', pid: ''}}
+        options={{ headerTitle: '免费咨询', headerShown: false }}
+        initialParams={{ type: '', title: '', pid: '' }}
       />
       <TabConsultStack.Screen
         name="ConsultScreen"

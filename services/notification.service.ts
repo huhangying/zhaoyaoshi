@@ -6,16 +6,13 @@ import { Notification, NotificationType } from '../models/io/notification.model'
 //---------------------------------------------------
 
 export function getUnreadCount(notifications: Notification[] = []) {
-  if (!notifications?.length) return 0;
+  if (!notifications?.length) return undefined;
   return notifications.reduce((total, noti) => {
     total += (noti.count || 0);
     return total;
   }, 0);
 }
 
-// export function chatCount() { return getUnreadCount(this.chatNotifications); }
-// export function feedbackCount() { return getUnreadCount(this.feedbackNotifications); }
-// export function consultCount() { return getUnreadCount(this.consultNotifications); }
 export const getNotificationNameByType = (type: NotificationType) => {
   switch(type) {
     case NotificationType.chat:
