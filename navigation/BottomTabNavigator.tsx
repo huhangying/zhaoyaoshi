@@ -88,6 +88,7 @@ export default function BottomTabNavigator() {
       </BottomTab.Navigator>
       <Snackbar
         visible={!!state.snackbar}
+        style={{marginBottom: 60, backgroundColor: 'gray'}}        
         duration={3000}
         onDismiss={onDismissSnackBar}>
         {state.snackbar}

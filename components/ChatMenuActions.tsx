@@ -27,9 +27,6 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
   const dispatch = useDispatch()
 
 
-
-
-
   useEffect(() => {
     const hasNewServices = (pid: string) => {
       if (!pid) return false;
