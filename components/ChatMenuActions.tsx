@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import { NotificationType } from '../models/io/notification.model';
@@ -13,6 +13,7 @@ import { updateChatNotifications, updateConsultNotifications, updateFeedbackNoti
 import { setConsultDoneByDocterUserAndType } from '../services/consult.service';
 import { Doctor } from '../models/crm/doctor.model';
 import { sendWechatMsg } from '../services/weixin.service';
+import { Notification } from "../models/io/notification.model";
 
 export default function ChatMenuActions({ type, pid, doctorId, openid, id, existedConsult, doctor, userName }:
   {
@@ -20,15 +21,44 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
     existedConsult?: ExistedConsult, doctor?: Doctor, userName?: string
   }) {
   const state = useSelector((state: AppState) => state);
-  const [visible, setVisible] = React.useState(false);
+  const [visible, setVisible] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false);
   const { navigate } = useNavigation();
   const dispatch = useDispatch()
 
-  const openMenu = () => {
-    setVisible(true);
-  }
 
-  const closeMenu = () => setVisible(false);
+
+
+
+  useEffect(() => {
+    const hasNewServices = (pid: string) => {
+      if (!pid) return false;
+      let notifications: Notification[] = [];
+      switch (type) {
+        case NotificationType.chat: // NotificationType.customerService
+          notifications = state.chatNotifications || [];
+          break;
+
+        case NotificationType.adverseReaction:
+        case NotificationType.doseCombination:
+          notifications = state.feedbackNotifications?.filter(_ => _.type === type) || [];
+          break;
+
+        case NotificationType.consultChat:
+          notifications = state.consultNotifications || [];
+          break;
+      }
+      if (!notifications?.length) return false;
+      return notifications.findIndex(noti => noti.patientId === pid) > -1;
+    }
+
+    setVisible(hasNewServices(pid));
+    return () => {
+    }
+  }, [pid, type, state])
+
+  const openMenu = () => setMenuOpen(true);
+  const closeMenu = () => setMenuOpen(false);
 
   const goBackConsult = () => {
     const type = existedConsult?.type;
@@ -112,42 +142,46 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
   }
 
   return (
-    <View style={{ position: 'absolute', right: 10, top: 45 }}>
-      <Provider>
-        <View
-          style={{
-            paddingTop: 0,
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
-            // backgroundColor: 'lightblue',
-            backgroundColor: 'transparent',
-            width: 200,
-            height: 200,
-          }}>
-          <Menu
-            visible={visible}
-            onDismiss={closeMenu}
-            anchor={
-              <Button
-                type="clear"
-                icon={<Icon name="menu" size={24} color="white" />}
-                style={{ alignContent: 'center', alignSelf: 'center' }}
-                onPress={openMenu} />
-            }
-            style={{ marginTop: 0, position: 'absolute', right: 0, left: 0, top: 40, zIndex: 99999, elevation: 9999 }}
-          >
+    <>
+      {visible && (
+        <View style={{ position: 'absolute', right: 10, top: 45 }}>
+          <Provider>
+            <View
+              style={{
+                paddingTop: 0,
+                flexDirection: 'row',
+                justifyContent: 'flex-end',
+                // backgroundColor: 'lightblue',
+                backgroundColor: 'transparent',
+                width: 200,
+                height: 200,
+              }}>
+              <Menu
+                visible={menuOpen}
+                onDismiss={closeMenu}
+                anchor={
+                  <Button
+                    type="clear"
+                    icon={<Icon name="menu" size={24} color="white" />}
+                    style={{ alignContent: 'center', alignSelf: 'center' }}
+                    onPress={openMenu} />
+                }
+                style={{ marginTop: 0, position: 'absolute', right: 0, left: 0, top: 40, zIndex: 99999, elevation: 9999 }}
+              >
 
-            <Menu.Item icon="check-circle" onPress={() => { markDone() }} title="标识完成" />
-            <View style={{
-              display: (type === NotificationType.chat && existedConsult && existedConsult.exists) ? 'flex' : 'none'
-            }}>
-              <Divider />
-              <Menu.Item icon="keyboard-backspace" onPress={goBackConsult} title="返回付费咨询" />
+                <Menu.Item icon="check-circle" onPress={() => { markDone() }} title="标识完成" />
+                <View style={{
+                  display: (type === NotificationType.chat && existedConsult && existedConsult.exists) ? 'flex' : 'none'
+                }}>
+                  <Divider />
+                  <Menu.Item icon="keyboard-backspace" onPress={goBackConsult} title="返回付费咨询" />
+                </View>
+              </Menu>
             </View>
-          </Menu>
+          </Provider>
         </View>
-      </Provider>
-    </View>
+      )}
+    </>
   );
 }
 
