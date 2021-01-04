@@ -1,14 +1,16 @@
-import React from 'react';
-import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { Button, Dialog, Divider, FAB, Paragraph, TextInput } from 'react-native-paper';
 import Constants from "expo-constants";
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
-export default function EditTextList({ list, onListSave }: { list: string[], onListSave: any }) {
-  const [action, setAction] = React.useState('');
-  const [selectItem, setSelectItem] = React.useState('');
-  const [selectIndex, setSelectIndex] = React.useState(-1);
-  const [visible, setVisible] = React.useState(false);
+export default function EditTextList({ list, onListSave, onModalClose }: { list: string[], onListSave: any, onModalClose: any }) {
+  const [action, setAction] = useState('');
+  const [selectItem, setSelectItem] = useState('');
+  const [selectIndex, setSelectIndex] = useState(-1);
+  const [visible, setVisible] = useState(false);
+  const dimensions = useWindowDimensions();
 
   const openSelect = (item: string, index = -1) => {
     setAction(index === -1 ? 'add' : 'edit');
@@ -50,23 +52,27 @@ export default function EditTextList({ list, onListSave }: { list: string[], onL
 
   return (
     <>
-      <ScrollView>
-        {
-          list.map((l, i) => (l ? (
-            <ListItem key={i} bottomDivider containerStyle={i === selectIndex ? styles.highlight : styles.normal}>
-              <ListItem.Content>
-                <ListItem.Title>{l}</ListItem.Title>
-              </ListItem.Content>
-              <ListItem.Chevron type='ionicon' name="ios-create" size={24} color="royalblue" style={styles.mr2} onPress={() => openSelect(l, i)} />
-              <ListItem.Chevron type='ionicon' name="ios-trash" size={24} color="tomato" style={styles.mr2} onPress={() => deleteConfirm(l, i)} />
-            </ListItem>
-          ) :
-            (<Text key="nodata" style={{paddingHorizontal: 20, paddingBottom: 10, color: 'gray'}}> 请点击 + 增加快捷回复。</Text>)
-          ))
-        }
-      </ScrollView>
+      <Swipeable
+        renderLeftActions={() => (<Text></Text>)}
+        onSwipeableLeftOpen={onModalClose}>
+        <ScrollView style={{ height: Platform.OS === 'ios' ? dimensions.height - 160 : dimensions.height - 90 }}>
+          {
+            list.map((l, i) => (l ? (
+              <ListItem key={i} bottomDivider containerStyle={i === selectIndex ? styles.highlight : styles.normal}>
+                <ListItem.Content>
+                  <ListItem.Title>{l}</ListItem.Title>
+                </ListItem.Content>
+                <ListItem.Chevron type='ionicon' name="ios-create" size={24} color="royalblue" style={styles.mr2} onPress={() => openSelect(l, i)} />
+                <ListItem.Chevron type='ionicon' name="ios-trash" size={24} color="tomato" style={styles.mr2} onPress={() => deleteConfirm(l, i)} />
+              </ListItem>
+            ) :
+              (<Text key="nodata" style={{ paddingHorizontal: 20, paddingBottom: 10, color: 'gray' }}> 请点击 + 增加快捷回复。</Text>)
+            ))
+          }
+        </ScrollView>
+      </Swipeable>
 
-      <Dialog visible={visible} style={{  position: 'absolute', top: 100, right: 0, left: 0, marginBottom: 136 }}>
+      <Dialog visible={visible} style={{ position: 'absolute', top: 100, right: 0, left: 0, marginBottom: 136 }}>
         <Dialog.Title>{action === 'delete' ? '确认删除' :
           (action === 'add' ? '新增' : '编辑')}</Dialog.Title>
         <Divider></Divider>

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Caption } from 'react-native-paper';
 import EditTextList from '../../../components/EditTextList';
 import { getDoctorConsultByDoctorId, updateDoctorConsult } from '../../../services/consult.service';
@@ -24,7 +24,7 @@ export default function ConsultTags({ doctorid, onClose }: { doctorid: string, o
     }
   }, [doctorid]);
 
-  const onListSave = React.useCallback(() => {
+  const onListSave = useCallback(() => {
     const newTags = tags.join('|');
     if (doctorid) {
       updateDoctorConsult(doctorid, {doctor_id: doctorid, tags: newTags}).pipe(
@@ -36,6 +36,10 @@ export default function ConsultTags({ doctorid, onClose }: { doctorid: string, o
     }
   }, [doctorid, tags]);
 
+  const onModalClose = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
   return (
     <View style={styles.container}>
       <Header
@@ -43,7 +47,7 @@ export default function ConsultTags({ doctorid, onClose }: { doctorid: string, o
         rightComponent={{ icon: 'close', color: '#fff', onPress: onClose }}
       />
       <Caption style={styles.m3}>自定义标签列表</Caption>
-      <EditTextList key="edit-tags" list={tags} onListSave={onListSave} />
+      <EditTextList key="edit-tags" list={tags} onListSave={onListSave} onModalClose={onModalClose} />
     </View>
   );
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Modal, ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Button, Card, ListItem, Text } from 'react-native-elements';
+import { Modal, StyleSheet } from 'react-native';
+import { Card, ListItem, Text } from 'react-native-elements';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Caption, List, Paragraph, Subheading } from 'react-native-paper';
@@ -106,13 +106,13 @@ export default function ConsultSettingsScreen() {
             <ListItem.Chevron />
           </ListItem>
 
-          <Modal visible={tagsVisible} animationType="slide"
+          <Modal visible={tagsVisible}
             statusBarTranslucent={true}
             hardwareAccelerated={true}
             onDismiss={closeConsultTags}>
             <ConsultTags doctorid={doctor._id} onClose={onCloseConsultTags}></ConsultTags>
           </Modal>
-          <Modal visible={diseaseTypesVisible} animationType="slide" 
+          <Modal visible={diseaseTypesVisible}
                       statusBarTranslucent={true}
                       hardwareAccelerated={true}
                       onDismiss={closeConsultDiseaseTypes}>

@@ -36,6 +36,11 @@ export default function ConsultDiseaseTypes({ doctorid, onClose }: { doctorid: s
     }
   }, [doctorid, diseaseTypes]);
 
+  const onModalClose = useCallback(() => {
+    onClose();
+  }, [onClose]);
+
+
   return (
     <View style={styles.container}>
       <Header
@@ -43,7 +48,7 @@ export default function ConsultDiseaseTypes({ doctorid, onClose }: { doctorid: s
         rightComponent={{ icon: 'close', color: '#fff', onPress: onClose }}
       />
       <Caption style={styles.m3}>疾病类型列表</Caption>
-      <EditTextList key="edit-disease-types" list={diseaseTypes} onListSave={onListSave} />
+      <EditTextList key="edit-disease-types" list={diseaseTypes} onListSave={onListSave} onModalClose={onModalClose} />
     </View>
   );
 }
