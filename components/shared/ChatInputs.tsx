@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback, useEffect, useState } from "react";
 import { Switch } from "react-native";
-import { Keyboard, Platform, SafeAreaView, StyleSheet } from "react-native";
+import { Keyboard, Platform, SafeAreaView, StyleSheet, Text } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { tap } from "rxjs/operators";
 import { Consult } from "../../models/consult/consult.model";
@@ -174,6 +174,7 @@ export default function ChatInputs({ pid, doctor, type, onSend, existsConsult, c
         {(type === NotificationType.chat && doctor?.prices?.length && !existsConsult) && (
           <View style={{ flex: 1, flexDirection: 'row-reverse', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
             <Switch value={setCharged} onValueChange={toggleSetCharge} />
+            <Text style={{color: 'gray'}}>设置付费</Text>
           </View>
         )}
       </View>

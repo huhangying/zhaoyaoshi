@@ -1,8 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { useCallback } from 'react';
-import { Text } from 'react-native';
-import { Header } from 'react-native-elements';
 import { useSelector } from 'react-redux';
 import SelectPatient from '../../components/shared/SelectPatient';
 import { AppState } from '../../models/app-state.model';
