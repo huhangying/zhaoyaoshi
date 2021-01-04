@@ -15,7 +15,6 @@ export default function SelectChatScreen() {
 
   const onSelectPatient = useCallback((user: User) => {
     if (user) {
-      console.log(user);
       navigate('ChatScreen', { pid: user._id,  type: NotificationType.chat, title: user.name + '免费咨询' });
     }
   }, [navigate]);

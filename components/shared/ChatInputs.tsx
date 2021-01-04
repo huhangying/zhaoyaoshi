@@ -5,20 +5,25 @@ import { Switch } from "react-native";
 import { Keyboard, Platform, SafeAreaView, StyleSheet } from "react-native";
 import { Button, Input } from "react-native-elements";
 import { tap } from "rxjs/operators";
+import { Consult } from "../../models/consult/consult.model";
 import { Doctor } from "../../models/crm/doctor.model";
+import { ChatCommandType } from "../../models/io/chat.model";
+import { NotificationType } from "../../models/io/notification.model";
+import { getPendingConsultByDoctorIdAndUserId, sendConsult, updateConsultById } from "../../services/consult.service";
 import { createBlobFormData, uploadDoctorDir } from "../../services/core/upload.service";
 import EmojiMenu from "../chat/emojiMenu";
 import ShortcutBottomMenu from "../chat/ShortcutsBottomMenu";
 import { View } from "../Themed";
 
-export default function ChatInputs({ pid, doctor, onSend }: { pid: string, doctor?: Doctor, onSend: any }) {
+export default function ChatInputs({ pid, doctor, type, onSend, existsConsult, consultId }: 
+  { pid: string, doctor?: Doctor, type: number, onSend: any, existsConsult?: boolean, consultId?: string }) { //如果existsConsult=true，则consultId存在
   const [isShortcutsMenuVisible, setIsShortcutsMenuVisible] = useState(false);
   const [inputText, setInputText] = useState('')
   const [showEmojis, setShowEmojis] = useState(false)
+  const [setCharged, setSetCharged] = useState(false)
 
+  // effect
   useEffect(() => {
-    // effect
-
     (async () => {
       if (Platform.OS !== 'web') {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -32,10 +37,20 @@ export default function ChatInputs({ pid, doctor, onSend }: { pid: string, docto
       }
     })();
 
+    if (doctor?._id && pid) {
+      // get 付费咨询 flag
+      getPendingConsultByDoctorIdAndUserId(doctor._id, pid).pipe(
+        tap(result => {
+          // this.currentConsult = result;
+          setSetCharged(result?.setCharged || false)
+        }),
+      ).subscribe();
+    }
+
     return () => {
       // cleanup
     }
-  }, [doctor])
+  }, [doctor, pid])
 
   const onShortcutSelected = useCallback((shortcut) => {
     if (shortcut) {
@@ -105,40 +120,70 @@ export default function ChatInputs({ pid, doctor, onSend }: { pid: string, docto
     onSend(msg);
   }
 
+  const toggleSetCharge = () =>  {
+    const currentSetCharged = !setCharged;
+    setSetCharged(currentSetCharged);
+    if (consultId && doctor?._id) {
+      updateConsultById(consultId, { user: pid, doctor: doctor?._id, setCharged: currentSetCharged }).pipe(
+        tap((result: Consult) => {
+          setChatChargedStatus(result?.setCharged);
+        })
+      ).subscribe();
+
+    } else {
+      sendConsult({
+        doctor: doctor?._id || '',
+        user: pid,
+        setCharged: currentSetCharged
+      }).pipe(
+        tap(result => {
+          setChatChargedStatus(result?.setCharged);
+        })
+      ).subscribe();
+    }
+  }
+
+  const setChatChargedStatus = (charged = false) => {
+    const cmd = charged ? ChatCommandType.setCharged : ChatCommandType.setFree;
+    onSend(cmd, false, true);
+  }
+
   return (
     <SafeAreaView style={styles.fixBottom}>
-    <Input
-      placeholder="请输入..."
-      value={inputText}
-      onChangeText={setInputText}
-      onFocus={hideEmojis}
-      style={styles.bottomInput}
-      multiline={true}
-      rightIcon={
-        <Button title="发送" containerStyle={{ marginRight: -12 }} buttonStyle={{ paddingLeft: 4, paddingRight: 10 }} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}
-          disabled={!inputText} onPress={() => send(inputText)}
-        />}
-    />
+      <Input
+        placeholder="请输入..."
+        value={inputText}
+        onChangeText={setInputText}
+        onFocus={hideEmojis}
+        style={styles.bottomInput}
+        multiline={true}
+        rightIcon={
+          <Button title="发送" containerStyle={{ marginRight: -12 }} buttonStyle={{ paddingLeft: 4, paddingRight: 10 }} icon={{ type: 'ionicon', name: 'ios-paper-plane', color: 'white' }}
+            disabled={!inputText} onPress={() => send(inputText)}
+          />}
+      />
 
-    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -28, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
-      <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightgray' }}>
-        <Ionicons name="ios-happy" size={26} color="#0095ff"
-          style={{ marginRight: 22, color: !showEmojis ? '#0095ff' : 'orange' }} onPress={toggleEmojis}></Ionicons>
-        <Ionicons name="ios-image" size={26} color="#0095ff" style={styles.mr3} onPress={pickImage}></Ionicons>
-        <Ionicons name="ios-camera" size={26} color="#0095ff" style={styles.mr3} onPress={pickCamera}></Ionicons>
-        <Ionicons name="ios-arrow-undo" size={26} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
+      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', marginTop: -28, backgroundColor: 'lightgray', paddingVertical: 6, paddingHorizontal: 16 }}>
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: 'lightgray' }}>
+          <Ionicons name="ios-happy" size={26} color="#0095ff"
+            style={{ marginRight: 22, color: !showEmojis ? '#0095ff' : 'orange' }} onPress={toggleEmojis}></Ionicons>
+          <Ionicons name="ios-image" size={26} color="#0095ff" style={styles.mr3} onPress={pickImage}></Ionicons>
+          <Ionicons name="ios-camera" size={26} color="#0095ff" style={styles.mr3} onPress={pickCamera}></Ionicons>
+          <Ionicons name="ios-arrow-undo" size={26} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
+        </View>
+        {(type === NotificationType.chat && doctor?.prices?.length && !existsConsult) && (
+          <View style={{ flex: 1, flexDirection: 'row-reverse', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
+            <Switch value={setCharged} onValueChange={toggleSetCharge} />
+          </View>
+        )}
       </View>
-      <View style={{ flex: 1, flexDirection: 'row-reverse', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
-        <Switch value={true} onValueChange={()=>{}} />
-      </View>
-    </View>
-    {!!showEmojis &&
-      <EmojiMenu onSelect={onEmojiSelected}></EmojiMenu>
-    }
-    {!!isShortcutsMenuVisible &&
-      <ShortcutBottomMenu shortcuts={doctor?.shortcuts || ''} onSelect={onShortcutSelected}></ShortcutBottomMenu>
-    }
-  </SafeAreaView>
+      {!!showEmojis &&
+        <EmojiMenu onSelect={onEmojiSelected}></EmojiMenu>
+      }
+      {!!isShortcutsMenuVisible &&
+        <ShortcutBottomMenu shortcuts={doctor?.shortcuts || ''} onSelect={onShortcutSelected}></ShortcutBottomMenu>
+      }
+    </SafeAreaView>
   );
 }
 

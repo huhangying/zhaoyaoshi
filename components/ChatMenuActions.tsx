@@ -33,12 +33,12 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
   const goBackConsult = () => {
     const type = existedConsult?.type;
     // 付费图文咨询 （共用chat）
-    if (type === 0) {
+    if (type === NotificationType.consultChat) {
       navigate('ConsultScreen', {
         pid: pid, type: NotificationType.consultChat,
         title: userName + ' 付费图文咨询', id: existedConsult?.consultId
       });
-    } else if (type === 1) {
+    } else if (type === NotificationType.consultPhone) {
       // 付费电话咨询，到说明页面
       // navigate(['/main/consult-phone'], {
       //   queryParams: {
@@ -139,7 +139,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
 
             <Menu.Item icon="check-circle" onPress={() => { markDone() }} title="标识完成" />
             <View style={{
-              display: (existedConsult && existedConsult.exists) ? 'flex' : 'none'
+              display: (type === NotificationType.chat && existedConsult && existedConsult.exists) ? 'flex' : 'none'
             }}>
               <Divider />
               <Menu.Item icon="keyboard-backspace" onPress={goBackConsult} title="返回付费咨询" />

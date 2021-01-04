@@ -101,7 +101,7 @@ export default function ChatScreen() {
     scrollViewRef.current?.scrollToEnd({ animated: true });
   }
 
-  const onSend = useCallback((data: string, isImg = false) => {
+  const onSend = useCallback((data: string, isImg = false, isCmd = false) => {
     if (!doctor) {
       return;
     }
@@ -110,7 +110,7 @@ export default function ChatScreen() {
       sender: doctor._id || '',
       senderName: doctor.name || '',
       to: pid,
-      type: !isImg ? ChatType.text : ChatType.picture,
+      type: !isCmd ? (!isImg ? ChatType.text : ChatType.picture) : ChatType.command,
       data: data,
       cs: false// this.isCs
     };
@@ -162,7 +162,7 @@ export default function ChatScreen() {
           </View>
         </ ScrollView>
 
-        <ChatInputs pid={pid} doctor={doctor} onSend={onSend}></ChatInputs>
+        <ChatInputs pid={pid} doctor={doctor} type={type} onSend={onSend} existsConsult={existedConsult?.exists} consultId={existedConsult?.consultId}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
         <ChatMenuActions pid={pid} type={type} doctorId={doctor?._id} existedConsult={existedConsult} userName={user?.name} />
 
