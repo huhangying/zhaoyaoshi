@@ -35,7 +35,7 @@ export default function ProfileScreen() {
         </Card>
 
         <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title>基本信息</Card.Title>
+          <Card.Title style={styles.title}>基本信息</Card.Title>
           <Card.Divider />
           <DataTable>
             <DataTable.Row>
@@ -62,7 +62,7 @@ export default function ProfileScreen() {
         </Card>
 
         <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title>工作时间</Card.Title>
+          <Card.Title style={styles.title}>工作时间</Card.Title>
           <Card.Divider />
           <Text style={styles.mx3}>
             {doctor.hours}
@@ -70,7 +70,7 @@ export default function ProfileScreen() {
         </Card>
 
         <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title>擅长领域</Card.Title>
+          <Card.Title style={styles.title}>擅长领域</Card.Title>
           <Card.Divider />
           <Text style={styles.mx3}>
             {doctor.expertise}
@@ -78,7 +78,7 @@ export default function ProfileScreen() {
         </Card>
 
         <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title>工作范围</Card.Title>
+          <Card.Title style={styles.title}>工作范围</Card.Title>
           <Card.Divider />
           <Text style={styles.mx3}>
             {doctor.bulletin}
@@ -86,7 +86,7 @@ export default function ProfileScreen() {
         </Card>
 
         <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title>获奖情况</Card.Title>
+          <Card.Title style={styles.title}>获奖情况</Card.Title>
           <Card.Divider />
           <Text style={styles.mx3}>
             {doctor.honor}
@@ -104,8 +104,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: 20,
+    paddingTop: 6,
+    fontSize: 16,
     fontWeight: 'bold',
+    color: 'gray',
   },
   separator: {
     marginVertical: 30,
@@ -115,10 +117,10 @@ const styles = StyleSheet.create({
   item: {
     width: 100,
     marginLeft: 15,
-    marginRight: 50,
+    marginRight: 15,
   },
   itemLabel: {
-    marginLeft: -30,
+    marginLeft: -140,
   },
   mx3: {
     marginHorizontal: 16,
