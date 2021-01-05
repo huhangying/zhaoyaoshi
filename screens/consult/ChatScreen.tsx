@@ -146,7 +146,7 @@ export default function ChatScreen() {
         <Header
           placement="left"
           leftComponent={{ icon: 'chevron-left', style: { marginTop: -4 }, size: 28, color: '#fff', onPress: navigation.goBack }}
-          centerComponent={{ text: title, style: { color: '#fff', fontSize: 18 }, onPress: navigation.goBack }}
+          centerComponent={{ text: decodeURIComponent(title), style: { color: '#fff', fontSize: 18 }, onPress: navigation.goBack }}
         />
 
         <ScrollView ref={scrollViewRef}

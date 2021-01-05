@@ -144,7 +144,7 @@ export default function FeedbackChatScreen() {
         <Header
           placement="left"
           leftComponent={{ icon: 'chevron-left', style: {marginTop: -4}, size: 28, color: '#fff', onPress: navigation.goBack }}
-          centerComponent={{ text: title, style: { color: '#fff', fontSize: 18 }, onPress: navigation.goBack }}
+          centerComponent={{ text: decodeURIComponent(title), style: { color: '#fff', fontSize: 18 }, onPress: navigation.goBack }}
         />
         <ScrollView ref={scrollViewRef}
           style={{ marginBottom: Platform.OS === "ios" ? 119 : 88, maxHeight: dimensions.height - 145 }}
