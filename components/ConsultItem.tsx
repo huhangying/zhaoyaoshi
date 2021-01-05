@@ -28,7 +28,7 @@ export default function ConsultItem({ consult, doctor, icon, onImgView }: { cons
           <>
             <Text style={styles.consultType}>
               ***
-              {consult.type === NotificationType.consultChat ? ' 付费图文咨询 ' : ' 付费电话咨询 '}
+              {consult.type === 0 ? ' 付费图文咨询 ' : ' 付费电话咨询 '}
               {consult.finished ? ' (已完成) ' : ''}
               ***
             </Text>
