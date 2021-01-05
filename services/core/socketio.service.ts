@@ -15,7 +15,7 @@ export class SocketioService {
   socket: any;
 
   constructor(room: string) {
-    this.socket = io(ENDPOINT, {autoConnect: true});
+    this.socket = io(ENDPOINT, {reconnection: true});
     this.socket?.emit('joinRoom', room);
   }
 
