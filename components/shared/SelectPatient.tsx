@@ -5,7 +5,7 @@ import { Text } from '../../components/Themed';
 import { getDoctorGroups, getPatientGroupedRelationships } from '../../services/doctor.service';
 import { GroupedRelationship, Relationship } from '../../models/crm/relationship.model';
 import { tap } from 'rxjs/operators';
-import { List } from 'react-native-paper';
+import { Caption, List } from 'react-native-paper';
 import { DoctorGroup } from '../../models/crm/doctor-group.model';
 
 export default function SelectPatient({ doctorId, onSelect }: { doctorId?: string, onSelect: any }) {
@@ -62,7 +62,7 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
 
   return (
     <>
-      <Text style={styles.m3}>从用户群组中选择</Text>
+      <Caption style={styles.m3}>从用户群组中选择</Caption>
       <ScrollView ref={scrollViewRef}>
         {doctorGroups.map((group: DoctorGroup, i) => (
           <List.Accordion

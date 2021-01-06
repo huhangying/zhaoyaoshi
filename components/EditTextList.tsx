@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { ListItem } from 'react-native-elements';
-import { Button, Dialog, Divider, FAB, Paragraph, TextInput } from 'react-native-paper';
+import { Button, ListItem } from 'react-native-elements';
+import { Dialog, Divider, FAB, Subheading, TextInput } from 'react-native-paper';
 import Constants from "expo-constants";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
@@ -78,7 +78,7 @@ export default function EditTextList({ list, onListSave, onModalClose }: { list:
         <Divider></Divider>
         <Dialog.Content style={styles.pt3}>
           {action === 'delete' ?
-            <Paragraph>您确定要删除该数据吗？</Paragraph> :
+            <Subheading>您确定要删除该数据吗？</Subheading> :
             <TextInput
               value={selectItem}
               onChangeText={text => setSelectItem(text)}
@@ -86,10 +86,13 @@ export default function EditTextList({ list, onListSave, onModalClose }: { list:
           }
         </Dialog.Content>
         <Dialog.Actions>
-          <Button mode="outlined" style={[styles.mr3, styles.px3]} onPress={() => resetSelect()}>
+          <Button title="取消" type="outline" buttonStyle={styles.button} onPress={resetSelect} />
+          <Button title="确定" buttonStyle={styles.button} onPress={saveItem} />
+
+          {/* <Button mode="outlined" style={[styles.mr3, styles.px3]} onPress={() => resetSelect()}>
             取消</Button>
           <Button mode="contained" style={[styles.mr2, styles.px3]} disabled={!selectItem} onPress={() => saveItem()}>
-            确定</Button>
+            确定</Button> */}
         </Dialog.Actions>
       </Dialog>
       <FAB
@@ -121,11 +124,9 @@ const styles = StyleSheet.create({
   mr2: {
     marginRight: 8
   },
-  mr3: {
-    marginRight: 16
-  },
-  px3: {
-    paddingHorizontal: 16
+  button: {
+    marginHorizontal: 16,
+    paddingHorizontal: 24
   },
   pt3: {
     paddingTop: 16

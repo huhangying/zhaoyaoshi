@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { User } from '../models/crm/user.model';
 import { Text } from './Themed';
-import { Avatar, Button, Dialog, Divider, List, Title } from 'react-native-paper';
+import { Avatar, Dialog, Divider, List, Title } from 'react-native-paper';
 import { wxImgSource } from '../services/core/image.service';
 import Spinner from './shared/Spinner';
 import { getDateFormat } from '../services/core/moment';
+import { Button } from 'react-native-elements';
 
 export default function PatientDetails({ user, onClose }: { user: User, onClose: any }) {
 
@@ -23,7 +24,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
         <Dialog.Title >
           <List.Item
             style={styles.header}
-            left={() => (<><Avatar.Image size={52} source={ wxImgSource(user.icon) } /><Title style={styles.headerTitle}>{user.name}</Title></>)}
+            left={() => (<><Avatar.Image size={52} source={wxImgSource(user.icon)} /><Title style={styles.headerTitle}>{user.name}</Title></>)}
             title=""
           />
         </Dialog.Title>
@@ -49,8 +50,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
           </ScrollView>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button mode="contained" style={{ flex: 1 }} onPress={onClose}>
-            关闭</Button>
+          <Button title="关闭" containerStyle={{flex: 1, marginTop: -16, marginBottom: 10, marginHorizontal: 16}} onPress={onClose} />
         </Dialog.Actions>
       </Dialog>
     )
