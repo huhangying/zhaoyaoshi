@@ -14,7 +14,7 @@ import { tap } from 'rxjs/operators';
 import { connect, useStore } from 'react-redux';
 import { useDispatch } from 'react-redux'
 import {
-  updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications, 
+  updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications,
   UpdateIoService, updateIsLoggedIn, updateNotiPage, updateToken, updateSnackbar
 } from '../services/core/app-store.actions';
 import { AppState } from "../models/app-state.model";
@@ -110,11 +110,17 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
               break;
 
             case NotificationType.consultChat:
-            case NotificationType.consultPhone:
               notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
               dispatch(updateConsultNotifications(notifications));
               if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
                 pushLocalNotification(noti, 'consult/consult-chat');
+              }
+              break;
+            case NotificationType.consultPhone:
+              notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
+              dispatch(updateConsultNotifications(notifications));
+              if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
+                pushLocalNotification(noti, 'consult/consult-phone');
               }
               break;
           }
@@ -158,6 +164,9 @@ export function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
                   break;
                 case 'consult/consult-chat':
                   navigationRef.current.navigate('ConsultScreen', queryParams || {})
+                  break;
+                case 'consult/consult-phone':
+                  navigationRef.current.navigate('ConsultPhoneScreen', queryParams || {})
                   break;
                 default:
                   break;

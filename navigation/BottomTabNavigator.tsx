@@ -27,6 +27,7 @@ import SelectChatScreen from '../screens/consult/SelectChatScreen';
 import NotificationSettingsScreen from '../screens/settings/NotificationSettingsScreen';
 import { Snackbar } from 'react-native-paper';
 import { updateSnackbar } from '../services/core/app-store.actions';
+import ConsultPhoneScreen from '../screens/consult/ConsultPhoneScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -129,7 +130,12 @@ function TabConsultNavigator() {
       <TabConsultStack.Screen
         name="ConsultScreen"
         component={ConsultScreen}
-        options={{ headerTitle: '付费咨询', headerShown: false }}
+        options={{ headerTitle: '付费图片咨询', headerShown: false }}
+      />
+      <TabConsultStack.Screen
+        name="ConsultPhoneScreen"
+        component={ConsultPhoneScreen}
+        options={{ headerTitle: '付费电话咨询', headerShown: false }}
       />
     </TabConsultStack.Navigator>
   );

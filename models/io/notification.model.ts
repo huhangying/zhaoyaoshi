@@ -27,4 +27,5 @@ export interface NotificationParams {
   title: string; 
   type: number;
   id?: string; // used for consult chat
+  fromConsultPhone?: boolean; // use for consult phone to consult-chat
 }

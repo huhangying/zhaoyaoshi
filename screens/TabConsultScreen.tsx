@@ -8,7 +8,7 @@ import { ListItem } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Caption } from 'react-native-paper';
 import NotificationList from '../components/NotificationList';
-import { Notification } from '../models/io/notification.model';
+import { Notification, NotificationType } from '../models/io/notification.model';
 import Spinner from '../components/shared/Spinner';
 import { useCallback, useState } from 'react';
 import NotificationBadge from '../components/shared/NotificationBadge';
@@ -52,18 +52,30 @@ export default function TabConsultScreen() {
         </ListItem>
         <Caption style={styles.m3}>咨询消息提醒</Caption>
         <ListItem key={'noti-consult' + 1} bottomDivider
-          onPress={() => openNotification('付费咨询消息提醒', consultNotifications || [])}>
+          onPress={() => openNotification('付费图文咨询提醒', consultNotifications?.filter(_ => _.type === NotificationType.consultChat) || [])}>
           <Ionicons name="ios-megaphone" size={24} color="coral"></Ionicons>
           <ListItem.Content>
             <ListItem.Title>
-              付费咨询消息提醒
-              <NotificationBadge notiLength={consultNotifications?.length}></NotificationBadge>
+              付费图文咨询提醒
+              <NotificationBadge notiLength={consultNotifications?.filter(_ => _.type === NotificationType.consultChat)?.length}></NotificationBadge>
             </ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
         <Text> </Text>
-        <ListItem key={2}
+        <ListItem key={'noti-consult' + 2} bottomDivider
+          onPress={() => openNotification('付费电话咨询提醒', consultNotifications?.filter(_ => _.type === NotificationType.consultPhone) || [])}>
+          <Ionicons name="ios-call" size={24} color="coral"></Ionicons>
+          <ListItem.Content>
+            <ListItem.Title>
+              付费电话咨询提醒
+              <NotificationBadge notiLength={consultNotifications?.filter(_ => _.type === NotificationType.consultPhone)?.length}></NotificationBadge>
+            </ListItem.Title>
+          </ListItem.Content>
+          <ListItem.Chevron />
+        </ListItem>
+        <Text> </Text>
+        <ListItem key={3}
           onPress={() => openNotification('免费咨询消息提醒', chatNotifications || [])}>
           <Ionicons name="ios-notifications" size={24} color="turquoise"></Ionicons>
           <ListItem.Content>

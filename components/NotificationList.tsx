@@ -22,7 +22,7 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
           });
           break;
         case NotificationType.consultPhone:
-          navigate('ConsultScreen', {
+          navigate('ConsultPhoneScreen', {
             pid: noti.patientId, type: noti.type,
             title: noti.name + ' 付费电话咨询', id: noti.keyId
           });

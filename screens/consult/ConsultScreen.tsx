@@ -29,6 +29,7 @@ export default function ConsultScreen() {
   const [type, setType] = useState(NotificationType.chat);
   const [pid, setPid] = useState('');
   const [consultId, setConsultId] = useState('')
+  const [fromConsultPhone, setFromConsultPhone] = useState(false)
   const [loading, setLoading] = useState(false);
   const initConsults: Consult[] = [];
   const [consults, setConsults] = useState(initConsults);
@@ -50,13 +51,14 @@ export default function ConsultScreen() {
   });
 
   useEffect(() => {
-    const {pid, title, type, id} = route.params as NotificationParams;
+    const {pid, title, type, id, fromConsultPhone} = route.params as NotificationParams;
     setTitle(title);
     if (doctor?._id) {
       setLoading(true);
       setType(type);
       setPid(pid);
       setConsultId(id || '');
+      setFromConsultPhone(fromConsultPhone || false);
 
       // get history
       if (type === NotificationType.consultChat) {
@@ -171,7 +173,8 @@ export default function ConsultScreen() {
         </ ScrollView>
         <ChatInputs pid={pid} doctor={doctor} type={type} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
-        <ChatMenuActions pid={pid} type={type} doctorId={doctor?._id} openid={user.link_id} id={consultId} doctor={doctor} userName={user?.name} />
+        <ChatMenuActions pid={pid} type={type} doctorId={doctor?._id} openid={user.link_id} id={consultId} 
+          doctor={doctor} userName={user?.name} fromConsultPhone={fromConsultPhone} />
 
       </KeyboardAvoidingView>
     );

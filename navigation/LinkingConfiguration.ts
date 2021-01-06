@@ -11,7 +11,8 @@ export default {
             path: 'consult',
             screens: {
               TabConsultScreen: '',
-              ConsultChatScreen: 'consult-chat',
+              ConsultScreen: 'consult-chat',
+              ConsultPhoneScreen: 'consult-phone',
               ChatScreen: 'chat',
               SelectChatScreen: 'select-chat',
             },

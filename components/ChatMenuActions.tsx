@@ -15,10 +15,10 @@ import { Doctor } from '../models/crm/doctor.model';
 import { sendWechatMsg } from '../services/weixin.service';
 import { Notification } from "../models/io/notification.model";
 
-export default function ChatMenuActions({ type, pid, doctorId, openid, id, existedConsult, doctor, userName }:
+export default function ChatMenuActions({ type, pid, doctorId, openid, id, existedConsult, doctor, userName, fromConsultPhone }:
   {
     pid: string, type: NotificationType, doctorId: string, openid?: string, id?: string,
-    existedConsult?: ExistedConsult, doctor?: Doctor, userName?: string
+    existedConsult?: ExistedConsult, doctor?: Doctor, userName?: string, fromConsultPhone?: boolean
   }) {
   const state = useSelector((state: AppState) => state);
   const [visible, setVisible] = useState(false)
@@ -57,25 +57,25 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
   const openMenu = () => setMenuOpen(true);
   const closeMenu = () => setMenuOpen(false);
 
-  const goBackConsult = () => {
-    const type = existedConsult?.type;
+  const goBackConsult = (forceToConsultPhone?: boolean, id?: string) => {
+    const type = !forceToConsultPhone ? existedConsult?.type: 1;
     // 付费图文咨询 （共用chat）
-    if (type === NotificationType.consultChat) {
+    if (type === 0) {
       navigate('ConsultScreen', {
         pid: pid, type: NotificationType.consultChat,
         title: userName + ' 付费图文咨询', id: existedConsult?.consultId
       });
-    } else if (type === NotificationType.consultPhone) {
+    } else if (type === 1) {
       // 付费电话咨询，到说明页面
-      // navigate(['/main/consult-phone'], {
-      //   queryParams: {
-      //     pid: this.selectedPatient?._id,
-      //     id: this.existedConsultId
-      //   }
-      // });
+      navigate('ConsultPhoneScreen', {
+        pid: pid, type: NotificationType.consultPhone,
+        title: userName + ' 付费电话咨询', id: id || existedConsult?.consultId
+      });
     }
     closeMenu();
   }
+
+
 
   // 药师标识完成
   const markDone = () => {
@@ -165,8 +165,11 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
                 }
                 style={{ marginTop: 0, position: 'absolute', right: 0, left: 0, top: 40, zIndex: 99999, elevation: 9999 }}
               >
-
-                <Menu.Item icon="check-circle" onPress={() => { markDone() }} title="标识完成" />
+                {!fromConsultPhone ? (
+                  <Menu.Item icon="check-circle" onPress={() => { markDone() }} title="标识完成" />
+                ):(
+                  <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(true, id)} title="付费电话咨询" />
+                )}
                 <View style={{
                   display: (type === NotificationType.chat && existedConsult && existedConsult.exists) ? 'flex' : 'none'
                 }}>
