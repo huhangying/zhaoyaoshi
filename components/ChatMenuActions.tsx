@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import { NotificationType } from '../models/io/notification.model';
 import { Button, Divider, Icon } from 'react-native-elements';
-import { Consult, ExistedConsult } from '../models/consult/consult.model';
+import { ExistedConsult } from '../models/consult/consult.model';
 import { useNavigation } from '@react-navigation/native';
 import { setReadByDocterAndPatient } from '../services/chat.service';
 import { setReadByDocterPatientAndType } from '../services/user-feedback.service';
@@ -64,12 +64,12 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   const goBackConsult = (forceToConsultPhone?: boolean, id?: string) => {
     const type = !forceToConsultPhone ? existedConsult?.type: 1;
     // 付费图文咨询 （共用chat）
-    if (type === 0) {
+    if (type === NotificationType.consultChat) {
       navigate('ConsultScreen', {
         pid: pid, type: NotificationType.consultChat,
         title: userName + ' 付费图文咨询', id: existedConsult?.consultId
       });
-    } else if (type === 1) {
+    } else if (type === NotificationType.consultPhone) {
       // 付费电话咨询，到说明页面
       navigate('ConsultPhoneScreen', {
         pid: pid, type: NotificationType.consultPhone,
