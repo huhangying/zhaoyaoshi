@@ -10,10 +10,10 @@ import { setConsultDoneByDocterUserAndType } from '../services/consult.service';
 import { Doctor } from '../models/crm/doctor.model';
 import { sendWechatMsg } from '../services/weixin.service';
 
-export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, userName }:
+export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, userName, consultReject }:
   {
     pid: string, type: NotificationType, openid?: string, id?: string,
-    doctor?: Doctor, userName?: string
+    doctor?: Doctor, userName?: string, consultReject: any
   }) {
   const state = useSelector((state: AppState) => state);
   const { navigate } = useNavigation();
@@ -23,7 +23,7 @@ export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, 
   const textReply = () => {
     navigate('ConsultScreen', {
       pid: pid, type: NotificationType.consultChat,
-      title: userName + ' 付费咨询', 
+      title: userName + ' 付费咨询',
       id: id,
       fromConsultPhone: true
     });
@@ -55,30 +55,26 @@ export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, 
     }
   }
 
-  const consultReject = () => {
-
-  }
-
   return (
     <SafeAreaView style={styles.fixBottom}>
       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', padding: 10 }}>
-        <Button title="咨询拒绝" type="outline" raised
+        <Button title="咨询拒绝" type="outline"
           titleStyle={{ color: 'orange', fontSize: 12 }}
-          buttonStyle={{ paddingLeft: 4, paddingRight: 10 }}
+          buttonStyle={{ paddingLeft: 4, paddingRight: 12 }}
           icon={{ type: 'ionicon', name: 'ios-close-circle-outline', color: 'orange' }}
           onPress={consultReject}
         />
 
-        <Button title="图文回复" type="outline" raised
+        <Button title="图文回复" type="outline"
           titleStyle={{ fontSize: 12 }}
-          buttonStyle={{ paddingLeft: 4, paddingRight: 10 }}
+          buttonStyle={{ paddingLeft: 4, paddingRight: 12 }}
           icon={{ type: 'ionicon', name: 'ios-close-circle-outline', color: '#2f95dc' }}
           onPress={textReply}
         />
 
-        <Button title="标记完成" raised
+        <Button title="标记完成"
           titleStyle={{ fontSize: 12 }}
-          buttonStyle={{ paddingLeft: 4, paddingRight: 10 }}
+          buttonStyle={{ paddingLeft: 4, paddingRight: 12 }}
           icon={{ type: 'ionicon', name: 'ios-checkmark-circle-outline', color: 'white' }}
           onPress={markDone}
         />
@@ -101,7 +97,4 @@ const styles = StyleSheet.create({
   bottomInput: {
     paddingHorizontal: 2,
   },
-  mr3: {
-    marginRight: 22,
-  }
 });

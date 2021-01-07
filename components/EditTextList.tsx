@@ -88,13 +88,9 @@ export default function EditTextList({ list, onListSave, onModalClose }: { list:
         <Dialog.Actions>
           <Button title="取消" type="outline" buttonStyle={styles.button} onPress={resetSelect} />
           <Button title="确定" buttonStyle={styles.button} onPress={saveItem} />
-
-          {/* <Button mode="outlined" style={[styles.mr3, styles.px3]} onPress={() => resetSelect()}>
-            取消</Button>
-          <Button mode="contained" style={[styles.mr2, styles.px3]} disabled={!selectItem} onPress={() => saveItem()}>
-            确定</Button> */}
         </Dialog.Actions>
       </Dialog>
+      
       <FAB
         style={styles.fab}
         icon="plus"

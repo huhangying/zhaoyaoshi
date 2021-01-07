@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useSelector } from 'react-redux';
 import { AppState } from '../../models/app-state.model';
@@ -13,9 +13,10 @@ import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 import { Header } from 'react-native-elements';
 import { View } from 'react-native';
 import { Consult } from '../../models/consult/consult.model';
-import { getConsultById} from '../../services/consult.service';
+import { getConsultById } from '../../services/consult.service';
 import ConsultItem from '../../components/ConsultItem';
 import ConsultPhoneActionsBar from '../../components/ConsultPhoneActionsBar';
+import ConsultReject from '../../components/ConsultReject';
 
 export default function ConsultPhoneScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -24,7 +25,6 @@ export default function ConsultPhoneScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
   const [type, setType] = useState(NotificationType.chat);
   const [pid, setPid] = useState('');
-  // const [consultId, setConsultId] = useState('')
   const [loading, setLoading] = useState(false);
   const initConsult: Consult = { user: '', doctor: '' };
   const [consult, setConsult] = useState(initConsult);
@@ -32,7 +32,19 @@ export default function ConsultPhoneScreen() {
   const [user, setUser] = useState(initUser);
   const navigation = useNavigation();
   const [title, setTitle] = useState('')
+  const [rejectVisible, setRejectVisible] = useState(false)
 
+
+  const onModalClose = useCallback(() => {
+    const closeConsultReject = () => {
+      setRejectVisible(false);
+    }
+    closeConsultReject();
+  }, []);
+
+  const consultReject = useCallback(() => {
+    setRejectVisible(true);
+  }, []);
 
   useEffect(() => {
     const { pid, title, type, id } = route.params as NotificationParams;
@@ -48,39 +60,6 @@ export default function ConsultPhoneScreen() {
         getConsultById(id).pipe(
           take(1),
           tap(_consult => {
-            _consult.content = `sldks;d
-            sd
-            f
-            sd
-            f
-            sd
-            f
-            sd
-            sd
-            fsd
-
-            fs
-            d
-            fsdfsd
-
-            sdf
-            sd
-
-            wer
-            ew
-            rwe
-
-            rew
-
-            
-            f
-            sd
-            f
-            sd
-            f
-            sf
-            dsf
-            `;
             setConsult(_consult);
             setLoading(false);
           })
@@ -111,6 +90,7 @@ export default function ConsultPhoneScreen() {
     setViewerImg('');
   }
 
+
   if (!doctor?._id || loading) {
     return <Spinner />;
   } else {
@@ -125,14 +105,17 @@ export default function ConsultPhoneScreen() {
         />
         <ScrollView ref={scrollViewRef}
           style={{ marginBottom: 62, maxHeight: dimensions.height - 145 }}
-          >
+        >
           <View style={styles.item}>
             <ConsultItem key={0} consult={consult} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></ConsultItem>
           </View>
         </ ScrollView>
-        <ConsultPhoneActionsBar pid={pid} doctor={doctor} type={type} id={consult?._id} userName={user.name}></ConsultPhoneActionsBar>
+        <ConsultPhoneActionsBar pid={pid} doctor={doctor} type={type} id={consult?._id} userName={user.name} consultReject={consultReject}></ConsultPhoneActionsBar>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
 
+        <ConsultReject visible={rejectVisible} type={type} consult={consult} doctor={doctor} openid={user.link_id}
+          onModalClose={onModalClose} 
+        ></ConsultReject>
       </KeyboardAvoidingView>
     );
   }
