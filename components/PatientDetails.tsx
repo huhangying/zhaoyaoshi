@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { User } from '../models/crm/user.model';
 import { Text } from './Themed';
-import { Avatar, Dialog, Divider, List, Title } from 'react-native-paper';
+import { Avatar, Dialog, List, Title } from 'react-native-paper';
 import { wxImgSource } from '../services/core/image.service';
 import Spinner from './shared/Spinner';
 import { getDateFormat } from '../services/core/moment';
-import { Button } from 'react-native-elements';
+import { Button, Divider } from 'react-native-elements';
 
 export default function PatientDetails({ user, onClose }: { user: User, onClose: any }) {
 

@@ -18,8 +18,9 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
   const dispatch = useDispatch()
 
   const onReject = () => {
-    if (consult?.out_trade_no) {
-      dispatch(updateSnackbar('申请退款失败！', MessageType.error));
+    if (!consult?.out_trade_no) {
+      dispatch(updateSnackbar('缺少有效的付款交易号，申请退款失败！', MessageType.error));
+      closeModel();
       return;
     }
     
@@ -45,14 +46,14 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
             consult.userName || ''
           ).subscribe();
 
-          dispatch(updateSnackbar('药师标记电话咨询已经完成！', MessageType.success));
+          dispatch(updateSnackbar('药师付费咨询已经完成！', MessageType.success));
           closeModel();
         } else {
           dispatch(updateSnackbar('申请退款失败！', MessageType.error));
         }
       }),
       catchError(err => {
-        dispatch(updateSnackbar('申请退款失败！', MessageType.error));
+        dispatch(updateSnackbar('不能执行退款，请联系系统管理员！', MessageType.error));
         return EMPTY;
       })
     ).subscribe();
@@ -87,7 +88,7 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
       </Dialog.Content>
 
       <Dialog.Actions style={{ marginTop: -10 }}>
-        <Button title="取消" type="outline" buttonStyle={styles.button} onPress={onModalClose}
+        <Button title="取消" type="outline" buttonStyle={styles.button} onPress={closeModel}
           icon={{ type: 'ionicon', name: 'ios-close-circle-outline', color: '#2f95dc' }} />
         <Button title="发送" disabled={!rejectReason} buttonStyle={styles.button} titleStyle={{ paddingLeft: 8 }}
           icon={<Icon name="check-circle" size={18} color="white" />} onPress={onReject} />

@@ -19,6 +19,7 @@ import { View } from 'react-native';
 import { Consult } from '../../models/consult/consult.model';
 import { GetConsultsByDoctorIdAndUserId, GetConsultsByDoctorIdUserIdAndType, sendConsult } from '../../services/consult.service';
 import ConsultItem from '../../components/ConsultItem';
+import ConsultReject from '../../components/ConsultReject';
 
 export default function ConsultScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -33,6 +34,8 @@ export default function ConsultScreen() {
   const [loading, setLoading] = useState(false);
   const initConsults: Consult[] = [];
   const [consults, setConsults] = useState(initConsults);
+  const initConsult: Consult = {user: '', doctor: ''};
+  const [consult, setConsult] = useState(initConsult);
   const initUser: User = { _id: '' };
   const [user, setUser] = useState(initUser);
   const dispatch = useDispatch();
@@ -66,6 +69,9 @@ export default function ConsultScreen() {
           take(1),
           tap(_consults => {
             setConsults(_consults);
+            if (id) {
+              setConsult(_consults.find(_ => _._id === id) || ({user: '', doctor: ''} as Consult));
+            }
             setLoading(false);
           })
         ).subscribe();
@@ -147,6 +153,19 @@ export default function ConsultScreen() {
     setViewerImg('');
   }
 
+  const [rejectVisible, setRejectVisible] = useState(false)
+  const onModalClose = useCallback(() => {
+    const closeConsultReject = () => {
+      setRejectVisible(false);
+    }
+    closeConsultReject();
+  }, []);
+
+  const consultReject = useCallback(() => {
+    setRejectVisible(true);
+  }, []);
+
+
   if (!doctor?._id || loading) {
     return <Spinner />;
   } else {
@@ -174,8 +193,13 @@ export default function ConsultScreen() {
         <ChatInputs pid={pid} doctor={doctor} type={type} onSend={onSend}></ChatInputs>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
         <ChatMenuActions pid={pid} type={type} doctorId={doctor?._id} openid={user.link_id} id={consultId} 
-          doctor={doctor} userName={user?.name} fromConsultPhone={fromConsultPhone} />
+          doctor={doctor} userName={user?.name} fromConsultPhone={fromConsultPhone} 
+          onConsultReject={consultReject}
+          />
 
+        <ConsultReject visible={rejectVisible} type={type} consult={consult} doctor={doctor} openid={user.link_id || ''}
+          onModalClose={onModalClose} 
+        ></ConsultReject>
       </KeyboardAvoidingView>
     );
   }

@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import { NotificationType } from '../models/io/notification.model';
 import { Button, Divider, Icon } from 'react-native-elements';
-import { ExistedConsult } from '../models/consult/consult.model';
+import { Consult, ExistedConsult } from '../models/consult/consult.model';
 import { useNavigation } from '@react-navigation/native';
 import { setReadByDocterAndPatient } from '../services/chat.service';
 import { setReadByDocterPatientAndType } from '../services/user-feedback.service';
@@ -16,10 +16,13 @@ import { sendWechatMsg } from '../services/weixin.service';
 import { Notification } from "../models/io/notification.model";
 import { MessageType } from '../models/app-settings.model';
 
-export default function ChatMenuActions({ type, pid, doctorId, openid, id, existedConsult, doctor, userName, fromConsultPhone }:
+
+export default function ChatMenuActions({ type, pid, doctorId, openid, id,
+  existedConsult, doctor, userName, fromConsultPhone, onConsultReject }:
   {
     pid: string, type: NotificationType, doctorId: string, openid?: string, id?: string,
-    existedConsult?: ExistedConsult, doctor?: Doctor, userName?: string, fromConsultPhone?: boolean
+    existedConsult?: ExistedConsult, doctor?: Doctor, userName?: string, fromConsultPhone?: boolean,
+    onConsultReject?: any
   }) {
   const state = useSelector((state: AppState) => state);
   const [visible, setVisible] = useState(false)
@@ -75,7 +78,6 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
     }
     closeMenu();
   }
-
 
 
   // 药师标识完成
@@ -139,6 +141,12 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
     closeMenu();
   }
 
+  const consultReject = () => {
+    closeMenu();
+    onConsultReject();
+  }
+
+
   return (
     <>
       {visible && (
@@ -167,15 +175,21 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
                 style={{ marginTop: 0, position: 'absolute', right: 0, left: 0, top: 40, zIndex: 99999, elevation: 9999 }}
               >
                 {!fromConsultPhone ? (
-                  <Menu.Item icon="check-circle" onPress={() => { markDone() }} title="标识完成" />
-                ):(
-                  <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(true, id)} title="付费电话咨询" />
+                  <Menu.Item icon="check-circle" onPress={markDone} title="标识完成" />
+                ) : (
+                    <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(true, id)} title="付费电话咨询" />
+                  )}
+                {(type === NotificationType.consultChat) && (
+                  <>
+                    <Divider />
+                    <Menu.Item icon="keyboard-backspace" onPress={consultReject} title="咨询拒绝" />
+                  </>
                 )}
                 <View style={{
                   display: (type === NotificationType.chat && existedConsult && existedConsult.exists) ? 'flex' : 'none'
                 }}>
                   <Divider />
-                  <Menu.Item icon="keyboard-backspace" onPress={goBackConsult} title="返回付费咨询" />
+                  <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(false, id)} title="返回付费咨询" />
                 </View>
               </Menu>
             </View>
@@ -185,45 +199,3 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    marginTop: 10,
-    marginHorizontal: 4,
-  },
-  chatTimestamp: {
-    color: 'gray',
-    fontSize: 12,
-    textAlign: 'right',
-    paddingHorizontal: 8,
-    paddingTop: 6,
-    paddingBottom: 0,
-  },
-  sender: {
-    paddingTop: 10,
-    paddingBottom: 4,
-    paddingHorizontal: 10,
-    backgroundColor: 'lightblue',
-    marginVertical: 4,
-    marginRight: 2,
-    borderRadius: 10,
-  },
-  to: {
-    paddingTop: 10,
-    paddingBottom: 4,
-    paddingHorizontal: 14,
-    backgroundColor: 'lightyellow',
-    marginVertical: 4,
-    marginLeft: 2,
-    borderRadius: 10,
-  },
-  alignLeft: {
-    flex: 1,
-    flexDirection: 'row',
-  },
-  alignRight: {
-    flex: 1,
-    flexDirection: 'row-reverse',
-  },
-
-});

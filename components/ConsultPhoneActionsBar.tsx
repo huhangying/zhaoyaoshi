@@ -52,7 +52,8 @@ export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, 
           userName
         ).subscribe();
       }
-      dispatch(updateSnackbar('药师标记图文咨询已经完成', MessageType.success))
+      dispatch(updateSnackbar('药师标记图文咨询已经完成', MessageType.success));
+      navigate('TabConsultScreen');
     }
   }
 

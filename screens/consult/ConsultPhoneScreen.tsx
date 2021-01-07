@@ -32,9 +32,8 @@ export default function ConsultPhoneScreen() {
   const [user, setUser] = useState(initUser);
   const navigation = useNavigation();
   const [title, setTitle] = useState('')
+
   const [rejectVisible, setRejectVisible] = useState(false)
-
-
   const onModalClose = useCallback(() => {
     const closeConsultReject = () => {
       setRejectVisible(false);
@@ -113,7 +112,7 @@ export default function ConsultPhoneScreen() {
         <ConsultPhoneActionsBar pid={pid} doctor={doctor} type={type} id={consult?._id} userName={user.name} consultReject={consultReject}></ConsultPhoneActionsBar>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
 
-        <ConsultReject visible={rejectVisible} type={type} consult={consult} doctor={doctor} openid={user.link_id}
+        <ConsultReject visible={rejectVisible} type={type} consult={consult} doctor={doctor} openid={user.link_id || ''}
           onModalClose={onModalClose} 
         ></ConsultReject>
       </KeyboardAvoidingView>
