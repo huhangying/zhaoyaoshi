@@ -28,6 +28,7 @@ import NotificationSettingsScreen from '../screens/settings/NotificationSettings
 import { Snackbar } from 'react-native-paper';
 import { updateSnackbar } from '../services/core/app-store.actions';
 import ConsultPhoneScreen from '../screens/consult/ConsultPhoneScreen';
+import { MessageType } from '../models/app-settings.model';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -39,12 +40,27 @@ export default function BottomTabNavigator() {
   const onDismissSnackBar = () => {
     dispatch(updateSnackbar(''));
   };
+  const getSnackbarColorByMsgType = (type?: MessageType) => {
+    switch(type) {
+      case MessageType.info:
+        return '#0dcaf0';
+      case MessageType.warn:
+        return '#ffc107';
+      case MessageType.success:
+        return '#198754';
+      case MessageType.error:
+        return '#dc3545';
+      default:
+        return 'gray';    
+    }
+  }
 
   const getChatAndConsultUnreadCount = () => {
     const totalCount = (getUnreadCount(state.chatNotifications) || 0) +
       (getUnreadCount(state.consultNotifications) || 0);
     return totalCount > 0 ? totalCount : undefined;
   }
+  
 
   return (
     <>
@@ -88,11 +104,11 @@ export default function BottomTabNavigator() {
         />
       </BottomTab.Navigator>
       <Snackbar
-        visible={!!state.snackbar}
-        style={{marginBottom: 60, backgroundColor: 'gray'}}        
+        visible={!!state.snackbar?.msg}
+        style={{marginBottom: 60, backgroundColor: getSnackbarColorByMsgType(state.snackbar?.type)}}        
         duration={3000}
         onDismiss={onDismissSnackBar}>
-        {state.snackbar}
+        {state.snackbar?.msg}
       </Snackbar>
     </>
   );

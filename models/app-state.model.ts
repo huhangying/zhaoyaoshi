@@ -1,4 +1,5 @@
 import { SocketioService } from "../services/core/socketio.service";
+import { Toaster } from "./app-settings.model";
 import { Doctor } from "./crm/doctor.model";
 import { NotiPage } from "./io/noti-page.model";
 import { Notification } from "./io/notification.model";
@@ -11,7 +12,7 @@ export class AppState {
 
     public readonly loading?: boolean,
     public readonly errorMessage?: string,
-    public readonly snackbar?: string,
+    public readonly snackbar?: Toaster,
 
     public readonly chatNotifications?: Notification[],
     public readonly feedbackNotifications?: Notification[],

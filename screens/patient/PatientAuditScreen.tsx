@@ -14,6 +14,7 @@ import { updateRoleById } from '../../services/user.service';
 import PatientDetails from '../../components/PatientDetails';
 import Spinner from '../../components/shared/Spinner';
 import { updateSnackbar } from '../../services/core/app-store.actions';
+import { MessageType } from '../../models/app-settings.model';
 
 export default function PatientAuditScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -62,7 +63,7 @@ export default function PatientAuditScreen() {
             const filterUpdated = filterRelationships.map(r => (r.user?._id === user._id ? { ...r, user } : r));
             setFilterRelationships(filterUpdated);
             // success message
-            dispatch(updateSnackbar('操作成功！'));
+            dispatch(updateSnackbar('操作成功！', MessageType.success));
           } else {
             // error message
           }

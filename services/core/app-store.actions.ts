@@ -1,3 +1,4 @@
+import { Toaster } from "../../models/app-settings.model";
 import { AppState } from "../../models/app-state.model";
 import { Doctor } from "../../models/crm/doctor.model";
 import { NotiPage } from "../../models/io/noti-page.model";
@@ -76,10 +77,13 @@ export const UpdateErrorMessage = (errorMessage: string) => (
   }
 );
 
-export const updateSnackbar = (snackbar: string) => (
+export const updateSnackbar = (msg: string, type=0) => (
   {
     type: AppStoreActionType.UpdateSnackbar,
-    payload: snackbar,
+    payload: {
+      type: type,
+      msg: msg
+    },
   }
 );
 

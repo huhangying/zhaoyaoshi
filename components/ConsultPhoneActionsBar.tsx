@@ -9,6 +9,7 @@ import { updateConsultNotifications, updateSnackbar } from '../services/core/app
 import { setConsultDoneByDocterUserAndType } from '../services/consult.service';
 import { Doctor } from '../models/crm/doctor.model';
 import { sendWechatMsg } from '../services/weixin.service';
+import { MessageType } from '../models/app-settings.model';
 
 export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, userName, consultReject }:
   {
@@ -51,7 +52,7 @@ export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, 
           userName
         ).subscribe();
       }
-      dispatch(updateSnackbar('药师标记图文咨询已经完成'))
+      dispatch(updateSnackbar('药师标记图文咨询已经完成', MessageType.success))
     }
   }
 

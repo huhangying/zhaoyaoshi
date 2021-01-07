@@ -14,6 +14,7 @@ import { setConsultDoneByDocterUserAndType } from '../services/consult.service';
 import { Doctor } from '../models/crm/doctor.model';
 import { sendWechatMsg } from '../services/weixin.service';
 import { Notification } from "../models/io/notification.model";
+import { MessageType } from '../models/app-settings.model';
 
 export default function ChatMenuActions({ type, pid, doctorId, openid, id, existedConsult, doctor, userName, fromConsultPhone }:
   {
@@ -125,7 +126,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
               userName
             ).subscribe();
           }
-          dispatch(updateSnackbar('药师标记图文咨询已经完成'))
+          dispatch(updateSnackbar('药师标记图文咨询已经完成', MessageType.success))
         }
         closeMenu();
         return;
@@ -134,7 +135,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id, exist
         return;
     }
 
-    dispatch(updateSnackbar('药师标记消息已处理！'))
+    dispatch(updateSnackbar('药师标记消息已处理！', MessageType.success))
     closeMenu();
   }
 

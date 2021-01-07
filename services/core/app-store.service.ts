@@ -5,6 +5,7 @@ import { Store } from "./store";
 import { Notification } from "../../models/io/notification.model";
 import { SocketioService } from "./socketio.service";
 import { NotiPage } from "../../models/io/noti-page.model";
+import { Toaster } from "../../models/app-settings.model";
 
 export class AppStoreService extends Store<AppState> {
   constructor(initState?: AppState) {
@@ -85,7 +86,7 @@ export class AppStoreService extends Store<AppState> {
     });
   }
 
-  updateSnackbar(snackbar: string) {
+  updateSnackbar(snackbar: Toaster) {
     this.setState({
       ...this.state,
       snackbar,

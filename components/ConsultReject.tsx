@@ -5,6 +5,7 @@ import { Dialog, TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { EMPTY } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { MessageType } from '../models/app-settings.model';
 import { Consult } from '../models/consult/consult.model';
 import { Doctor } from '../models/crm/doctor.model';
 import { updateSnackbar } from '../services/core/app-store.actions';
@@ -18,7 +19,7 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
 
   const onReject = () => {
     if (consult?.out_trade_no) {
-      dispatch(updateSnackbar('申请退款失败！'));
+      dispatch(updateSnackbar('申请退款失败！', MessageType.error));
       return;
     }
     
@@ -32,7 +33,7 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
     }).pipe(
       tap((rsp) => {
         if (rsp) {
-          dispatch(updateSnackbar('申请退款成功！'));
+          dispatch(updateSnackbar('申请退款成功！', MessageType.success));
           // 发送药师拒绝消息
           sendWechatMsg(openid,
             `${doctor.name}${doctor.title}未完成本次咨询服务`,
@@ -44,14 +45,14 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
             consult.userName || ''
           ).subscribe();
 
-          dispatch(updateSnackbar('药师标记电话咨询已经完成！'));
+          dispatch(updateSnackbar('药师标记电话咨询已经完成！', MessageType.success));
           closeModel();
         } else {
-          dispatch(updateSnackbar('申请退款失败！'));
+          dispatch(updateSnackbar('申请退款失败！', MessageType.error));
         }
       }),
       catchError(err => {
-        dispatch(updateSnackbar('申请退款失败！'));
+        dispatch(updateSnackbar('申请退款失败！', MessageType.error));
         return EMPTY;
       })
     ).subscribe();
