@@ -109,7 +109,7 @@ export default function ConsultPhoneScreen() {
             <ConsultItem key={0} consult={consult} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></ConsultItem>
           </View>
         </ ScrollView>
-        <ConsultPhoneActionsBar pid={pid} doctor={doctor} type={type} id={consult?._id} userName={user.name} consultReject={consultReject}></ConsultPhoneActionsBar>
+        <ConsultPhoneActionsBar pid={pid} doctor={doctor} type={type} id={consult?._id} openid={user.link_id} userName={user.name} consultReject={consultReject}></ConsultPhoneActionsBar>
         <ImageZoomViewer img={viewerImg} visible={isOpenViewer} onClose={closeViewer}></ImageZoomViewer>
 
         <ConsultReject visible={rejectVisible} type={type} consult={consult} doctor={doctor} openid={user.link_id || ''}

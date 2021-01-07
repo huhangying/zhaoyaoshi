@@ -32,7 +32,7 @@ export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, 
 
   // 药师标识完成
   const markDone = () => {
-    if (doctor?._id) {
+    if (doctor?._id && openid && userName) {
       // 付费咨询：标记已读，并从提醒列表里去除
       const notifications = state.consultNotifications?.filter(_ => _.patientId !== pid || _.type !== type) || [];// type=5 or 6
       // save back
@@ -42,16 +42,14 @@ export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, 
       setConsultDoneByDocterUserAndType(doctor?._id, pid, 1).subscribe();  // type=0: 图文
 
       // 发送微信消息
-      if (doctor && openid && userName) {
-        sendWechatMsg(openid,
-          '药师咨询完成',
-          `${doctor.name}${doctor.title}已完成咨询。请点击查看，并建议和评价药师。`,
-          `${doctor.wechatUrl}consult-finish?doctorid=${doctor._id}&openid=${openid}&state=${doctor.hid}&id=${id}&type=1`,
-          '',
-          doctor._id,
-          userName
-        ).subscribe();
-      }
+      sendWechatMsg(openid,
+        '药师咨询完成',
+        `${doctor.name}${doctor.title}已完成咨询。请点击查看，并建议和评价药师。`,
+        `${doctor.wechatUrl}consult-finish?doctorid=${doctor._id}&openid=${openid}&state=${doctor.hid}&id=${id}&type=1`,
+        '',
+        doctor._id,
+        userName
+      ).subscribe();
       dispatch(updateSnackbar('药师标记图文咨询已经完成', MessageType.success));
       navigate('TabConsultScreen');
     }
