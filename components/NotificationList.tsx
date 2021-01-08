@@ -1,14 +1,16 @@
 import React, { useCallback, useEffect } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Text } from '../components/Themed';
 import { ListItem, Header, Button } from 'react-native-elements';
 import { Notification, NotificationType } from '../models/io/notification.model';
 import { useNavigation } from '@react-navigation/native';
 import { getDateTimeFormat } from '../services/core/moment';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 export default function NotificationList({ list, title, onClose }: { list: Notification[], title: string, onClose: any }) {
   const { navigate } = useNavigation();
-
+  const dimensions = useWindowDimensions();
+  
   const chatNavigate = useCallback((noti: Notification) => {
     if (noti) {
       switch (noti.type) {
@@ -72,25 +74,29 @@ export default function NotificationList({ list, title, onClose }: { list: Notif
         centerComponent={{ text: title, style: { color: '#fff' } }}
         rightComponent={{ icon: 'close', color: '#fff', onPress: onClose }}
       />
-      <ScrollView>
-        {
-          list.map((noti, i) => (
-            <ListItem key={i} bottomDivider
-              style={{ marginTop: 4 }}
-              onPress={() => chatNavigate(noti)}>
-              <ListItem.Content>
-                {
-                  renderNotiTitle(noti)
-                }
+      <Swipeable
+        renderLeftActions={() => (<Text></Text>)}
+        onSwipeableLeftOpen={onClose}>
+        <ScrollView style={{ height: Platform.OS === 'ios' ? dimensions.height - 160 : dimensions.height - 90 }}>
+          {
+            list.map((noti, i) => (
+              <ListItem key={i} bottomDivider
+                style={{ marginTop: 4 }}
+                onPress={() => chatNavigate(noti)}>
                 <ListItem.Content>
-                  <Text style={styles.textHint}>发送于{getDateTimeFormat(noti.created)}</Text>
+                  {
+                    renderNotiTitle(noti)
+                  }
+                  <ListItem.Content>
+                    <Text style={styles.textHint}>发送于{getDateTimeFormat(noti.created)}</Text>
+                  </ListItem.Content>
                 </ListItem.Content>
-              </ListItem.Content>
-              <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" />
-            </ListItem>
-          ))
-        }
-      </ScrollView>
+                <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" />
+              </ListItem>
+            ))
+          }
+        </ScrollView>
+      </Swipeable>
       <View style={styles.fixBottom}>
         <Button
           title='关闭'

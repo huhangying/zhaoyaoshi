@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, useWindowDimensions } from 'react-native';
-import { Button, ListItem } from 'react-native-elements';
-import { Dialog, Divider, FAB, Subheading, TextInput } from 'react-native-paper';
+import { Button, Divider, ListItem } from 'react-native-elements';
+import { Dialog, FAB, Subheading, TextInput } from 'react-native-paper';
 import Constants from "expo-constants";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
