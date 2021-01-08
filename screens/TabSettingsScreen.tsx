@@ -44,13 +44,13 @@ export default function TabSettingsScreen() {
           </ListItem.Content>
           <ListItem.Chevron />
         </ListItem>
-        <ListItem key={2} bottomDivider onPress={() => navigate('NotificationSettingsScreen')}>
+        {/* <ListItem key={2} bottomDivider onPress={() => navigate('NotificationSettingsScreen')}>
           <Ionicons name="ios-color-palette" size={24} color="purple" />
           <ListItem.Content>
             <ListItem.Title>设置</ListItem.Title>
           </ListItem.Content>
           <ListItem.Chevron />
-        </ListItem>
+        </ListItem> */}
         <ListItem key={3} bottomDivider onPress={() => navigate('ShortcutSettingsScreen')}>
           <Ionicons name="ios-arrow-undo" color="seagreen" size={24} />
           <ListItem.Content>
