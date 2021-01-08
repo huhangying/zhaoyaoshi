@@ -16,6 +16,10 @@ export const imgSource = (path?: string) => {
   return { uri: Constants.manifest.extra.imageServer + path };
 }
 
+export const getAppLogo = () => {
+  return require('../../assets/images/icon.png');
+}
+
 export const wxImgSource = (path?: string) => {
   if (!path) {
     return require('../../assets/images/noimage.jpg');
