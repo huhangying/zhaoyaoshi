@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import { Chat } from '../../models/io/chat.model';
 import { Notification, NotificationType } from '../../models/io/notification.model';
-const ENDPOINT = "http://timebox.i234.me:3000";
+import Constants from 'expo-constants';
 import { UserFeedback } from '../../models/io/user-feedback.model';
 import { Consult } from '../../models/consult/consult.model';
 import { AppStoreService } from './app-store.service';
@@ -15,7 +15,7 @@ export class SocketioService {
   socket: any;
 
   constructor(room: string) {
-    this.socket = io(ENDPOINT, {reconnection: true});
+    this.socket = io(Constants.manifest.extra.socketUrl, {reconnection: true});
     this.socket?.emit('joinRoom', room);
   }
 

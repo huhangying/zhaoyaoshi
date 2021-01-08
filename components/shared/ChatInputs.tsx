@@ -171,12 +171,12 @@ export default function ChatInputs({ pid, doctor, type, onSend, existsConsult, c
           <Ionicons name="ios-camera" size={26} color="#0095ff" style={styles.mr3} onPress={pickCamera}></Ionicons>
           <Ionicons name="ios-arrow-undo" size={26} color="#0095ff" onPress={showShortcutsMenu}></Ionicons>
         </View>
-        {(type === NotificationType.chat && doctor?.prices?.length && !existsConsult) && (
+        {(type === NotificationType.chat && doctor?.prices?.length && !existsConsult) ? (
           <View style={{ flex: 1, flexDirection: 'row-reverse', alignItems: 'center', alignContent: 'center', backgroundColor: 'lightgray' }}>
             <Switch value={setCharged} onValueChange={toggleSetCharge} />
             <Text style={{color: 'gray'}}>设置付费</Text>
           </View>
-        )}
+        ): <Text></Text>}
       </View>
       {!!showEmojis &&
         <EmojiMenu onSelect={onEmojiSelected}></EmojiMenu>

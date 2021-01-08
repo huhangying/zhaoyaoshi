@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
 import { Text } from '../../components/Themed';
 import { getDoctorGroups, getPatientGroupedRelationships } from '../../services/doctor.service';
@@ -59,6 +59,9 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
     setRrelationshipList(loadData(group._id));
     scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
   }
+  const test = (t: any) => {
+    alert(JSON.stringify(t))
+  }
 
   return (
     <>
@@ -75,9 +78,10 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
 
             {relationshipList?.length ? (
               relationshipList.map((relationship: Relationship, k) => (
-                <TouchableOpacity key={`${i}-${k}`} onPress={() => onSelect(relationship.user)} style={styles.item}>
-                  <List.Item title={relationship.user?.name} />
-                </TouchableOpacity>
+                <View key={`${i}-${k}`} style={styles.item}>
+                  <List.Item key={`item${i}-${k}`} title={relationship.user?.name}
+                    onPress={() => onSelect(relationship?.user)} />
+                </View>
               ))
             ) : (
                 <Text style={{ backgroundColor: 'lightyellow', paddingTop: 14, paddingBottom: 16, color: 'gray' }}>没有数据</Text>

@@ -19,7 +19,7 @@ export default function SelectChatScreen() {
 
   return (
     <>
-      <SelectPatient doctorId={doctor?._id} onSelect={onSelectPatient}></SelectPatient>
+      <SelectPatient key="select-p" doctorId={doctor?._id} onSelect={onSelectPatient}></SelectPatient>
     </>
   );
 }
