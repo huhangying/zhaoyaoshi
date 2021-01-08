@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
-import { Avatar, Card } from 'react-native-elements';
+import { Avatar, Card, Icon, ListItem } from 'react-native-elements';
 import { imgSource } from '../../services/core/image.service';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
@@ -23,7 +23,7 @@ export default function ProfileScreen() {
   } else {
     return (
       <ScrollView>
-        <Card containerStyle={{ padding: 10, margin: 0, flex: 1, alignItems: 'center' }} >
+        <Card containerStyle={{ padding: 16, margin: 0, flex: 1, alignItems: 'center' }} >
 
           <Avatar
             rounded size="large"
@@ -34,9 +34,13 @@ export default function ProfileScreen() {
           <Text>{doctor?.department?.name}</Text>
         </Card>
 
-        <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title style={styles.title}>基本信息</Card.Title>
-          <Card.Divider />
+        <Card containerStyle={styles.cardContainer}>
+          <ListItem bottomDivider>
+            <Icon name='assignment' color='#00aced' />
+            <ListItem.Content>
+              <ListItem.Title> 基本信息 </ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
           <DataTable>
             <DataTable.Row>
               <DataTable.Cell numeric style={styles.itemLabel}>用户名:</DataTable.Cell>
@@ -61,34 +65,50 @@ export default function ProfileScreen() {
           </DataTable>
         </Card>
 
-        <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title style={styles.title}>工作时间</Card.Title>
-          <Card.Divider />
-          <Text style={styles.mx3}>
+        <Card containerStyle={styles.cardContainer}>
+          <ListItem bottomDivider>
+            <Icon name='schedule' color='#00aced' />
+            <ListItem.Content>
+              <ListItem.Title> 工作时间 </ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+          <Text style={styles.cardBody}>
             {doctor.hours}
           </Text>
         </Card>
 
-        <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title style={styles.title}>擅长领域</Card.Title>
-          <Card.Divider />
-          <Text style={styles.mx3}>
+        <Card containerStyle={styles.cardContainer}>
+          <ListItem bottomDivider>
+            <Icon name='verified' color='#00aced' />
+            <ListItem.Content>
+              <ListItem.Title> 擅长领域 </ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+          <Text style={styles.cardBody}>
             {doctor.expertise}
           </Text>
         </Card>
 
-        <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title style={styles.title}>工作范围</Card.Title>
-          <Card.Divider />
-          <Text style={styles.mx3}>
+        <Card containerStyle={styles.cardContainer}>
+          <ListItem bottomDivider>
+            <Icon name='chrome-reader-mode' color='#00aced' />
+            <ListItem.Content>
+              <ListItem.Title> 工作范围 </ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+          <Text style={styles.cardBody}>
             {doctor.bulletin}
           </Text>
         </Card>
 
-        <Card containerStyle={{ padding: 10, margin: 0, marginTop: 20, flex: 1 }}>
-          <Card.Title style={styles.title}>获奖情况</Card.Title>
-          <Card.Divider />
-          <Text style={styles.mx3}>
+        <Card containerStyle={styles.cardContainer}>
+        <ListItem bottomDivider>
+            <Icon name='school' color='#00aced' />
+            <ListItem.Content>
+              <ListItem.Title> 获奖情况 </ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+          <Text style={styles.cardBody}>
             {doctor.honor}
           </Text>
         </Card>
@@ -108,6 +128,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'gray',
+
   },
   separator: {
     marginVertical: 30,
@@ -121,9 +142,19 @@ const styles = StyleSheet.create({
   },
   itemLabel: {
     marginLeft: -140,
+    color: 'gray',
   },
-  mx3: {
+  cardContainer: {
+    padding: 0, 
+    margin: 0,
+    marginTop: 22,
+  },
+  cardBody: {
+    paddingTop: 16,
+    paddingBottom: 8,
     marginHorizontal: 16,
     marginBottom: 8,
+    fontSize: 15,
+    lineHeight: 22,
   }
 });
