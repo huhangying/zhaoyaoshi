@@ -6,14 +6,12 @@ import { createStore } from 'redux';
 import Spinner from './components/shared/Spinner';
 
 import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+import { MainScreen } from './navigation/MainScreen';
 import { appStoreReducer } from './services/core/app-store.reducer';
 
 export default function App() {
   const store = createStore(appStoreReducer);
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
     return (<Spinner />);
@@ -21,7 +19,8 @@ export default function App() {
     return (
       <Provider store={store}>
         <SafeAreaProvider>
-          <Navigation colorScheme={colorScheme} />
+          {/* <Navigation colorScheme={colorScheme} /> */}
+          <MainScreen></MainScreen>
           <StatusBar />
         </SafeAreaProvider>
       </Provider>

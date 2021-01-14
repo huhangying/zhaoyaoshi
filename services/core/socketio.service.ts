@@ -14,13 +14,29 @@ import { forkJoin } from 'rxjs';
 export class SocketioService {
   socket: any;
 
-  constructor(room: string) {
-    this.socket = io(Constants.manifest.extra.socketUrl, {reconnection: true});
-    this.socket?.emit('joinRoom', room);
+  constructor(room?: string) {
+    if (room) {
+      this.connect(room);
+    }
+  }
+
+  connect(room: string) {
+    if (!this.socket) {
+      this.socket = io(Constants.manifest.extra.socketUrl, {});
+      this.socket?.emit('joinRoom', room);
+      return;
+    }
+    if (this.socket.disconnected) {
+      this.socket.connect();
+    }
   }
 
   disconnect() {
     this.socket?.emit('disconnect');
+  }
+
+  isConnected(): boolean {
+    return this.socket.connected || false;
   }
 
   joinRoom(room: string) {

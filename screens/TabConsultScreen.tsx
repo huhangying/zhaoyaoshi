@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { StyleSheet, Modal } from 'react-native';
 import { Text } from '../components/Themed';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { ListItem } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +17,7 @@ import { updateSnackbar } from '../services/core/app-store.actions';
 export default function TabConsultScreen() {
   const { navigate } = useNavigation();
   const { doctor, chatNotifications, consultNotifications } = useSelector((state: AppState) => state);
+  const store = useStore();
   const dispatch = useDispatch()
 
   const [notiVisible, setNotiVisible] = useState(false);
