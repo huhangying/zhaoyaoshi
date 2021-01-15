@@ -20,7 +20,7 @@ import * as Linking from 'expo-linking';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { Platform } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { getNotificationNameByType } from '../services/notification.service';
 import { getDateTimeFormat } from '../services/core/moment';
 import { AppState as appState } from 'react-native';
@@ -45,12 +45,13 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
   const [expoPushToken, setExpoPushToken] = useState('');
   const [currentState, setCurrentState] = useState(appState.currentState);
+  // const notificationListener = useRef();
+  // const responseListener = useRef();
 
   const ioService = useSelector((state: AppState) => state.ioService)
 
 
   const pushLocalNotification = async (noti: Notification, path: string) => {
-    // if (noti.room === doctorId) {
     if (!noti) return;
     const notiName = getNotificationNameByType(noti.type || 0);
     await Notifications.scheduleNotificationAsync({
@@ -64,7 +65,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       },
       trigger: { seconds: 2 },
     });
-    // }
   }
 
   const getLatestNotis = useCallback((doctorid: string, socketio: SocketioService) => {
@@ -87,11 +87,12 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       // add the following line if 已经在chat/feedback 页面同病患交互不算新消息。
       // if (noti.patientId === this.pid && noti.type === +this.notiType) return; // skip
       let notifications = [];
+
       switch (noti.type) {
         case NotificationType.chat:
           notifications = socketio.addNotiToExisted(state.chatNotifications, noti);
           dispatch(updateChatNotifications(notifications));
-          if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
+          if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
             pushLocalNotification(noti, 'consult/chat');
           }
           break;
@@ -100,7 +101,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         case NotificationType.doseCombination:
           notifications = socketio.addNotiToExisted(state.feedbackNotifications, noti);
           dispatch(updateFeedbackNotifications(notifications));
-          if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
+          if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
             pushLocalNotification(noti, 'feedback/feedback-chat');
           }
           break;
@@ -108,14 +109,14 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         case NotificationType.consultChat:
           notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
           dispatch(updateConsultNotifications(notifications));
-          if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
+          if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
             pushLocalNotification(noti, 'consult/consult-chat');
           }
           break;
         case NotificationType.consultPhone:
           notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
           dispatch(updateConsultNotifications(notifications));
-          if (!notiPage?.patientId || (notiPage.patientId !== noti.patientId && notiPage.type !== noti.type)) {
+          if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
             pushLocalNotification(noti, 'consult/consult-phone');
           }
           break;
@@ -123,28 +124,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
     });
 
   }, [dispatch, store]);
-
-  const prepareSocketIo = useCallback((doctorid: string)  => {
-
-    if (!ioService) {
-      const socketio = new SocketioService(doctorid);
-      dispatch(UpdateIoService(socketio));
-
-      // console.log('new socket.io'); 
-      setTimeout(()=> {
-        attachNotificationListeners(socketio);
-        getLatestNotis(doctorid, socketio);
-      })     
-
-    } else {
-      // if (!ioService.isConnected()) {
-      //   // ioService.connect(doctorid);
-      //   setTimeout(() => {
-      //     console.log('...reconnect...' + ioService.isConnected());
-      //   })
-      // }
-    }
-  }, [ioService, getLatestNotis, attachNotificationListeners, dispatch]);
 
   const handleAppStateChange = useCallback((nextAppState: AppStateStatus) => {
     if (currentState !== nextAppState) {
@@ -158,22 +137,39 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
     }
   }, [ioService, currentState, store, getLatestNotis]);
 
+
   useEffect(() => {
 
     const doctorId = store.getState()?.doctor?._id;
-    if (doctorId) {
-      prepareSocketIo(doctorId)
+    if (doctorId && !ioService) {
+      const socketio = new SocketioService(doctorId);
+      dispatch(UpdateIoService(socketio));
+
+      setTimeout(() => {
+        attachNotificationListeners(socketio);
+        getLatestNotis(doctorId, socketio);
+      })
     }
+
+    // push notification
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token || ''));
+
+    // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    //   console.log('notification', notification);
+    // });
+    // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    //   console.log('response', response);
+    // });
 
     appState?.addEventListener('change', handleAppStateChange);
 
     return () => {
+      // Notifications.removeNotificationSubscription(notificationListener);
+      // Notifications.removeNotificationSubscription(responseListener);
       appState?.removeEventListener('change', handleAppStateChange);
     }
-  }, [store, dispatch, prepareSocketIo, handleAppStateChange]);
+  }, [store, dispatch, attachNotificationListeners, getLatestNotis, ioService, handleAppStateChange]);
 
-  // push notification
-  registerForPushNotificationsAsync().then(token => setExpoPushToken(token || ''));
 
   return (
     <NavigationContainer
@@ -182,7 +178,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
         ...LinkingConfiguration,
         subscribe(listener) {
           const onReceiveURL = ({ url }: { url: string }) => listener(url);
-          // const linkTo = useLinkTo();
 
           // Listen to incoming links from deep linking
           Linking.addEventListener('url', onReceiveURL);

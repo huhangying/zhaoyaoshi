@@ -1,12 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { Doctor } from '../models/crm/doctor.model';
 import { Avatar, Divider, Image } from 'react-native-elements';
 import { imgPath, imgSource } from '../services/core/image.service';
 import { getDateTimeFormat } from '../services/core/moment';
 import TextAndEmoji from './shared/TextAndEmoji';
 import { Consult } from '../models/consult/consult.model';
-import { NotificationType } from '../models/io/notification.model';
 
 export default function ConsultItem({ consult, doctor, icon, onImgView }: { consult: Consult, doctor: Doctor, icon: string, onImgView: any }) {
   // const screenWidth = useWindowDimensions().width;

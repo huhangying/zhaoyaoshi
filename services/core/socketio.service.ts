@@ -24,6 +24,23 @@ export class SocketioService {
     if (!this.socket) {
       this.socket = io(Constants.manifest.extra.socketUrl, {});
       this.socket?.emit('joinRoom', room);
+
+      this.socket.on('disconnect', (reason: string) => {
+        if (reason === 'io server disconnect') {
+          // the disconnection was initiated by the server, you need to reconnect manually
+          this.socket.connect();
+        }
+        // else the socket will automatically try to reconnect
+      });
+      this.socket.on('error', (error: string) => {
+        // console.log('error', error);
+        this.socket.connect();
+        // ...
+      });
+      this.socket.on('connect_error', (error: string) => {
+        // console.log('connect_error', error);
+        // ...
+      });
       return;
     }
     if (this.socket.disconnected) {
