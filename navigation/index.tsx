@@ -125,6 +125,18 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
   }, [dispatch, store]);
 
+  const prepareSocketIo = useCallback((doctorid: string) => {
+    if (!ioService) {
+      const socketio = new SocketioService(doctorid);
+      dispatch(UpdateIoService(socketio));
+
+      setTimeout(() => {
+        attachNotificationListeners(socketio);
+        getLatestNotis(doctorid, socketio);
+      })
+    }
+  }, [ioService, getLatestNotis, attachNotificationListeners, dispatch]);
+
   const handleAppStateChange = useCallback((nextAppState: AppStateStatus) => {
     if (currentState !== nextAppState) {
       // console.log('App State: ' + nextAppState);
@@ -137,18 +149,11 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
     }
   }, [ioService, currentState, store, getLatestNotis]);
 
-
   useEffect(() => {
 
     const doctorId = store.getState()?.doctor?._id;
-    if (doctorId && !ioService) {
-      const socketio = new SocketioService(doctorId);
-      dispatch(UpdateIoService(socketio));
-
-      setTimeout(() => {
-        attachNotificationListeners(socketio);
-        getLatestNotis(doctorId, socketio);
-      })
+    if (doctorId) {
+      prepareSocketIo(doctorId)
     }
 
     // push notification
@@ -167,8 +172,9 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       // Notifications.removeNotificationSubscription(notificationListener);
       // Notifications.removeNotificationSubscription(responseListener);
       appState?.removeEventListener('change', handleAppStateChange);
+      ioService?.disconnect();
     }
-  }, [store, dispatch, attachNotificationListeners, getLatestNotis, ioService, handleAppStateChange]);
+  }, [store, dispatch, prepareSocketIo, handleAppStateChange, ioService]);
 
 
   return (
