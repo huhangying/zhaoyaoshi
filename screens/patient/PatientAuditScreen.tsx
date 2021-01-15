@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Text } from '../../components/Themed';
 import { getRelationshipsByDoctorId } from '../../services/doctor.service';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { AppState } from '../../models/app-state.model';
 import { Button, DataTable, Searchbar, Subheading, Switch } from 'react-native-paper';
 import { User } from '../../models/crm/user.model';
@@ -38,6 +38,20 @@ export default function PatientAuditScreen() {
     if (doctor?._id) {
       setLoading(true);
       getRelationshipsByDoctorId(doctor._id).pipe(
+        map(results => {
+          // remove duplicated user
+          const userList: string[] = [];
+          const filteredResults: Relationship[] = [];
+          results?.map(result => {
+            if (result?.user) {
+              if (userList.findIndex(_ => _ === result.user?._id) < 0) {
+                userList.push(result.user._id);
+                filteredResults.push(result);
+              }
+            }
+          });
+          return filteredResults;
+        }),
         tap(results => {
           setRelationships(results);
           setLoading(false);
