@@ -108,7 +108,7 @@ export const UpdateHideBottomBar = (hideBottomBar: boolean) => (
   }
 );
 
-export const UpdateIoService = (ioService: SocketioService) => (
+export const UpdateIoService = (ioService?: SocketioService) => (
   {
     type: AppStoreActionType.UpdateIoService,
     payload: ioService,

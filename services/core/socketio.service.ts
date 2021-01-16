@@ -1,15 +1,8 @@
 import io from 'socket.io-client';
 import { Chat } from '../../models/io/chat.model';
-import { Notification, NotificationType } from '../../models/io/notification.model';
 import Constants from 'expo-constants';
 import { UserFeedback } from '../../models/io/user-feedback.model';
 import { Consult } from '../../models/consult/consult.model';
-import { AppStoreService } from './app-store.service';
-import { convertChatNotificationList, getChatUnreadListByDocter } from '../chat.service';
-import { map } from 'rxjs/operators';
-import { convertFeedbackNotificationList, getFeedbackUnreadListByDocter } from '../user-feedback.service';
-import { convertConsultNotificationList, getPendingConsultsByDoctorId } from '../consult.service';
-import { forkJoin } from 'rxjs';
 
 export class SocketioService {
   socket: any;
@@ -21,7 +14,8 @@ export class SocketioService {
   }
 
   connect(room: string) {
-    if (!this.socket) {
+    if (!this.socket?.connected) {
+      this.socket?.disconnect();
       this.socket = io(Constants.manifest.extra.socketUrl, {});
       this.socket?.emit('joinRoom', room);
 
@@ -29,11 +23,22 @@ export class SocketioService {
         if (reason === 'io server disconnect') {
           // the disconnection was initiated by the server, you need to reconnect manually
           this.socket.connect();
+          this.socket?.emit('joinRoom', room);
           // console.log('io server disconnect ==> reconnect...');
         }
         // else the socket will automatically try to reconnect
       });
+    
+      this.socket?.on('connect_error', (reason: string) => {
+          // console.log('connect_error ==> ' + reason);
+          this.socket.connect();
+      });
+      this.socket?.on('error', (reason: string) => {
+          // console.log('error ==> ' + reason);
+          this.socket.connect();
+      });
     }
+    return this.socket;
   }
 
   disconnect() {
@@ -41,7 +46,7 @@ export class SocketioService {
   }
 
   isConnected(): boolean {
-    return this.socket.connected || false;
+    return this.socket?.connected || false;
   }
 
   joinRoom(room: string) {
@@ -85,69 +90,6 @@ export class SocketioService {
   // Notifications
   onNotification(next: any) {
     this.socket.on('notification', next);
-  }
-
-  // no use!
-  addNotification(noti: Notification, appStore: AppStoreService) {
-    let notifications = [];
-    // save to store
-    switch (noti.type) {
-      case NotificationType.chat:
-        notifications = this.addNotiToExisted(appStore.state.chatNotifications, noti);
-        return appStore.updateChatNotifications(notifications);
-
-      case NotificationType.adverseReaction:
-      case NotificationType.doseCombination:
-        notifications = this.addNotiToExisted(appStore.state.feedbackNotifications, noti);
-        return appStore.updateFeedbackNotifications(notifications);
-
-      case NotificationType.consultChat:
-      case NotificationType.consultPhone:
-        notifications = this.addNotiToExisted(appStore.state.consultNotifications, noti);
-        return appStore.updateConsultNotifications(notifications);
-    }
-  }
-
-  addNotiToExisted(storeNotifications: any[] = [], noti: Notification) {
-    let notifications: Notification[] = [];
-    if (!storeNotifications?.length) {
-      notifications = [noti];
-    } else {
-      notifications = [...storeNotifications];
-      const index = notifications.findIndex(_ => _.patientId === noti.patientId && _.type === noti.type);
-      // if new
-      if (index === -1) {
-        notifications.push(noti);
-      } else { // if existed
-        notifications[index].count = (notifications[index].count || 0) + 1;
-        notifications[index].created = noti.created;
-      }
-    }
-    return notifications;
-  }
-
-  getUnreadCount(notifications: Notification[]) {
-    if (!notifications?.length) return 0;
-    return notifications.reduce((total, noti) => {
-      total += (noti.count || 0);
-      return total;
-    }, 0);
-  }
-
-  getUnreadList(doctorId: string) {
-    return forkJoin({
-      chats: getChatUnreadListByDocter(doctorId),
-      feedbacks: getFeedbackUnreadListByDocter(doctorId),
-      consults: getPendingConsultsByDoctorId(doctorId)
-    }).pipe(
-      map(({ chats, feedbacks, consults }) => {
-        return {
-          chatNotifications: convertChatNotificationList(chats, NotificationType.chat),
-          feedbackNotifications: convertFeedbackNotificationList(feedbacks),
-          consultNotifications: convertConsultNotificationList(consults),
-        };
-      })
-    );
   }
 
 }

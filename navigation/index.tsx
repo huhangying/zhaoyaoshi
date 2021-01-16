@@ -20,8 +20,8 @@ import * as Linking from 'expo-linking';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import { Platform } from 'react-native';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { getNotificationNameByType } from '../services/notification.service';
+import { useCallback, useEffect, useState } from 'react';
+import { addNotiToExisted, getNotificationNameByType, getUnreadList } from '../services/notification.service';
 import { getDateTimeFormat } from '../services/core/moment';
 import { AppState as appState } from 'react-native';
 import { AppState } from '../models/app-state.model';
@@ -40,13 +40,12 @@ const Stack = createStackNavigator();
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   const store = useStore();
   const dispatch = useDispatch();
+  const [inited, setInited] = useState(false)
   const initNavigation: any = null;
   const navigationRef = React.useRef(initNavigation);
 
   const [expoPushToken, setExpoPushToken] = useState('');
   const [currentState, setCurrentState] = useState(appState.currentState);
-  // const notificationListener = useRef();
-  // const responseListener = useRef();
 
   const ioService = useSelector((state: AppState) => state.ioService)
 
@@ -67,9 +66,9 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
     });
   }
 
-  const getLatestNotis = useCallback((doctorid: string, socketio: SocketioService) => {
+  const getLatestNotis = useCallback((doctorid: string) => {
     // 更新消息
-    socketio?.getUnreadList(doctorid).pipe(
+    getUnreadList(doctorid).pipe(
       take(1),
       tap(({ chatNotifications, feedbackNotifications, consultNotifications }) => {
         dispatch(updateChatNotifications(chatNotifications));
@@ -90,7 +89,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
       switch (noti.type) {
         case NotificationType.chat:
-          notifications = socketio.addNotiToExisted(state.chatNotifications, noti);
+          notifications = addNotiToExisted(state.chatNotifications, noti);
           dispatch(updateChatNotifications(notifications));
           if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
             pushLocalNotification(noti, 'consult/chat');
@@ -99,7 +98,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
         case NotificationType.adverseReaction:
         case NotificationType.doseCombination:
-          notifications = socketio.addNotiToExisted(state.feedbackNotifications, noti);
+          notifications = addNotiToExisted(state.feedbackNotifications, noti);
           dispatch(updateFeedbackNotifications(notifications));
           if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
             pushLocalNotification(noti, 'feedback/feedback-chat');
@@ -107,14 +106,14 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
           break;
 
         case NotificationType.consultChat:
-          notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
+          notifications = addNotiToExisted(state.consultNotifications, noti);
           dispatch(updateConsultNotifications(notifications));
           if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
             pushLocalNotification(noti, 'consult/consult-chat');
           }
           break;
         case NotificationType.consultPhone:
-          notifications = socketio.addNotiToExisted(state.consultNotifications, noti);
+          notifications = addNotiToExisted(state.consultNotifications, noti);
           dispatch(updateConsultNotifications(notifications));
           if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
             pushLocalNotification(noti, 'consult/consult-phone');
@@ -125,56 +124,52 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
   }, [dispatch, store]);
 
-  const prepareSocketIo = useCallback((doctorid: string) => {
-    if (!ioService) {
-      const socketio = new SocketioService(doctorid);
-      dispatch(UpdateIoService(socketio));
-
-      setTimeout(() => {
-        attachNotificationListeners(socketio);
-        getLatestNotis(doctorid, socketio);
-      })
-    }
-  }, [ioService, getLatestNotis, attachNotificationListeners, dispatch]);
-
   const handleAppStateChange = useCallback((nextAppState: AppStateStatus) => {
     if (currentState !== nextAppState) {
       // console.log('App State: ' + nextAppState);
       const doctorid = store.getState()?.doctor?._id
-      if (nextAppState === 'active' && doctorid && ioService) {
+      if (nextAppState === 'active' && doctorid) {
+        // console.log('...');
+        const doctorId = store.getState()?.doctor?._id;
         // 更新消息
-        getLatestNotis(doctorid, ioService);
+        getLatestNotis(doctorid);
+        const socketio = new SocketioService(doctorId);
+
+        setTimeout(() => {
+          attachNotificationListeners(socketio);
+          getLatestNotis(doctorId);
+          dispatch(UpdateIoService(socketio));
+        })
       }
       setCurrentState(nextAppState);
     }
-  }, [ioService, currentState, store, getLatestNotis]);
+  }, [currentState, store, getLatestNotis, attachNotificationListeners, dispatch]);
 
   useEffect(() => {
+    if (!inited) {
+      const doctorId = store.getState()?.doctor?._id;
+      if (doctorId && !ioService) {
 
-    const doctorId = store.getState()?.doctor?._id;
-    if (doctorId) {
-      prepareSocketIo(doctorId)
+        // console.log('..');
+        const socketio = new SocketioService(doctorId);
+        attachNotificationListeners(socketio);
+        getLatestNotis(doctorId);
+        dispatch(UpdateIoService(socketio));
+
+      }
+
+      // push notification
+      registerForPushNotificationsAsync().then(token => setExpoPushToken(token || ''));
+      setInited(true);
     }
-
-    // push notification
-    registerForPushNotificationsAsync().then(token => setExpoPushToken(token || ''));
-
-    // notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-    //   console.log('notification', notification);
-    // });
-    // responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-    //   console.log('response', response);
-    // });
 
     appState?.addEventListener('change', handleAppStateChange);
 
     return () => {
-      // Notifications.removeNotificationSubscription(notificationListener);
-      // Notifications.removeNotificationSubscription(responseListener);
       appState?.removeEventListener('change', handleAppStateChange);
-      ioService?.disconnect();
+      // ioService?.disconnect();
     }
-  }, [store, dispatch, prepareSocketIo, handleAppStateChange, ioService]);
+  }, [store, dispatch, handleAppStateChange, attachNotificationListeners, getLatestNotis, ioService, inited]);
 
 
   return (
