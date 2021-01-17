@@ -18,9 +18,9 @@ export default function ConsultSettingsScreen() {
 
   useEffect(() => {
     doctor?.prices?.map(price => {
-      if (price.type === 0) {
+      if (price.type === 0 && price.amount > -1) {
         setTextPrice(price);
-      } else if (price.type === 1) {
+      } else if (price.type === 1 && price.amount > -1) {
         setPhonePrice(price);
       }
     })
@@ -55,24 +55,24 @@ export default function ConsultSettingsScreen() {
         {doctor?.prices?.length ? (
           <List.Section>
             <List.Subheader>您的付费咨询已经开通</List.Subheader>
-            {textPrice ? (
+            {(textPrice?.amount > -1) ? (
               <List.Item 
                 key="textConsult"
                 title="图文咨询"
-                description={`服务价格 ${textPrice.amount}元/${textPrice.unit_count}分钟`}
+                description={`服务价格 ${textPrice.amount} 元/次`}
                 left={() => <List.Icon icon="chat-processing" color="steelblue" />} />
             ) : (
-                <Text>图文咨询未开通</Text>
+                <Text style={{paddingLeft: 24}}>图文咨询未开通</Text>
               )
             }
-            {phonePrice ? (
+            {(phonePrice?.amount > -1) ? (
               <List.Item 
                 key="phoneConsult"
                 title={`电话咨询`}
-                description={`服务价格 ${phonePrice.amount}元/次`}
+                description={`服务价格 ${phonePrice.amount} 元/${phonePrice.unit_count}分钟`}
                 left={() => <List.Icon icon="phone" color="teal" />} />
             ) : (
-                <Text>电话咨询未开通</Text>
+                <Text style={{paddingLeft: 24}}>电话咨询未开通</Text>
               )
             }
           </List.Section>
