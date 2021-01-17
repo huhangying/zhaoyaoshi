@@ -105,13 +105,14 @@ export default function ChatScreen() {
     if (!doctor) {
       return;
     }
-    const chat = {
+    const chat: Chat = {
       room: doctor._id,
       sender: doctor._id || '',
       senderName: doctor.name || '',
       to: pid,
       type: !isCmd ? (!isImg ? ChatType.text : ChatType.picture) : ChatType.command,
       data: data,
+      created: new Date(),
       cs: false// this.isCs
     };
     const _chats = [...chats];
