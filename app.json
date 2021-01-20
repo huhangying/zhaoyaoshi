@@ -44,9 +44,9 @@
       "id": "zhaoyaoshi",
       "versionDate": "2021年1月3日",
       "company": "惠宏医药信息技术服务（上海）有限公司",
-      "baseUrl": "http://timebox.i234.me/api/",
-      "imageServer": "http://timebox.i234.me/images/",
-      "socketUrl": "ws://timebox.i234.me:3000"
+      "baseUrl": "http://www.zhaoyaoshi885.cn/api/",
+      "imageServer": "http://www.zhaoyaoshi885.cn/images/",
+      "socketUrl": "ws://www.zhaoyaoshi885.cn:3000"
     }
   }
 }
