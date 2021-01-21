@@ -16,7 +16,6 @@ import { sendWechatMsg } from '../services/weixin.service';
 import { Notification } from "../models/io/notification.model";
 import { MessageType } from '../models/app-settings.model';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Assets } from '@react-navigation/stack';
 
 export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   existedConsult, doctor, userName, fromConsultPhone, onConsultReject }:
