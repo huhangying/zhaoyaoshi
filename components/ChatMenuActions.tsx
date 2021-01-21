@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import { Menu, Provider } from 'react-native-paper';
 import { NotificationType } from '../models/io/notification.model';
 import { Button, Divider, Icon } from 'react-native-elements';
@@ -15,7 +15,8 @@ import { Doctor } from '../models/crm/doctor.model';
 import { sendWechatMsg } from '../services/weixin.service';
 import { Notification } from "../models/io/notification.model";
 import { MessageType } from '../models/app-settings.model';
-
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Assets } from '@react-navigation/stack';
 
 export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   existedConsult, doctor, userName, fromConsultPhone, onConsultReject }:
@@ -29,7 +30,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   const [menuOpen, setMenuOpen] = useState(false);
   const { navigate } = useNavigation();
   const dispatch = useDispatch()
-
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const hasNewServices = (pid: string) => {
@@ -150,7 +151,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   return (
     <>
       {visible && (
-        <View style={{ position: 'absolute', right: 10, top: 45 }}>
+        <View style={{ position: 'absolute', right: 10, top: Platform.OS === 'ios' ? insets.top : (insets.top + 2) }}>
           <Provider>
             <View
               style={{
@@ -175,7 +176,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
                 style={{ marginTop: 0, position: 'absolute', right: 0, left: 0, top: 40, zIndex: 99999, elevation: 9999 }}
               >
                 {!fromConsultPhone ? (
-                  <Menu.Item icon="check-circle" onPress={markDone} title="标识完成" />
+                  <Menu.Item icon="check-circle" onPress={markDone} title={"标识完成" + insets.top} />
                 ) : (
                     <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(true, id)} title="付费电话咨询" />
                   )}
