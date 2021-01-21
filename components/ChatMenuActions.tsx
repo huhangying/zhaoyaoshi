@@ -176,7 +176,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
                 style={{ marginTop: 0, position: 'absolute', right: 0, left: 0, top: 40, zIndex: 99999, elevation: 9999 }}
               >
                 {!fromConsultPhone ? (
-                  <Menu.Item icon="check-circle" onPress={markDone} title={"标识完成" + insets.top} />
+                  <Menu.Item icon="check-circle" onPress={markDone} title="标识完成" />
                 ) : (
                     <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(true, id)} title="付费电话咨询" />
                   )}
