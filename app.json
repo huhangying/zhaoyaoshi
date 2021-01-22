@@ -2,7 +2,7 @@
   "expo": {
     "name": "找药师",
     "slug": "zhaoyaoshi",
-    "version": "1.0.2",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "zhaoyaoshi",
@@ -30,12 +30,12 @@
         "NOTIFICATIONS"
       ],
       "package": "com.zhaoyaoshi885",
-      "versionCode": 2
+      "versionCode": 1
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.zhaoyaoshi885.zhaoyaoshi",
-      "buildNumber": "1.0.2"
+      "buildNumber": "1.0.1"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
