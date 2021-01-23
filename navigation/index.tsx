@@ -126,10 +126,9 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
   const handleAppStateChange = useCallback((nextAppState: AppStateStatus) => {
     if (currentState !== nextAppState) {
-      console.log('App State: ' + currentState + ' -> ' + nextAppState);
+      // console.log('App State: ' + currentState + ' -> ' + nextAppState);
       const doctorid = store.getState()?.doctor?._id
       if (nextAppState === 'active' && doctorid) {
-        // console.log('...');
         const doctorId = store.getState()?.doctor?._id;
         
         const socketio = new SocketioService(doctorId);
@@ -138,7 +137,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
           attachNotificationListeners(socketio);
           dispatch(UpdateIoService(socketio));
         })
-      } else { // background or inactive
+      } else if (nextAppState === 'background'){ // background or inactive
         ioService?.disconnect();
         dispatch(UpdateIoService());
       }
