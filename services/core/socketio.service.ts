@@ -14,29 +14,26 @@ export class SocketioService {
   }
 
   connect(room: string) {
-    if (!this.socket?.connected) {
-      this.socket?.disconnect();
-      this.socket = io(Constants.manifest.extra.socketUrl, {});
+    if (!this.socket) {
+      this.socket = io(Constants.manifest.extra.socketUrl);
       this.socket?.emit('joinRoom', room);
 
       this.socket?.on('disconnect', (reason: string) => {
         if (reason === 'io server disconnect') {
           // the disconnection was initiated by the server, you need to reconnect manually
           this.socket.connect();
-          this.socket?.emit('joinRoom', room);
-          // console.log('io server disconnect ==> reconnect...');
         }
         // else the socket will automatically try to reconnect
       });
     
-      this.socket?.on('connect_error', (reason: string) => {
-          // console.log('connect_error ==> ' + reason);
-          this.socket.connect();
-      });
-      this.socket?.on('error', (reason: string) => {
-          // console.log('error ==> ' + reason);
-          this.socket.connect();
-      });
+      // this.socket?.on('connect_error', (reason: string) => {
+      //     // console.log('connect_error ==> ' + reason);
+      //     this.socket.connect();
+      // });
+      // this.socket?.on('error', (reason: string) => {
+      //     // console.log('error ==> ' + reason);
+      //     this.socket.connect();
+      // });
     }
     return this.socket;
   }

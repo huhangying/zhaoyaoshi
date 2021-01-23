@@ -126,36 +126,37 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
   const handleAppStateChange = useCallback((nextAppState: AppStateStatus) => {
     if (currentState !== nextAppState) {
-      // console.log('App State: ' + nextAppState);
+      console.log('App State: ' + currentState + ' -> ' + nextAppState);
       const doctorid = store.getState()?.doctor?._id
       if (nextAppState === 'active' && doctorid) {
         // console.log('...');
         const doctorId = store.getState()?.doctor?._id;
-        // 更新消息
-        getLatestNotis(doctorid);
+        
         const socketio = new SocketioService(doctorId);
-
         setTimeout(() => {
+          getLatestNotis(doctorid); // 更新消息
           attachNotificationListeners(socketio);
-          getLatestNotis(doctorId);
           dispatch(UpdateIoService(socketio));
         })
+      } else { // background or inactive
+        ioService?.disconnect();
+        dispatch(UpdateIoService());
       }
       setCurrentState(nextAppState);
     }
-  }, [currentState, store, getLatestNotis, attachNotificationListeners, dispatch]);
+  }, [currentState, store, getLatestNotis, attachNotificationListeners, dispatch, ioService]);
 
   useEffect(() => {
     if (!inited) {
       const doctorId = store.getState()?.doctor?._id;
-      if (doctorId && !ioService) {
-
+      if (doctorId) {
         // console.log('..');
         const socketio = new SocketioService(doctorId);
-        attachNotificationListeners(socketio);
-        getLatestNotis(doctorId);
-        dispatch(UpdateIoService(socketio));
-
+        setTimeout(() => {
+          getLatestNotis(doctorId); // 更新消息
+          attachNotificationListeners(socketio);
+          dispatch(UpdateIoService(socketio));
+        });
       }
 
       // push notification
@@ -167,7 +168,6 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
     return () => {
       appState?.removeEventListener('change', handleAppStateChange);
-      // ioService?.disconnect();
     }
   }, [store, dispatch, handleAppStateChange, attachNotificationListeners, getLatestNotis, ioService, inited]);
 
