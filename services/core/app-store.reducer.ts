@@ -1,6 +1,6 @@
 import { AppState } from "../../models/app-state.model";
 import { AppStoreAction, AppStoreActionType } from "./app-store.actions";
-import { clearLocalStorage, setDoctor, setToken } from "./local.store";
+import { clearLocalStorage, setAppSettings, setDoctor, setToken } from "./local.store";
 
 export const appStoreInitialState = new AppState();
 
@@ -13,6 +13,10 @@ export function appStoreReducer(state: AppState = appStoreInitialState, action: 
     case AppStoreActionType.UpdateToken:
       setToken(action.payload);
       return { ...state, token: action.payload };
+
+    case AppStoreActionType.UpdateAppSettings:
+      setAppSettings(action.payload);
+      return { ...state, appSettings: action.payload };
 
     case AppStoreActionType.UpdateIsLoggedIn:
       return { ...state, isLoggedIn: action.payload };

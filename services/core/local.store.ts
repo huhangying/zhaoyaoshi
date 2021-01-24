@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AppSettings } from '../../models/app-settings.model';
 import { AppState } from '../../models/app-state.model';
 import { Doctor } from '../../models/crm/doctor.model';
 import { Hospital } from '../../models/hospital/hospital.model';
@@ -14,6 +15,14 @@ const setDoctor = async (doctor: Doctor) => {
 const setToken = async (token = '') => {
   try {
     await AsyncStorage.setItem('@token', token)
+  } catch (e) {
+    // saving error
+  }
+}
+
+const setAppSettings = async (appSettings: AppSettings) => {
+  try {
+    await AsyncStorage.setItem('@appSettings', JSON.stringify(appSettings))
   } catch (e) {
     // saving error
   }
@@ -39,6 +48,15 @@ const getDoctor = async () => {
 const getToken = async () => {
   try {
     return await AsyncStorage.getItem('@token') as string;
+  } catch (e) {
+    // error reading value
+  }
+}
+
+const getAppSettings = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('@appSettings')
+    return jsonValue != null ? (JSON.parse(jsonValue) as AppSettings) : undefined;
   } catch (e) {
     // error reading value
   }
@@ -80,8 +98,11 @@ const getAppState = async () => {
 export {
   setDoctor,
   setToken,
+  setAppSettings,
   getDoctor,
   getToken,
+  getAppSettings,
+  
   clearLocalStorage,
   setAppState,
   getAppState,

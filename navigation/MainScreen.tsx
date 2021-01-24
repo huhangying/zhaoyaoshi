@@ -6,7 +6,7 @@ import Navigation from '../navigation';
 import SignInScreen from '../screens/SignInScreen';
 import {
   updateChatNotifications, updateConsultNotifications, updateDoctor, updateFeedbackNotifications,
-  updateIsLoggedIn, updateNotiPage, updateToken, updateSnackbar
+  updateIsLoggedIn, updateNotiPage, updateToken, updateSnackbar, updateAppSettings
 } from '../services/core/app-store.actions';
 import { getAuthState } from '../services/core/auth';
 
@@ -21,6 +21,7 @@ export function MainScreen() {
       if (_auth?.doctor?._id) {
         dispatch(updateDoctor(_auth.doctor));
         dispatch(updateToken(_auth.token));
+        dispatch(updateAppSettings(_auth.appSettings || {}));
       }
     });
   }, [dispatch]);
@@ -45,6 +46,7 @@ const mapState = (state: AppState) => {
   return {
     doctor: state.doctor,
     token: state.token,
+    appSettings: state.appSettings,
     isLoggedIn: state.isLoggedIn,
     notiPage: state.notiPage,
     snackbar: state.snackbar,
@@ -57,6 +59,7 @@ const mapState = (state: AppState) => {
 const mapDispatch = {
   updateDoctor,
   updateToken,
+  updateAppSettings,
   updateIsLoggedIn,
   updateNotiPage,
   updateSnackbar,

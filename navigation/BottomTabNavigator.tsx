@@ -228,7 +228,7 @@ function TabSettingsNavigator() {
       <TabConsultStack.Screen
         name="NotificationSettingsScreen"
         component={NotificationSettingsScreen}
-        options={{ headerTitle: 'Notification设置' }}
+        options={{ headerTitle: '设置' }}
       />
       <TabConsultStack.Screen
         name="ShortcutSettingsScreen"

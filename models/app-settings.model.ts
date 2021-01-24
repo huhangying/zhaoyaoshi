@@ -1,6 +1,7 @@
 
 export interface AppSettings {
   enableVibrate?: boolean;
+  disableNoti?: boolean;
 }
 
 export interface Toaster {

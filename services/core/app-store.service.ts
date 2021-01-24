@@ -1,11 +1,11 @@
 import { AppState } from "../../models/app-state.model";
 import { Doctor } from "../../models/crm/doctor.model";
-import { clearLocalStorage, setDoctor, setToken } from "./local.store";
+import { clearLocalStorage, setAppSettings, setDoctor, setToken } from "./local.store";
 import { Store } from "./store";
 import { Notification } from "../../models/io/notification.model";
 import { SocketioService } from "./socketio.service";
 import { NotiPage } from "../../models/io/noti-page.model";
-import { Toaster } from "../../models/app-settings.model";
+import { AppSettings, Toaster } from "../../models/app-settings.model";
 
 export class AppStoreService extends Store<AppState> {
   constructor(initState?: AppState) {
@@ -18,6 +18,7 @@ export class AppStoreService extends Store<AppState> {
   // selectors
   get token() { return this.state?.token; }
   get doctor() { return this.state?.doctor; }
+  get appSettings() { return this.state?.appSettings || {}; }
   get chatNotifications() { return this.state?.chatNotifications || []; }
   get feedbackNotifications() { return this.state?.feedbackNotifications || []; }
   get consultNotifications() { return this.state?.consultNotifications || []; }
@@ -48,6 +49,16 @@ export class AppStoreService extends Store<AppState> {
         token,
       });
       setToken(token);
+    }
+  }
+
+  updateAppSettings(appSettings?: AppSettings) {
+    if (appSettings) {
+      this.setState({
+        ...this.state,
+        appSettings,
+      });
+      setAppSettings(appSettings);
     }
   }
 

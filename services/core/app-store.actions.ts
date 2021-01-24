@@ -1,4 +1,4 @@
-import { Toaster } from "../../models/app-settings.model";
+import { AppSettings, Toaster } from "../../models/app-settings.model";
 import { AppState } from "../../models/app-state.model";
 import { Doctor } from "../../models/crm/doctor.model";
 import { NotiPage } from "../../models/io/noti-page.model";
@@ -14,6 +14,7 @@ export enum AppStoreActionType {
 
   UpdateDoctor,
   UpdateToken,
+  UpdateAppSettings,
   UpdateChatNotifications,
   UpdateFeedbackNotifications,
   UpdateConsultNotifications,
@@ -44,6 +45,13 @@ export const updateToken = (token = '') => (
     payload: token,
   }
 );
+export const updateAppSettings = (appSettings: AppSettings) => (
+  {
+    type: AppStoreActionType.UpdateAppSettings,
+    payload: appSettings,
+  }
+);
+
 export const updateChatNotifications = (chatNotifications: Notification[]) => (
   {
     type: AppStoreActionType.UpdateChatNotifications,
