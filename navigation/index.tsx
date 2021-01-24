@@ -81,6 +81,8 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   const attachNotificationListeners = useCallback((socketio: SocketioService) => {
     socketio?.onNotification(async (noti: Notification) => {
       const state = store.getState();
+      if (state.appSettings?.disableNoti) return; // if 关闭消息提醒
+      
       const notiPage = state?.notiPage;
       // if (state.doctor?._id === noti.doctorId) return; // skip self-send noti (在不同手机上打开两个相同的app)
       // add the following line if 已经在chat/feedback 页面同病患交互不算新消息。

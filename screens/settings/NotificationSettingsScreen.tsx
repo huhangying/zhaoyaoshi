@@ -17,8 +17,6 @@ export default function NotificationsSettingsScreen() {
   };
 
   useEffect(() => {
-    console.log(store.getState().appSettings);
-    
     setDisableNoti(store.getState().appSettings?.disableNoti || false);
 
     return () => {
