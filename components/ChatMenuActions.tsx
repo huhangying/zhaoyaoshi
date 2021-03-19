@@ -66,14 +66,18 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
     // 付费图文咨询 （共用chat）
     if (type === NotificationType.consultChat) {
       navigate('ConsultScreen', {
-        pid: pid, type: NotificationType.consultChat,
-        title: userName + ' 付费图文咨询', id: existedConsult?.consultId
+        pid: pid,
+        type: NotificationType.consultChat,
+        title: userName + ' 付费图文咨询', 
+        id: existedConsult?.consultId,
       });
     } else if (type === NotificationType.consultPhone) {
       // 付费电话咨询，到说明页面
       navigate('ConsultPhoneScreen', {
-        pid: pid, type: NotificationType.consultPhone,
-        title: userName + ' 付费电话咨询', id: id || existedConsult?.consultId
+        pid: pid,
+        type: NotificationType.consultPhone,
+        title: userName + ' 付费电话咨询', 
+        id: id || existedConsult?.consultId,
       });
     }
     closeMenu();

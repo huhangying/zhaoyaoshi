@@ -102,7 +102,6 @@ export default function FeedbackChatScreen() {
       name: '请参阅图片',
       upload: data,
       status: 2,
-      createdAt: new Date()
     } : { // text
         user: pid,
         doctor: doctor._id,
@@ -110,7 +109,6 @@ export default function FeedbackChatScreen() {
         type: type,
         name: data,
         status: 2,
-        createdAt: new Date()
       };
     const _feedbacks = [...feedbacks];
     _feedbacks.push(feedback);

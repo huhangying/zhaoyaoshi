@@ -23,9 +23,11 @@ export default function ConsultPhoneActionsBar({ type, pid, openid, id, doctor, 
 
   const textReply = () => {
     navigate('ConsultScreen', {
-      pid: pid, type: NotificationType.consultChat,
+      pid: pid,
+      type: NotificationType.consultChat,
       title: userName + ' 付费咨询',
       id: id,
+      openid: openid,
       fromConsultPhone: true
     });
   }
