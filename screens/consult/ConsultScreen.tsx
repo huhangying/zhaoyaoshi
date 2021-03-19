@@ -155,7 +155,7 @@ export default function ConsultScreen() {
 
     scrollToEnd();
     Keyboard.dismiss();
-  }, [consults, doctor, ioService, pid, type, user]);
+  }, [consults, doctor, ioService, pid, type, user, consultId]);
 
 
   const [isOpenViewer, setIsOpenViewer] = useState(false);
