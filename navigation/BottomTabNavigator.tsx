@@ -29,6 +29,7 @@ import { Snackbar } from 'react-native-paper';
 import { updateSnackbar } from '../services/core/app-store.actions';
 import ConsultPhoneScreen from '../screens/consult/ConsultPhoneScreen';
 import { MessageType } from '../models/app-settings.model';
+import AdviseScreen from '../screens/consult/AdviseScreen';
 
 const BottomTab = createMaterialBottomTabNavigator();
 
@@ -131,6 +132,11 @@ function TabConsultNavigator() {
         name="TabConsultScreen"
         component={TabConsultScreen}
         options={{ headerTitle: '药师咨询' }}
+      />
+      <TabConsultStack.Screen
+        name="AdviseScreen"
+        component={AdviseScreen}
+        options={{ headerTitle: '药师咨询 - 线下咨询' }}
       />
       <TabConsultStack.Screen
         name="SelectChatScreen"
