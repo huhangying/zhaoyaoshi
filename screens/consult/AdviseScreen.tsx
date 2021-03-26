@@ -10,6 +10,7 @@ import { map } from 'rxjs/operators';
 import { getAuthState } from '../../services/core/auth';
 import { AdviseTemplate, Question } from '../../models/survey/advise-template.model';
 import SurveyQuestions from '../../components/SurveyQuestions';
+import { useForm } from 'react-hook-form';
 
 export default function AdviseScreen() {
   const [patientSelect, setPatientSelect] = useState('')
@@ -17,11 +18,14 @@ export default function AdviseScreen() {
   const [gender, setGender] = useState('')
   const [age, setAge] = useState('')
   const [cell, setCell] = useState('')
+  const [count, setCount] = useState(0)
+
   const initQuestions: Question[] = []
   const [questions, setQuestions] = useState(initQuestions)
 
   const initAdviseTemplates: AdviseTemplate[] = [];
   const [adviseTemplates, setAdviseTemplates] = useState(initAdviseTemplates);
+
 
   useEffect(() => {
     getAuthState().then(_ => {
@@ -65,8 +69,10 @@ export default function AdviseScreen() {
     console.log(_questions);
 
     setQuestions(_questions)
+    const _count = count + 1;
+    setCount(_count)
 
-  }, []);
+  }, [count]);
 
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100} style={styles.container}>
@@ -165,8 +171,13 @@ export default function AdviseScreen() {
                 }}
               />
             </View>
-            <Divider></Divider>
+            <Divider></Divider><Text>{count}</Text>
+            <Text>{questions[0]?.options[0]?.selected}</Text>
             <SurveyQuestions key="load-questions" questions={questions} onChange={onQuestionsChange}></SurveyQuestions>
+            <View style={styles.oneLine}>
+              <Button title="取消" type="outline" buttonStyle={styles.button} />
+              <Button title="确定" buttonStyle={styles.button} />
+            </View>
           </View>
         )}
       </ScrollView>
@@ -205,10 +216,11 @@ const styles = StyleSheet.create({
   inputStyle: {
     backgroundColor: 'white',
   },
-  note: {
-    paddingTop: 10,
-    color: 'gray',
-    fontSize: 13,
+  oneLine: {
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   }
 });
 

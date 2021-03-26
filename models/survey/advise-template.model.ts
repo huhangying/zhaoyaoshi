@@ -5,7 +5,7 @@ export interface AdviseTemplate {
 
   questions?: Question[];
   order?: number;
-  apply?: boolean;
+  // apply?: boolean;
 }
 
 export interface Question {
@@ -16,7 +16,7 @@ export interface Question {
   order?: number;
   answer_type: number; // 0: boolean; 1: radio; 2: multiple; 3: text
   options: QuestionOption[];
-  apply: boolean;
+  // apply: boolean;
 }
 
 export interface QuestionOption {
