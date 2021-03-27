@@ -15,7 +15,9 @@ import { User } from '../../models/crm/user.model';
 import Spinner from '../../components/shared/Spinner';
 
 export default function AdviseScreen() {
-  const [patientSelect, setPatientSelect] = useState('')
+  const [patientSelect, setPatientSelect] = useState('') // flag 
+  const initSelectedPatient: User = {_id: ''};
+  const [selectedPatient, setSelectedPatient] = useState(initSelectedPatient)
   const [searchPatientVisible, setSearchPatientVisible] = useState(false)
   const [searchType, setSearchType] = useState('name')
   const [searchQuery, setSearchQuery] = useState('')
@@ -68,6 +70,7 @@ export default function AdviseScreen() {
 
   const selectTempPatient = () => {
     setPatientSelect('temp')
+    setSelectedPatient(initSelectedPatient);
   }
 
   const openPatientSearch = () => {
@@ -77,10 +80,18 @@ export default function AdviseScreen() {
   const selectPatient = (p: User) => {
     // 搜索注册用户
     setPatientSelect('user')
+    setSelectedPatient(p);
+
+    // clean up
+    cleanupSelectPatientDialog();
   }
 
   const cancelSelectPatient = () => {
     setPatientSelect('');
+    cleanupSelectPatientDialog();
+  }
+
+  const cleanupSelectPatientDialog = () => {
     setSearchPatientVisible(false);
 
     setSearchType('name')
@@ -108,16 +119,6 @@ export default function AdviseScreen() {
       ).subscribe();
     }
   }
-  const handleKeypress = (e: any) => {
-    console.log(e.nativeEvent);
-
-    //it triggers by pressing the enter key
-    if (e.nativeEvent.keyCode === 13) {
-      searchPatients();
-    }
-
-  }
-
 
   const onQuestionsChange = useCallback((_questions: Question[]) => {
     console.log(_questions);
@@ -283,11 +284,10 @@ export default function AdviseScreen() {
             </View>
             <Searchbar
               placeholder="请输入搜索"
-              style={{}}
               onChangeText={onChangeSearch}
               value={searchQuery}
-              onKeyPress={handleKeypress}
-              onIconPress={searchPatients}
+              onEndEditing={searchPatients}
+              // onIconPress={searchPatients}
             />
             {searching && <Spinner />}
             {!searching && (
