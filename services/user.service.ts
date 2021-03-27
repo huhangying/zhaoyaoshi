@@ -7,10 +7,28 @@ export function getUserDetailsById(id: string) {
 }
 
 export function getUserCountByDoctorId(doctorId: string) {
-  return getApi<{total: number}>(`relationships/count/doctor/${doctorId}`);
+  return getApi<{ total: number }>(`relationships/count/doctor/${doctorId}`);
 }
 
 // 审核用户
 export function updateRoleById(id: string, role: number) {
   return patchApi<User>('user/' + id, { _id: id, role: role });
 }
+
+// Patient search
+export function searchByCriteria(searchType: string, searchQuery: string) {
+  let search;
+  switch (searchType) {
+    case 'name':
+      search = { name: searchQuery };
+      break;
+    case 'cell':
+      search = { cell: searchQuery };
+      break;
+    case 'notes':
+      search = { notes: searchQuery };
+      break;
+  }
+  return patchApi<User[]>('users/search', search);
+}
+
