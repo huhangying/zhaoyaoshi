@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { CheckBox, Icon, ListItem } from "react-native-elements";
-import { Dialog, Divider, Searchbar, TextInput } from "react-native-paper";
+import { Dialog, Divider, Searchbar } from "react-native-paper";
 import { finalize, tap } from "rxjs/operators";
 import Spinner from "../../../components/shared/Spinner";
 import { User } from "../../../models/crm/user.model";
-import { Question } from "../../../models/survey/advise-template.model";
 import { searchByCriteria } from "../../../services/user.service";
 
 
@@ -21,7 +20,6 @@ export default function SearchPatient({ visible, onSelect }:
 
   const selectPatient = (p: User) => {
     onSelect(p);
-
     cleanupSelectPatientDialog();
   }
 
@@ -32,7 +30,6 @@ export default function SearchPatient({ visible, onSelect }:
   }
 
   const cleanupSelectPatientDialog = () => {
-    // setSearchPatientVisible(false);
     setSearchType('name')
     setSearchQuery('');
     setSearchResults([])
@@ -41,17 +38,12 @@ export default function SearchPatient({ visible, onSelect }:
   const onChangeSearch = (query: string) => setSearchQuery(query);
   const searchPatients = () => {
     if (searchType) {
-      console.log('type: ', searchType);
       setSearching(true);
       // 搜索注册用户
       searchByCriteria(searchType, searchQuery).pipe(
         tap(results => {
-          console.log('===>', results.length);
-
+          // console.log('===>', results.length);
           setSearchResults(results);
-          // trigger render
-          // const _count = count + 1;
-          // setCount(_count)
         }),
         finalize(() => {
           setSearching(false);
@@ -113,7 +105,6 @@ export default function SearchPatient({ visible, onSelect }:
             onChangeText={onChangeSearch}
             value={searchQuery}
             onEndEditing={searchPatients}
-          // onIconPress={searchPatients}
           />
           {searching && <Spinner />}
           {!searching && (

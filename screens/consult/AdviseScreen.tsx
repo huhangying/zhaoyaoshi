@@ -137,6 +137,7 @@ export default function AdviseScreen() {
             <TextInput
               label="年龄"
               placeholder="请输入..."
+              keyboardType="numeric"
               value={age}
               onChangeText={text => setAge(text)} error={false}
               style={styles.inputStyle}
@@ -144,6 +145,7 @@ export default function AdviseScreen() {
             <TextInput
               label="手机"
               placeholder="请输入..."
+              keyboardType="phone-pad"
               value={cell}
               onChangeText={text => setCell(text)} error={false}
               style={styles.inputStyle}
