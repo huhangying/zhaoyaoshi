@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { TextInput } from "react-native-paper";
-import { Question } from "../models/survey/advise-template.model";
+import { Question } from "../../../models/survey/advise-template.model";
 
 
 export default function SurveyQuestions({ questions, readonly, onChange }:

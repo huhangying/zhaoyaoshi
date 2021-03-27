@@ -1,0 +1,165 @@
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { CheckBox, Icon, ListItem } from "react-native-elements";
+import { Dialog, Divider, Searchbar, TextInput } from "react-native-paper";
+import { finalize, tap } from "rxjs/operators";
+import Spinner from "../../../components/shared/Spinner";
+import { User } from "../../../models/crm/user.model";
+import { Question } from "../../../models/survey/advise-template.model";
+import { searchByCriteria } from "../../../services/user.service";
+
+
+export default function SearchPatient({ visible, onSelect }:
+  { visible?: boolean, onSelect?: any }) {
+  const dimensions = useWindowDimensions();
+
+  const [searchType, setSearchType] = useState('name')
+  const [searchQuery, setSearchQuery] = useState('')
+  const initSearchResults: User[] = [];
+  const [searchResults, setSearchResults] = useState(initSearchResults)
+  const [searching, setSearching] = useState(false)
+
+  const selectPatient = (p: User) => {
+    onSelect(p);
+
+    cleanupSelectPatientDialog();
+  }
+
+  const cancelSelectPatient = () => {
+    onSelect(null);
+    // clean up
+    cleanupSelectPatientDialog();
+  }
+
+  const cleanupSelectPatientDialog = () => {
+    // setSearchPatientVisible(false);
+    setSearchType('name')
+    setSearchQuery('');
+    setSearchResults([])
+  }
+
+  const onChangeSearch = (query: string) => setSearchQuery(query);
+  const searchPatients = () => {
+    if (searchType) {
+      console.log('type: ', searchType);
+      setSearching(true);
+      // 搜索注册用户
+      searchByCriteria(searchType, searchQuery).pipe(
+        tap(results => {
+          console.log('===>', results.length);
+
+          setSearchResults(results);
+          // trigger render
+          // const _count = count + 1;
+          // setCount(_count)
+        }),
+        finalize(() => {
+          setSearching(false);
+        })
+      ).subscribe();
+    }
+  }
+
+  if (!visible) {
+    return <></>;
+  } else
+    return (<>
+      <Dialog visible={true} style={{ left: 0, right: 0 }}>
+        <Dialog.Title>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold' }}>选择病患 </Text>
+              <Text style={{ fontSize: 12, color: 'gray' }}>  请根据选项搜索</Text>
+            </View>
+            <Icon
+              name='ios-close'
+              type='ionicon'
+              color='#517fa4'
+              style={{ width: 30, paddingVertical: 2, paddingLeft: 10, paddingRight: 2 }}
+              onPress={cancelSelectPatient}
+            />
+          </View>
+        </Dialog.Title>
+        <Divider></Divider>
+        <Dialog.Content style={{ backgroundColor: 'white' }}>
+          <View style={styles.lineBlock}>
+            <CheckBox
+              title='姓名'
+              checkedIcon='dot-circle-o'
+              uncheckedIcon='circle-o'
+              checked={searchType === 'name'}
+              onPress={() => setSearchType('name')}
+              containerStyle={styles.checkBoxSearchItem}
+            />
+            <CheckBox
+              title='手机'
+              checkedIcon='dot-circle-o'
+              uncheckedIcon='circle-o'
+              checked={searchType === 'cell'}
+              onPress={() => setSearchType('cell')}
+              containerStyle={styles.checkBoxSearchItem}
+            />
+            <CheckBox
+              title='病患备注'
+              checkedIcon='dot-circle-o'
+              uncheckedIcon='circle-o'
+              checked={searchType === 'notes'}
+              onPress={() => setSearchType('notes')}
+              containerStyle={styles.checkBoxSearchItem}
+            />
+          </View>
+          <Searchbar
+            placeholder="请输入搜索"
+            onChangeText={onChangeSearch}
+            value={searchQuery}
+            onEndEditing={searchPatients}
+          // onIconPress={searchPatients}
+          />
+          {searching && <Spinner />}
+          {!searching && (
+            <ScrollView style={{ paddingTop: 6, minHeight: 200, maxHeight: dimensions.height - 400 }}>
+              {
+                searchResults?.map((p, i) => (
+                  <ListItem key={`search-result-${i}`} bottomDivider>
+                    <ListItem.Content>
+                      <ListItem.Title>{p.name}</ListItem.Title>
+                      <ListItem.Subtitle style={styles.textHint}>
+                        {p.cell ? ` 手机：${p.cell}` : ''}
+                        {p.notes ? ` 备注：${p.notes}` : ''}
+                      </ListItem.Subtitle>
+                    </ListItem.Content>
+                    <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray"
+                      onPress={() => selectPatient(p)} />
+                  </ListItem>
+                ))
+              }
+              {!searchResults?.length &&
+                <Text style={{ padding: 16, marginTop: 24, backgroundColor: 'lightyellow' }}>没有搜索结果</Text>
+              }
+            </ScrollView>
+          )}
+        </Dialog.Content>
+      </Dialog>
+    </>);
+}
+
+
+const styles = StyleSheet.create({
+  lineBlock: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+  },
+  checkBoxSearchItem: {
+    backgroundColor: 'white',
+    borderColor: 'white',
+    paddingHorizontal: 0,
+    marginLeft: -12,
+  },
+  textHint: {
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    color: 'gray',
+    fontSize: 12,
+  },
+});

@@ -1,29 +1,24 @@
 import * as React from 'react';
-import { KeyboardAvoidingView, ScrollView, StyleSheet, Text, useWindowDimensions } from 'react-native';
+import { KeyboardAvoidingView, ScrollView, StyleSheet, Text } from 'react-native';
 import { useCallback, useEffect, useState } from 'react';
-import { Button, CheckBox, Divider, Icon, ListItem, SearchBar } from 'react-native-elements';
+import { Button, CheckBox, Divider, Icon } from 'react-native-elements';
 import { View } from '../../components/Themed';
-import { Dialog, Searchbar, TextInput } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import RNPickerSelect, { Item } from 'react-native-picker-select';
 import { getAdviseTemplatesByDepartmentId } from '../../services/hospital.service';
-import { finalize, map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { getAuthState } from '../../services/core/auth';
 import { AdviseTemplate, Question } from '../../models/survey/advise-template.model';
-import SurveyQuestions from '../../components/SurveyQuestions';
-import { searchByCriteria } from '../../services/user.service';
+import SurveyQuestions from './advise/SurveyQuestions';
 import { User } from '../../models/crm/user.model';
-import Spinner from '../../components/shared/Spinner';
+import SearchPatient from './advise/SearchPatient';
 
 export default function AdviseScreen() {
   const [patientSelect, setPatientSelect] = useState('') // flag 
-  const initSelectedPatient: User = {_id: ''};
+  const initSelectedPatient: User = { _id: '' };
   const [selectedPatient, setSelectedPatient] = useState(initSelectedPatient)
   const [searchPatientVisible, setSearchPatientVisible] = useState(false)
-  const [searchType, setSearchType] = useState('name')
-  const [searchQuery, setSearchQuery] = useState('')
-  const initSearchResults: User[] = [];
-  const [searchResults, setSearchResults] = useState(initSearchResults)
-  const [searching, setSearching] = useState(false)
+
 
   const [name, setName] = useState('')
   const [gender, setGender] = useState('')
@@ -36,7 +31,6 @@ export default function AdviseScreen() {
 
   const initAdviseTemplates: AdviseTemplate[] = [];
   const [adviseTemplates, setAdviseTemplates] = useState(initAdviseTemplates);
-  const dimensions = useWindowDimensions();
 
   useEffect(() => {
     getAuthState().then(_ => {
@@ -77,53 +71,23 @@ export default function AdviseScreen() {
     setSearchPatientVisible(true);
   }
 
-  const selectPatient = (p: User) => {
-    // 搜索注册用户
-    setPatientSelect('user')
-    setSelectedPatient(p);
-
-    // clean up
-    cleanupSelectPatientDialog();
-  }
-
-  const cancelSelectPatient = () => {
-    setPatientSelect('');
-    cleanupSelectPatientDialog();
-  }
-
-  const cleanupSelectPatientDialog = () => {
-    setSearchPatientVisible(false);
-
-    setSearchType('name')
-    setSearchQuery('');
-    setSearchResults([])
-  }
-
-  const onChangeSearch = (query: string) => setSearchQuery(query);
-  const searchPatients = () => {
-    if (searchType) {
-      console.log('type: ', searchType);
-      setSearching(true);
-      searchByCriteria(searchType, searchQuery).pipe(
-        tap(results => {
-          console.log('===>', results.length);
-
-          setSearchResults(results);
-          // trigger render
-          const _count = count + 1;
-          setCount(_count)
-        }),
-        finalize(() => {
-          setSearching(false);
-        })
-      ).subscribe();
-    }
-  }
-
   const onQuestionsChange = useCallback((_questions: Question[]) => {
     console.log(_questions);
 
     setQuestions(_questions)
+    // trigger render
+    const _count = count + 1;
+    setCount(_count)
+
+  }, [count]);
+
+  const onPatientSelected = useCallback((patient: User) => {
+    if (patient) {
+      setPatientSelect('user')
+      setSelectedPatient(patient);
+      // populate 
+    }
+    setSearchPatientVisible(false);
     // trigger render
     const _count = count + 1;
     setCount(_count)
@@ -146,6 +110,7 @@ export default function AdviseScreen() {
               label="姓名"
               placeholder="请输入..."
               value={name}
+              defaultValue={selectedPatient.name}
               onChangeText={text => setName(text)} error={false}
               style={styles.inputStyle}
             />
@@ -236,85 +201,10 @@ export default function AdviseScreen() {
             </View>
           </View>
         )}
-
-        <Dialog visible={searchPatientVisible}
-          style={{ left: 0, right: 0, marginTop: 50 }}>
-          <Dialog.Title>
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-              <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold' }}>选择病患 </Text>
-                <Text style={{ fontSize: 12, color: 'gray' }}>  请根据选项搜索</Text>
-              </View>
-              <Icon
-                name='ios-close'
-                type='ionicon'
-                color='#517fa4'
-                style={{ width: 20 }}
-                onPress={cancelSelectPatient}
-              />
-            </View>
-          </Dialog.Title>
-          <Divider></Divider>
-          <Dialog.Content style={{ backgroundColor: 'white' }}>
-            <View style={styles.lineBlock}>
-              <CheckBox
-                title='姓名'
-                checkedIcon='dot-circle-o'
-                uncheckedIcon='circle-o'
-                checked={searchType === 'name'}
-                onPress={() => setSearchType('name')}
-                containerStyle={styles.checkBoxSearchItem}
-              />
-              <CheckBox
-                title='手机'
-                checkedIcon='dot-circle-o'
-                uncheckedIcon='circle-o'
-                checked={searchType === 'cell'}
-                onPress={() => setSearchType('cell')}
-                containerStyle={styles.checkBoxSearchItem}
-              />
-              <CheckBox
-                title='病患备注'
-                checkedIcon='dot-circle-o'
-                uncheckedIcon='circle-o'
-                checked={searchType === 'notes'}
-                onPress={() => setSearchType('notes')}
-                containerStyle={styles.checkBoxSearchItem}
-              />
-            </View>
-            <Searchbar
-              placeholder="请输入搜索"
-              onChangeText={onChangeSearch}
-              value={searchQuery}
-              onEndEditing={searchPatients}
-              // onIconPress={searchPatients}
-            />
-            {searching && <Spinner />}
-            {!searching && (
-              <ScrollView style={{ paddingTop: 6, minHeight: 200, maxHeight: dimensions.height - 450 }}>
-                {
-                  searchResults?.map((p, i) => (
-                    <ListItem key={`search-result-${i}`} bottomDivider>
-                      <ListItem.Content>
-                        <ListItem.Title>{p.name}</ListItem.Title>
-                        <ListItem.Subtitle style={styles.textHint}>
-                          {p.cell ? ` 手机：${p.cell}` : ''}
-                          {p.notes ? ` 备注：${p.notes}` : ''}
-                        </ListItem.Subtitle>
-                      </ListItem.Content>
-                      <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray"
-                        onPress={() => selectPatient(p)} />
-                    </ListItem>
-                  ))
-                }
-                {!searchResults?.length &&
-                  <Text style={{ padding: 16, marginTop: 24, backgroundColor: 'lightyellow' }}>没有搜索结果</Text>
-                }
-              </ScrollView>
-            )}
-          </Dialog.Content>
-        </Dialog>
       </ScrollView>
+
+      <SearchPatient visible={searchPatientVisible} onSelect={onPatientSelected} />
+      
     </KeyboardAvoidingView>
   );
 }
@@ -345,23 +235,11 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderBottomWidth: 1,
   },
-  lineBlock: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-  },
   checkBoxItem: {
     backgroundColor: 'white',
     borderColor: 'white',
     width: 60,
   },
-  checkBoxSearchItem: {
-    backgroundColor: 'white',
-    borderColor: 'white',
-    paddingHorizontal: 0,
-    marginLeft: -12,
-  },
-
   inputStyle: {
     backgroundColor: 'white',
   },
@@ -370,12 +248,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  textHint: {
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    color: 'gray',
-    fontSize: 12,
   },
 });
 
