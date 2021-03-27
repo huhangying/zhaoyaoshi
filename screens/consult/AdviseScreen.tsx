@@ -12,6 +12,7 @@ import { AdviseTemplate, Question } from '../../models/survey/advise-template.mo
 import SurveyQuestions from './advise/SurveyQuestions';
 import { User } from '../../models/crm/user.model';
 import SearchPatient from './advise/SearchPatient';
+import ViewPatient from './advise/ViewPatient';
 
 export default function AdviseScreen() {
   const [patientSelect, setPatientSelect] = useState('') // flag 
@@ -45,7 +46,7 @@ export default function AdviseScreen() {
     })
     return () => {
     }
-  }, [])
+  }, [selectedPatient])
 
   const buildSelectItems = () => {
     const selectItems: Item[] = [];
@@ -94,6 +95,7 @@ export default function AdviseScreen() {
 
   }, [count]);
 
+
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100} style={styles.container}>
       <ScrollView>
@@ -104,16 +106,16 @@ export default function AdviseScreen() {
             icon={<Icon name={patientSelect === 'user' ? 'check-circle' : ''} size={18} color="white" />} onPress={openPatientSearch} />
         </View>
         {!!patientSelect && (
-
           <View style={{ paddingHorizontal: 16, }}>
             <TextInput
               label="姓名"
               placeholder="请输入..."
               value={name}
-              defaultValue={selectedPatient.name}
+              defaultValue={selectedPatient?.name}
               onChangeText={text => setName(text)} error={false}
               style={styles.inputStyle}
             />
+
 
             <View style={styles.inlineBlock}>
               <Text style={{ paddingRight: 16, fontSize: 16, color: 'gray' }}>性别</Text>
@@ -206,7 +208,7 @@ export default function AdviseScreen() {
       </ScrollView>
 
       <SearchPatient visible={searchPatientVisible} onSelect={onPatientSelected} />
-      
+      <ViewPatient visible={!!selectedPatient?._id} user={selectedPatient} />
     </KeyboardAvoidingView>
   );
 }
@@ -236,6 +238,11 @@ const styles = StyleSheet.create({
     borderColor: 'lightgray',
     borderStyle: 'solid',
     borderBottomWidth: 1,
+  },
+  floatRight: {
+    position: 'absolute',
+    right: 16,
+    top: 10
   },
   checkBoxItem: {
     backgroundColor: 'white',

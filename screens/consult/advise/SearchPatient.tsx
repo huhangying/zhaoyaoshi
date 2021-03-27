@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { CheckBox, Icon, ListItem } from "react-native-elements";
 import { Dialog, Divider, Searchbar } from "react-native-paper";
 import { finalize, tap } from "rxjs/operators";
@@ -18,6 +18,8 @@ export default function SearchPatient({ visible, onSelect }:
   const [searchResults, setSearchResults] = useState(initSearchResults)
   const [searching, setSearching] = useState(false)
 
+  const [errorMessage, setErrorMessage] = useState('')
+
   const selectPatient = (p: User) => {
     onSelect(p);
     cleanupSelectPatientDialog();
@@ -30,6 +32,7 @@ export default function SearchPatient({ visible, onSelect }:
   }
 
   const cleanupSelectPatientDialog = () => {
+    setErrorMessage('')
     setSearchType('name')
     setSearchQuery('');
     setSearchResults([])
@@ -37,6 +40,13 @@ export default function SearchPatient({ visible, onSelect }:
 
   const onChangeSearch = (query: string) => setSearchQuery(query);
   const searchPatients = () => {
+    // 至少一个字符
+    if (searchQuery.length < 1) {
+      setErrorMessage('搜索要求至少输入一个字')
+      return;
+    }
+
+    setErrorMessage('');
     if (searchType) {
       setSearching(true);
       // 搜索注册用户
@@ -63,13 +73,14 @@ export default function SearchPatient({ visible, onSelect }:
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>选择病患 </Text>
               <Text style={{ fontSize: 12, color: 'gray' }}>  请根据选项搜索</Text>
             </View>
-            <Icon
-              name='ios-close'
-              type='ionicon'
-              color='#517fa4'
-              style={{ width: 30, paddingVertical: 2, paddingLeft: 10, paddingRight: 2 }}
-              onPress={cancelSelectPatient}
-            />
+            <Pressable onPress={cancelSelectPatient}>
+              <Icon
+                name='ios-close'
+                type='ionicon'
+                color='#517fa4'
+                style={{ width: 30, paddingVertical: 2, paddingLeft: 10, paddingRight: 2 }}
+              />
+            </Pressable>
           </View>
         </Dialog.Title>
         <Divider></Divider>
@@ -106,9 +117,15 @@ export default function SearchPatient({ visible, onSelect }:
             value={searchQuery}
             onEndEditing={searchPatients}
           />
+          <>
+            {!!errorMessage && (
+              <Text style={{ paddingHorizontal: 16, paddingVertical: 8, color: 'orangered' }}>{errorMessage}</Text>
+            )}
+          </>
+
           {searching && <Spinner />}
           {!searching && (
-            <ScrollView style={{ paddingTop: 6, minHeight: 200, maxHeight: dimensions.height - 400 }}>
+            <ScrollView style={{ paddingTop: 6, minHeight: 200, maxHeight: dimensions.height - 420 }}>
               {
                 searchResults?.map((p, i) => (
                   <ListItem key={`search-result-${i}`} bottomDivider>
@@ -119,8 +136,9 @@ export default function SearchPatient({ visible, onSelect }:
                         {p.notes ? ` 备注：${p.notes}` : ''}
                       </ListItem.Subtitle>
                     </ListItem.Content>
-                    <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray"
-                      onPress={() => selectPatient(p)} />
+                    <Pressable onPress={() => selectPatient(p)}>
+                      <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" />
+                    </Pressable>
                   </ListItem>
                 ))
               }
