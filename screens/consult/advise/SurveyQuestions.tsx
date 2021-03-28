@@ -25,6 +25,14 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
     // console.log('--->', questions[index]);
   }
 
+  const setQuestionOptionAnswerInput = (question: Question, index: number, oIndex: number, value: any) => {
+    if (questions[index] && questions[index].options[oIndex]?.input !== value) {
+      questions[index].options[oIndex].input = value;
+      onChange(questions);
+      // console.log('==>', questions[index]);
+    }
+  }
+
   const setQuestionAnswerInput = (question: Question, index: number, value: any) => {
     if (questions[index] && questions[index].options[0]?.answer !== value) {
       questions[index].options[0].answer = value;
@@ -42,15 +50,26 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
 
         { question.answer_type !== 3 &&
           question.options?.map((opt, oIndex) => (
-            <CheckBox
-              key={i + '-' + oIndex}
-              title={opt.answer}
-              checkedIcon={question.answer_type === 2 ? 'check-square': 'dot-circle-o'}
-              uncheckedIcon={question.answer_type === 2 ? 'square-o': 'circle-o'}
-              checked={opt.selected}
-              onPress={() => { changeRadioSelection(question, i, oIndex, opt.selected) }}
-              containerStyle={styles.questionCheckbox}
-            />
+            <View key={i + '-' + oIndex}>
+              <CheckBox
+                key={'question' + i + '-option-' + oIndex}
+                title={opt.answer}
+                checkedIcon={question.answer_type === 2 ? 'check-square' : 'dot-circle-o'}
+                uncheckedIcon={question.answer_type === 2 ? 'square-o' : 'circle-o'}
+                checked={opt.selected}
+                onPress={() => { changeRadioSelection(question, i, oIndex, opt.selected) }}
+                containerStyle={styles.questionCheckbox}
+              />
+
+              {(opt.selected && opt.input_required) && (
+                <TextInput
+                  key={`${i}-${oIndex}-option-input`}
+                  placeholder="请输入..."
+                  onEndEditing={event => setQuestionOptionAnswerInput(question, i, oIndex, event.nativeEvent.text)}
+                  style={styles.questionInput}
+                />
+              )}
+            </View>
           ))
         }
         { question.answer_type === 3 && question.options?.length &&
