@@ -42,7 +42,7 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
 
         { question.answer_type !== 3 &&
           question.options?.map((opt, oIndex) => (
-            <CheckBox 
+            <CheckBox
               key={i + '-' + oIndex}
               title={opt.answer}
               checkedIcon='dot-circle-o'
@@ -70,16 +70,25 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
 
 const styles = StyleSheet.create({
   question: {
-    color: 'red',
-    paddingVertical: 8,
+    color: 'royalblue',
+    padding: 8,
+    fontSize: 16,
   },
   questionCheckbox: {
     backgroundColor: 'white',
     borderColor: 'white',
-    width: '100%',
+    flex: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    margin: 0,
   },
   questionInput: {
     backgroundColor: 'white',
-    width: '100%',
+    flex: 1,
+    marginHorizontal: 24,
+    marginTop: -10,
+    marginBottom: 0,
+    paddingHorizontal: 4,
+    paddingVertical: 0,
   },
 });

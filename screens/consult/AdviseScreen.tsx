@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { KeyboardAvoidingView, ScrollView, StyleSheet, Text } from 'react-native';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button, CheckBox, Divider, Icon } from 'react-native-elements';
 import { View } from '../../components/Themed';
 import { TextInput } from 'react-native-paper';
@@ -22,6 +22,8 @@ export default function AdviseScreen() {
   const [showDetails, setShowDetails] = useState(false)
 
   const [name, setName] = useState('')
+  const [nameFieldError, setNameFieldError] = useState(false)
+  const nameInputRef = useRef(null);
   const [gender, setGender] = useState('')
   const [age, setAge] = useState('')
   const [cell, setCell] = useState('')
@@ -99,6 +101,39 @@ export default function AdviseScreen() {
     setShowDetails(false)
   }
 
+  const onNameBlur = (text: string, focusOn?: boolean) => {
+    if (text) {
+      setNameFieldError(false)
+      return;
+    }
+    setNameFieldError(true);
+    if (focusOn) {
+      nameInputRef.current.focus();
+    }
+  }
+
+  const cleanupAdvise = () => {
+    setPatientSelect('');
+    setName('')
+    setAge('')
+    setGender('')
+    setCell('')
+    setSelectedPatient(initSelectedPatient)
+
+    setAdviseTemplates(initAdviseTemplates)
+    setQuestions(initQuestions)
+    setNameFieldError(nameFieldError)
+  }
+
+  const saveAdvise = () => {
+    // validation!
+    if (!name) {
+      onNameBlur(name, true);
+      return;
+    }
+
+  }
+
 
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100} style={styles.container}>
@@ -113,12 +148,15 @@ export default function AdviseScreen() {
           <View style={{ paddingHorizontal: 16 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
               <TextInput
-                label="姓名"
+                label="姓名 *"
                 placeholder="请输入..."
                 value={name}
                 defaultValue={selectedPatient?.name}
-                onChangeText={text => setName(text)} error={false}
+                onChangeText={text => setName(text)}
                 style={styles.inputStyle}
+                ref={nameInputRef}
+                onBlur={(event: any) => onNameBlur(event.nativeEvent.text)}
+                error={nameFieldError}
               />
               {patientSelect === 'user' && (
                 <Button type="outline"
@@ -128,6 +166,7 @@ export default function AdviseScreen() {
                 />
               )}
             </View>
+            {nameFieldError && <Text style={styles.errorMessage}>姓名为必选</Text>}
 
             <View style={styles.inlineBlock}>
               <Text style={{ paddingRight: 16, fontSize: 16, color: 'gray' }}>性别</Text>
@@ -208,12 +247,50 @@ export default function AdviseScreen() {
                 }}
               />
             </View>
-            <Divider></Divider><Text>{count}</Text>
-            <Text>{questions[0]?.options[0]?.selected}</Text>
-            <SurveyQuestions key="load-questions" questions={questions} onChange={onQuestionsChange}></SurveyQuestions>
-            <View style={styles.oneLine}>
-              <Button title="取消" type="outline" buttonStyle={styles.button} />
-              <Button title="确定" buttonStyle={styles.button} />
+            <Divider></Divider>
+            <View style={{ paddingHorizontal: 8, paddingTop: 12, paddingBottom: 32 }}>
+              <SurveyQuestions key="load-questions" questions={questions} onChange={onQuestionsChange}></SurveyQuestions>
+            </View>
+
+            <Divider></Divider>
+            <View style={styles.actionLine}>
+              <View style={{ paddingVertical: 8, }}>
+                {patientSelect === 'user' && (
+                  <>
+                    <CheckBox
+                      title="发送微信消息 "
+                      checkedIcon='check-square'
+                      uncheckedIcon='square-o'
+                      checked={false}
+                      containerStyle={styles.questionCheckbox}
+                    />
+                    <CheckBox
+                      title="其他药师可见 "
+                      checkedIcon='check-square'
+                      uncheckedIcon='square-o'
+                      checked={true}
+                      containerStyle={styles.questionCheckbox}
+                    />
+                  </>
+                )}
+                <CheckBox
+                  title="申报绩效 "
+                  checkedIcon='check-square'
+                  uncheckedIcon='square-o'
+                  checked={false}
+                  containerStyle={styles.questionCheckbox}
+                />
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
+                <Button title=" 清空内容" type="outline" buttonStyle={styles.button}
+                  style={{ marginVertical: 10 }}
+                  icon={<Icon name="check-circle" size={18} color="royalblue" />}
+                  onPress={cleanupAdvise} />
+                <Button title=" 结束归档" buttonStyle={styles.button}
+                  style={{ marginVertical: 10 }}
+                  icon={<Icon name="archive" size={18} color="white" />}
+                  onPress={saveAdvise} />
+              </View>
             </View>
           </View>
         )}
@@ -233,7 +310,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginHorizontal: 16,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     // paddingLeft: 16,
     // paddingRight: 22,
     marginBottom: 8,
@@ -258,6 +335,11 @@ const styles = StyleSheet.create({
     right: 16,
     top: 10
   },
+  errorMessage: {
+    paddingHorizontal: 12,
+    color: 'crimson',
+    paddingTop: 4,
+  },
   checkBoxItem: {
     backgroundColor: 'white',
     borderColor: 'white',
@@ -267,11 +349,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flex: 1,
   },
-  oneLine: {
-    position: 'absolute',
-    bottom: 0,
-    flexDirection: 'row',
+  actionLine: {
+    // flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    // marginBottom: 8,
+  },
+  questionCheckbox: {
+    backgroundColor: 'white',
+    borderColor: 'white',
+    // flex: 0.5,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    margin: 0,
   },
 });
 
