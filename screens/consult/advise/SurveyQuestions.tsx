@@ -45,8 +45,8 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
             <CheckBox
               key={i + '-' + oIndex}
               title={opt.answer}
-              checkedIcon='dot-circle-o'
-              uncheckedIcon='circle-o'
+              checkedIcon={question.answer_type === 2 ? 'check-square': 'dot-circle-o'}
+              uncheckedIcon={question.answer_type === 2 ? 'square-o': 'circle-o'}
               checked={opt.selected}
               onPress={() => { changeRadioSelection(question, i, oIndex, opt.selected) }}
               containerStyle={styles.questionCheckbox}

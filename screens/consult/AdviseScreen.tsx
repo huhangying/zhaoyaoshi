@@ -5,16 +5,24 @@ import { Button, CheckBox, Divider, Icon } from 'react-native-elements';
 import { View } from '../../components/Themed';
 import { TextInput } from 'react-native-paper';
 import RNPickerSelect, { Item } from 'react-native-picker-select';
-import { getAdviseTemplatesByDepartmentId } from '../../services/hospital.service';
-import { map } from 'rxjs/operators';
+import { createAdvise, getAdviseTemplatesByDepartmentId } from '../../services/hospital.service';
+import { catchError, map, tap } from 'rxjs/operators';
 import { getAuthState } from '../../services/core/auth';
 import { AdviseTemplate, Question } from '../../models/survey/advise-template.model';
 import SurveyQuestions from './advise/SurveyQuestions';
 import { User } from '../../models/crm/user.model';
 import SearchPatient from './advise/SearchPatient';
 import PatientDetails from '../../components/PatientDetails';
+import { Advise } from '../../models/survey/advise.model';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppState } from '../../models/app-state.model';
+import moment from 'moment';
+import { updateSnackbar } from '../../services/core/app-store.actions';
+import { MessageType } from '../../models/app-settings.model';
 
 export default function AdviseScreen() {
+  const doctor = useSelector((state: AppState) => state.doctor);
+  const dispatch = useDispatch()
   const [patientSelect, setPatientSelect] = useState('') // flag 
   const initSelectedPatient: User = { _id: '' };
   const [selectedPatient, setSelectedPatient] = useState(initSelectedPatient)
@@ -23,17 +31,23 @@ export default function AdviseScreen() {
 
   const [name, setName] = useState('')
   const [nameFieldError, setNameFieldError] = useState(false)
+  const [adviseTemplateFieldError, setAdviseTemplateFieldError] = useState(false)
   const nameInputRef = useRef(null);
   const [gender, setGender] = useState('')
   const [age, setAge] = useState('')
   const [cell, setCell] = useState('')
   const [count, setCount] = useState(0)
 
+  const [adviseTemplateId, setAdviseTemplateId] = useState('')
+  const initAdviseTemplates: AdviseTemplate[] = [];
+  const [adviseTemplates, setAdviseTemplates] = useState(initAdviseTemplates);
+
   const initQuestions: Question[] = []
   const [questions, setQuestions] = useState(initQuestions)
 
-  const initAdviseTemplates: AdviseTemplate[] = [];
-  const [adviseTemplates, setAdviseTemplates] = useState(initAdviseTemplates);
+  const [sendWxMessage, setSendWxMessage] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const [isPerformance, setIsPerformance] = useState(false)
 
   useEffect(() => {
     getAuthState().then(_ => {
@@ -60,14 +74,23 @@ export default function AdviseScreen() {
   }
 
   const loadDataByAdviseTemplateId = (id: string) => {
+    setAdviseTemplateId(id);
+    if (!id) {
+      setAdviseTemplateFieldError(true)
+      setQuestions([])
+      return;
+    }
+
+    setAdviseTemplateFieldError(false);
     if (!adviseTemplates?.length) return;
+
     const adviseTemplate = adviseTemplates.find(_ => _._id === id);
     setQuestions(adviseTemplate?.questions || []);
   }
 
   const selectTempPatient = () => {
+    cleanupAdvise()
     setPatientSelect('temp')
-    setSelectedPatient(initSelectedPatient);
   }
 
   const openPatientSearch = () => {
@@ -89,6 +112,10 @@ export default function AdviseScreen() {
       setPatientSelect('user')
       setSelectedPatient(patient);
       // populate 
+      setName(patient.name || '')
+      setGender(patient.gender || '')
+      setAge(patient.birthdate ? moment().diff(patient.birthdate, 'years').toString() : '')
+      setCell(patient.cell || '')
     }
     setSearchPatientVisible(false);
     // trigger render
@@ -122,7 +149,13 @@ export default function AdviseScreen() {
 
     setAdviseTemplates(initAdviseTemplates)
     setQuestions(initQuestions)
-    setNameFieldError(nameFieldError)
+
+    setNameFieldError(false)
+    setAdviseTemplateFieldError(false)
+
+    setSendWxMessage(false)
+    setIsOpen(false)
+    setIsPerformance(false)
   }
 
   const saveAdvise = () => {
@@ -131,6 +164,49 @@ export default function AdviseScreen() {
       onNameBlur(name, true);
       return;
     }
+    if (!adviseTemplateId) {
+      setAdviseTemplateFieldError(true);
+      return;
+    }
+
+    const advise: Advise = {
+      doctor: doctor?._id || '',
+      doctorName: doctor?.name,
+      doctorTitle: doctor?.title,
+      doctorDepartment: doctor?.department?.name,
+
+      user: selectedPatient?._id,
+      name,
+      gender,
+      age: +age,
+      cell,
+
+      adviseTemplate: adviseTemplateId,
+      questions,
+      isPerformance,
+      finished: true
+    }
+    if (selectedPatient?._id) {
+      advise.sendWxMessage = sendWxMessage;
+      advise.isOpen = isOpen;
+    }
+
+    // submit
+    createAdvise(advise).pipe(
+      tap(result => {
+        if (result?._id) {
+          dispatch(updateSnackbar('成功完成线下咨询！', MessageType.success));
+          // reset page
+          cleanupAdvise();
+        } else {
+          dispatch(updateSnackbar('结束线下咨询失败。请再试或联系管理员。', MessageType.error));
+        }
+      }),
+      catchError(err => {
+        dispatch(updateSnackbar('结束线下咨询失败。请再试或联系管理员。', MessageType.error));
+      })
+    ).subscribe();
+    console.log(advise);
 
   }
 
@@ -161,7 +237,7 @@ export default function AdviseScreen() {
               {patientSelect === 'user' && (
                 <Button type="outline"
                   title="个人信息"
-                  icon={<Icon name="person-outline" size={20} color="blue" />}
+                  icon={<Icon name="person-outline" size={20} color="royalblue" />}
                   onPress={() => setShowDetails(true)}
                 />
               )}
@@ -222,7 +298,7 @@ export default function AdviseScreen() {
                     right: 10,
                   },
                   placeholder: {
-                    color: 'gray',
+                    color: !adviseTemplateFieldError ? 'gray' : 'crimson',
                     fontSize: 16,
                     fontWeight: 'bold',
                   },
@@ -247,7 +323,9 @@ export default function AdviseScreen() {
                 }}
               />
             </View>
-            <Divider></Divider>
+            <Divider style={{ backgroundColor: !adviseTemplateFieldError ? 'gray' : 'red' }} />
+            {adviseTemplateFieldError && <Text style={styles.errorMessage}>线下咨询模板为必选</Text>}
+
             <View style={{ paddingHorizontal: 8, paddingTop: 12, paddingBottom: 32 }}>
               <SurveyQuestions key="load-questions" questions={questions} onChange={onQuestionsChange}></SurveyQuestions>
             </View>
@@ -261,15 +339,18 @@ export default function AdviseScreen() {
                       title="发送微信消息 "
                       checkedIcon='check-square'
                       uncheckedIcon='square-o'
-                      checked={false}
+                      checked={sendWxMessage}
                       containerStyle={styles.questionCheckbox}
+                      onPress={() => setSendWxMessage(!sendWxMessage)}
+
                     />
                     <CheckBox
                       title="其他药师可见 "
                       checkedIcon='check-square'
                       uncheckedIcon='square-o'
-                      checked={true}
+                      checked={isOpen}
                       containerStyle={styles.questionCheckbox}
+                      onPress={() => setIsOpen(!isOpen)}
                     />
                   </>
                 )}
@@ -277,8 +358,9 @@ export default function AdviseScreen() {
                   title="申报绩效 "
                   checkedIcon='check-square'
                   uncheckedIcon='square-o'
-                  checked={false}
+                  checked={isPerformance}
                   containerStyle={styles.questionCheckbox}
+                  onPress={() => setIsPerformance(!isPerformance)}
                 />
               </View>
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '100%', alignItems: 'center' }}>
@@ -370,7 +452,7 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 18,
     paddingVertical: 5,
     paddingHorizontal: 10,
-    color: 'black',
+    color: 'green',
     paddingRight: 30, // to ensure the text is never behind the icon
     alignSelf: 'stretch'
   },
@@ -378,7 +460,7 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 18,
     paddingHorizontal: 10,
     paddingVertical: 4,
-    color: 'black',
+    color: 'green',
     paddingRight: 30, // to ensure the text is never behind the icon
   },
 });
