@@ -12,14 +12,14 @@ import { AdviseTemplate, Question } from '../../models/survey/advise-template.mo
 import SurveyQuestions from './advise/SurveyQuestions';
 import { User } from '../../models/crm/user.model';
 import SearchPatient from './advise/SearchPatient';
-import ViewPatient from './advise/ViewPatient';
+import PatientDetails from '../../components/PatientDetails';
 
 export default function AdviseScreen() {
   const [patientSelect, setPatientSelect] = useState('') // flag 
   const initSelectedPatient: User = { _id: '' };
   const [selectedPatient, setSelectedPatient] = useState(initSelectedPatient)
   const [searchPatientVisible, setSearchPatientVisible] = useState(false)
-
+  const [showDetails, setShowDetails] = useState(false)
 
   const [name, setName] = useState('')
   const [gender, setGender] = useState('')
@@ -95,6 +95,10 @@ export default function AdviseScreen() {
 
   }, [count]);
 
+  const closeDetailsDialog = () => {
+    setShowDetails(false)
+  }
+
 
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100} style={styles.container}>
@@ -106,16 +110,24 @@ export default function AdviseScreen() {
             icon={<Icon name={patientSelect === 'user' ? 'check-circle' : ''} size={18} color="white" />} onPress={openPatientSearch} />
         </View>
         {!!patientSelect && (
-          <View style={{ paddingHorizontal: 16, }}>
-            <TextInput
-              label="姓名"
-              placeholder="请输入..."
-              value={name}
-              defaultValue={selectedPatient?.name}
-              onChangeText={text => setName(text)} error={false}
-              style={styles.inputStyle}
-            />
-
+          <View style={{ paddingHorizontal: 16 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+              <TextInput
+                label="姓名"
+                placeholder="请输入..."
+                value={name}
+                defaultValue={selectedPatient?.name}
+                onChangeText={text => setName(text)} error={false}
+                style={styles.inputStyle}
+              />
+              {patientSelect === 'user' && (
+                <Button type="outline"
+                  title="个人信息"
+                  icon={<Icon name="person-outline" size={20} color="blue" />}
+                  onPress={() => setShowDetails(true)}
+                />
+              )}
+            </View>
 
             <View style={styles.inlineBlock}>
               <Text style={{ paddingRight: 16, fontSize: 16, color: 'gray' }}>性别</Text>
@@ -208,7 +220,9 @@ export default function AdviseScreen() {
       </ScrollView>
 
       <SearchPatient visible={searchPatientVisible} onSelect={onPatientSelected} />
-      <ViewPatient visible={!!selectedPatient?._id} user={selectedPatient} />
+      {showDetails &&
+        <PatientDetails user={selectedPatient} onClose={closeDetailsDialog} />
+      }
     </KeyboardAvoidingView>
   );
 }
@@ -251,6 +265,7 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     backgroundColor: 'white',
+    flex: 1,
   },
   oneLine: {
     position: 'absolute',

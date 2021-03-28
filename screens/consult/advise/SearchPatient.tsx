@@ -137,7 +137,7 @@ export default function SearchPatient({ visible, onSelect }:
                       </ListItem.Subtitle>
                     </ListItem.Content>
                     <Pressable onPress={() => selectPatient(p)}>
-                      <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" />
+                      <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" style={{padding: 4}} />
                     </Pressable>
                   </ListItem>
                 ))
