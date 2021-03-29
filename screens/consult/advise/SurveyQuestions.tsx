@@ -59,14 +59,16 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
                 checked={opt.selected}
                 onPress={() => { changeRadioSelection(question, i, oIndex, opt.selected) }}
                 containerStyle={styles.questionCheckbox}
+                disabled={!!readonly}
               />
 
               {(opt.selected && opt.input_required) && (
                 <TextInput
                   key={`${i}-${oIndex}-option-input`}
-                  placeholder="请输入..."
+                  placeholder={!readonly ? '请输入...' : '空'}
                   onEndEditing={event => setQuestionOptionAnswerInput(question, i, oIndex, event.nativeEvent.text)}
                   style={styles.questionInput}
+                  disabled={!!readonly}
                 />
               )}
             </View>
@@ -75,7 +77,7 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
         { question.answer_type === 3 && question.options?.length &&
           <TextInput
             key={'input-' + i}
-            placeholder="请输入..."
+            placeholder={!readonly ? '请输入...' : '空'}
             onEndEditing={event => setQuestionAnswerInput(question, i, event.nativeEvent.text)}
             style={styles.questionInput}
           />

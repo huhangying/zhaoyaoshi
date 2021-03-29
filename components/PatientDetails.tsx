@@ -62,7 +62,7 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
           )}
         </Dialog.Content>
         <Dialog.Actions>
-          <Button title="关闭" containerStyle={{ flex: 1, marginTop: -16, marginBottom: 10, marginHorizontal: 16 }} onPress={onClose} />
+          <Button title="关闭" type="outline" containerStyle={{ flex: 1, marginTop: -16, marginBottom: 10, marginHorizontal: 16 }} onPress={onClose} />
         </Dialog.Actions>
       </Dialog>
     )

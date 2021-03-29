@@ -5,7 +5,6 @@ import { Button, CheckBox, Divider, Icon } from 'react-native-elements';
 import { View } from '../../components/Themed';
 import { TextInput } from 'react-native-paper';
 import RNPickerSelect, { Item } from 'react-native-picker-select';
-import { createAdvise, getAdviseTemplatesByDepartmentId } from '../../services/hospital.service';
 import { catchError, map, tap } from 'rxjs/operators';
 import { getAuthState } from '../../services/core/auth';
 import { AdviseTemplate, Question } from '../../models/survey/advise-template.model';
@@ -19,6 +18,7 @@ import { AppState } from '../../models/app-state.model';
 import moment from 'moment';
 import { updateSnackbar } from '../../services/core/app-store.actions';
 import { MessageType } from '../../models/app-settings.model';
+import { createAdvise, getAdviseTemplatesByDepartmentId } from '../../services/advise.service';
 
 export default function AdviseScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
