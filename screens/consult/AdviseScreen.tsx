@@ -19,6 +19,7 @@ import moment from 'moment';
 import { updateSnackbar } from '../../services/core/app-store.actions';
 import { MessageType } from '../../models/app-settings.model';
 import { createAdvise, getAdviseTemplatesByDepartmentId } from '../../services/advise.service';
+import { sendWechatMsg } from '../../services/weixin.service';
 
 export default function AdviseScreen() {
   const doctor = useSelector((state: AppState) => state.doctor);
@@ -195,6 +196,28 @@ export default function AdviseScreen() {
     createAdvise(advise).pipe(
       tap(result => {
         if (result?._id) {
+          // 成功, send wx message
+          if (advise.sendWxMessage && doctor && selectedPatient.link_id) {
+            sendWechatMsg(selectedPatient.link_id,
+              '线下咨询完成',
+              `${doctor.name} ${doctor.title} 给您发送了线下咨询消息`,
+              `${doctor.wechatUrl}advise?openid=${selectedPatient.link_id}&state=${doctor.hid}&id=${result._id}`,
+              '',
+              doctor._id,
+              advise.name
+            ).pipe(
+              tap(rsp => {
+                if (rsp?.errcode === 0) {
+                  dispatch(updateSnackbar('微信信息发送成功！', MessageType.success));
+                } else {
+                  // save to wx message queue
+                  dispatch(updateSnackbar('病患微信暂时不能接收该消息。消息已经保存，当病患再次使用服务号时重发。', MessageType.error));
+                }
+
+              })
+            ).subscribe();
+          }
+          
           dispatch(updateSnackbar('成功完成线下咨询！', MessageType.success));
           // reset page
           cleanupAdvise();
@@ -209,7 +232,6 @@ export default function AdviseScreen() {
     console.log(advise);
 
   }
-
 
   return (
     <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={100} style={styles.container}>
