@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { User } from '../models/crm/user.model';
-import { Text } from './Themed';
 import { Avatar, Dialog, List, Title } from 'react-native-paper';
 import { wxImgSource } from '../services/core/image.service';
 import Spinner from './shared/Spinner';
@@ -23,19 +22,18 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
   } else {
     return (
       <Dialog visible={true} onDismiss={onClose}>
-        <Dialog.Title >
-          <List.Item
-            style={styles.header}
-            left={() => (<><Avatar.Image size={52} source={wxImgSource(user.icon)} /><Title style={styles.headerTitle}>{user.name}</Title></>)}
-            title=""
-          />
+        <Dialog.Title style={styles.header}>
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }} >
+            <Avatar.Image size={52} source={wxImgSource(user.icon)} />
+            <Title style={styles.headerTitle}>{user.name}</Title>
+          </View>
         </Dialog.Title>
         <Dialog.Content>
           <ButtonGroup
             onPress={index => setSelectedIndex(index)}
             selectedIndex={selectedIndex}
             buttons={['个人信息', '线下咨询历史记录']}
-            containerStyle={{ height: 40, padding: 0, marginHorizontal: -12, marginTop: 0 }}
+            containerStyle={{ height: 40, padding: 0, marginHorizontal: -12, marginVertical: 0 }}
           />
           {selectedIndex === 0 && (
             <ScrollView>
@@ -72,14 +70,15 @@ export default function PatientDetails({ user, onClose }: { user: User, onClose:
 
 const styles = StyleSheet.create({
   header: {
-    paddingTop: 10,
-    marginTop: 2,
-    marginHorizontal: 0,
+    padding: 0,
+    marginTop: Platform.OS === 'android' ? 30 : 10,
+    marginBottom: Platform.OS === 'android' ? -18 : 2,
+    marginHorizontal: 16,
     height: 56,
   },
   headerTitle: {
     paddingHorizontal: 16,
-    paddingVertical: 8
+    // paddingVertical: 8
   },
   item: {
     paddingVertical: 10,

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Text, Pressable } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Pressable, useWindowDimensions } from 'react-native';
 import { User } from '../models/crm/user.model';
 import Spinner from './shared/Spinner';
 import { useSelector } from 'react-redux';
 import { AppState } from '../models/app-state.model';
 import { geUserAdviseHistory } from '../services/advise.service';
 import { Advise } from '../models/survey/advise.model';
-import { tap } from 'rxjs/operators';
+import { finalize, tap } from 'rxjs/operators';
 import { Button, Icon, ListItem } from 'react-native-elements';
 import SurveyQuestions from '../screens/consult/advise/SurveyQuestions';
 import { Divider } from 'react-native-paper';
@@ -14,13 +14,17 @@ import { getDateTimeFormat } from '../services/core/moment';
 
 
 export default function PatientAdviseHistory({ user }: { user: User }) {
+  const dimensions = useWindowDimensions();
   const doctor = useSelector((state: AppState) => state.doctor);
+
   const initAdvises: Advise[] = [];
   const [advises, setAdvises] = useState(initAdvises)
   const initAdviseDetails: Advise = { doctor: '', name: '' };
   const [adviseDetails, setAdviseDetails] = useState(initAdviseDetails)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    setIsLoading(true)
     geUserAdviseHistory(user._id).pipe(
       tap(results => {
         if (results?.length) {
@@ -28,6 +32,9 @@ export default function PatientAdviseHistory({ user }: { user: User }) {
           results = results.filter(_ => _.doctor === doctor?._id || (_.doctor !== doctor?._id && _.isOpen));
         }
         setAdvises(results);
+      }),
+      finalize(() => {
+        setIsLoading(false)
       })
     ).subscribe();
     return () => {
@@ -40,16 +47,16 @@ export default function PatientAdviseHistory({ user }: { user: User }) {
   }
 
 
-  if (!user?._id) {
+  if (isLoading) {
     return (<Spinner />);
   } else {
     return (
       <>
-        <ScrollView style={{ minHeight: 278, padding: 0, marginHorizontal: -12 }}>
+        <ScrollView style={{ minHeight: 278, maxHeight: dimensions.height - 400, marginHorizontal: -12, flexGrow: 0 }}>
           {!adviseDetails?._id && (
             <>
               {advises.map((advise, i) => (
-                <ListItem key={i} bottomDivider onPress={() => viewAdviseDetails(advise)}>
+                <ListItem key={i} bottomDivider>
                   <ListItem.Content>
                     {advise.doctorDepartment && (
                       <ListItem.Title>
@@ -61,7 +68,10 @@ export default function PatientAdviseHistory({ user }: { user: User }) {
                     </ListItem.Title>
                     <ListItem.Subtitle>{getDateTimeFormat(advise.createdAt)}</ListItem.Subtitle>
                   </ListItem.Content>
-                  <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" style={{ padding: 4 }} />
+
+                  <Pressable onPress={() => viewAdviseDetails(advise)}>
+                    <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" style={{ padding: 4 }} />
+                  </Pressable>
                 </ListItem>
               ))}
 
