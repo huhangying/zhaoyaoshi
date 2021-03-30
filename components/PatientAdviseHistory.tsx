@@ -9,7 +9,7 @@ import { Advise } from '../models/survey/advise.model';
 import { tap } from 'rxjs/operators';
 import { Button, Icon, ListItem } from 'react-native-elements';
 import SurveyQuestions from '../screens/consult/advise/SurveyQuestions';
-import { Dialog, Divider } from 'react-native-paper';
+import { Divider } from 'react-native-paper';
 import { getDateTimeFormat } from '../services/core/moment';
 
 
@@ -23,12 +23,16 @@ export default function PatientAdviseHistory({ user }: { user: User }) {
   useEffect(() => {
     geUserAdviseHistory(user._id).pipe(
       tap(results => {
+        if (results?.length) {
+          // filter by applying isOpen
+          results = results.filter(_ => _.doctor === doctor?._id || (_.doctor !== doctor?._id && _.isOpen));
+        }
         setAdvises(results);
       })
     ).subscribe();
     return () => {
     }
-  }, [user])
+  }, [user, doctor])
 
   const viewAdviseDetails = (advise: Advise) => {
     // console.log(advise);
@@ -77,13 +81,15 @@ export default function PatientAdviseHistory({ user }: { user: User }) {
 
                 <Pressable style={{ flexDirection: 'column' }}
                   onPress={() => setAdviseDetails(initAdviseDetails)}>
-                  <Text style={{ color: 'royalblue', fontWeight: 'bold' }}                    >
-                    {adviseDetails.doctorName}{adviseDetails.doctorTitle}
+                  <Text style={{ color: 'royalblue', fontWeight: 'bold', textAlign: 'center' }}>
                     线下咨询详细
                   </Text>
                   <Text style={{ color: 'gray' }}>
-                    {getDateTimeFormat(adviseDetails.createdAt)}
-                    </Text>
+                    药师：{adviseDetails.doctorName}{adviseDetails.doctorTitle}
+                  </Text>
+                  <Text style={{ color: 'gray' }}>
+                    时间：{getDateTimeFormat(adviseDetails.createdAt)}
+                  </Text>
                 </Pressable>
               </View>
               <Divider />

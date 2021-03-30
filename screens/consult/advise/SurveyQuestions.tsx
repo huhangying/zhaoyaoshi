@@ -9,6 +9,7 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
   { questions: Question[], readonly?: boolean, onChange?: any }) {
 
   const changeRadioSelection = (question: Question, index: number, oIndex: number, value?: boolean) => {
+    if (readonly) return;
     if (questions[index]) {
       questions[index].options = questions[index].options.map((option, i) => {
         if (question.answer_type === 0 || question.answer_type === 1) { // 单选
@@ -26,6 +27,7 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
   }
 
   const setQuestionOptionAnswerInput = (question: Question, index: number, oIndex: number, value: any) => {
+    if (readonly) return;
     if (questions[index] && questions[index].options[oIndex]?.input !== value) {
       questions[index].options[oIndex].input = value;
       onChange(questions);
@@ -34,6 +36,7 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
   }
 
   const setQuestionAnswerInput = (question: Question, index: number, value: any) => {
+    if (readonly) return;
     if (questions[index] && questions[index].options[0]?.answer !== value) {
       questions[index].options[0].answer = value;
       onChange(questions);
@@ -80,6 +83,7 @@ export default function SurveyQuestions({ questions, readonly, onChange }:
             placeholder={!readonly ? '请输入...' : '空'}
             onEndEditing={event => setQuestionAnswerInput(question, i, event.nativeEvent.text)}
             style={styles.questionInput}
+            disabled={!!readonly}
           />
         }
       </View>
