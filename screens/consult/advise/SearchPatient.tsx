@@ -68,8 +68,8 @@ export default function SearchPatient({ visible, onSelect }:
     return (<>
       <Dialog visible={true} style={{ left: 0, right: 0 }}>
         <Dialog.Title>
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+          <View style={{ width: dimensions.width - 96, flexDirection: 'row', justifyContent: 'space-between' }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={{ fontSize: 18, fontWeight: 'bold' }}>选择病患 </Text>
               <Text style={{ fontSize: 12, color: 'gray' }}>  请根据选项搜索</Text>
             </View>
@@ -137,7 +137,7 @@ export default function SearchPatient({ visible, onSelect }:
                       </ListItem.Subtitle>
                     </ListItem.Content>
                     <Pressable onPress={() => selectPatient(p)}>
-                      <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" style={{padding: 4}} />
+                      <ListItem.Chevron type='ionicon' name="ios-arrow-forward" size={24} color="gray" style={{ padding: 4 }} />
                     </Pressable>
                   </ListItem>
                 ))
