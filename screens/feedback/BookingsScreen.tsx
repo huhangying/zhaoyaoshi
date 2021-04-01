@@ -64,7 +64,7 @@ export default function BookingsScreen() {
     return (
       <>
         <Subheading style={styles.headline}>
-          <Text style={styles.mx3}>{isSwitchOn ? '当前门诊预约' : '已过期门诊预约（一个月内）'}</Text>
+          <Text style={styles.mx3}>{isSwitchOn ? '当前门诊预约' : '已过期门诊预约（二个月内）'}</Text>
           <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
         </Subheading>
         <ScrollView>

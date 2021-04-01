@@ -18,7 +18,7 @@ export function getBookingStatus(status: number) {
 
 // Booking ()
 export function  getAllBookingsByDoctorId(doctorId: string) {
-  const from = moment().add(-130, 'd').toISOString();
+  const from = moment().add(-60, 'd').toISOString();
   return getApi<Booking[]>(`bookings/doctor/${doctorId}/${from}`);
 }
 // Period
