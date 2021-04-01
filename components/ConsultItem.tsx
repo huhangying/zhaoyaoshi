@@ -1,26 +1,21 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Doctor } from '../models/crm/doctor.model';
-import { Avatar, Divider, Image } from 'react-native-elements';
+import { Divider, Image } from 'react-native-elements';
 import { imgPath, imgSource } from '../services/core/image.service';
 import { getDateTimeFormat } from '../services/core/moment';
 import TextAndEmoji from './shared/TextAndEmoji';
 import { Consult } from '../models/consult/consult.model';
+import AvatarIcon from './shared/AvatarIcon';
 
-export default function ConsultItem({ consult, doctor, icon, onImgView }: { consult: Consult, doctor: Doctor, icon: string, onImgView: any }) {
+export default function ConsultItem({ consult, doctor, icon, onImgView }: { consult: Consult, doctor: Doctor, icon?: string, onImgView: any }) {
   // const screenWidth = useWindowDimensions().width;
-  const isDoctor = consult.status && consult.status >= 2;
+  const isDoctor = (consult?.status || 0) >= 2;
   const isConsultRequest = consult.disease_types && consult.disease_types?.length > 0;
 
   return (
     <View style={isDoctor ? styles.alignRight : styles.alignLeft}>
-      {!!icon &&
-        <Avatar
-          containerStyle={styles.icon}
-          rounded
-          source={{ uri: icon }}
-        />
-      }
+      <AvatarIcon icon={icon} isDoctor={isDoctor} />
 
       <View style={isDoctor ? styles.sender : styles.to}>
         {isConsultRequest ? (
@@ -81,10 +76,6 @@ export default function ConsultItem({ consult, doctor, icon, onImgView }: { cons
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    marginTop: 10,
-    marginHorizontal: 4,
-  },
   chatTimestamp: {
     color: 'gray',
     fontSize: 12,

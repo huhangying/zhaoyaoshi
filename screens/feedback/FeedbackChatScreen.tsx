@@ -149,9 +149,9 @@ export default function FeedbackChatScreen() {
           onContentSizeChange={scrollToEnd}>
           <View style={styles.feedbacks}>
             {feedbacks.map((feedback, i) => (feedback.status >= 2 ?
-              <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={imgPath(doctor.icon)} onImgView={openViewer} ></FeedbackItem>
+              <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={doctor?.icon} onImgView={openViewer} ></FeedbackItem>
               :
-              <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></FeedbackItem>
+              <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={user?.icon} onImgView={openViewer}></FeedbackItem>
             ))
             }
           </View>

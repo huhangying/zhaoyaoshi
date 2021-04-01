@@ -2,25 +2,20 @@ import React from 'react';
 import { Text, StyleSheet } from 'react-native';
 import { View } from './Themed';
 import { Doctor } from '../models/crm/doctor.model';
-import { Avatar, Image } from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import { imgPath, imgSource } from '../services/core/image.service';
 import { UserFeedback } from '../models/io/user-feedback.model';
 import { getDateFormat, getDateTimeFormat } from '../services/core/moment';
 import { Divider } from 'react-native-paper';
 import TextAndEmoji from './shared/TextAndEmoji';
+import AvatarIcon from './shared/AvatarIcon';
 
-export default function FeedbackItem({ feedback, doctor, icon, onImgView }: { feedback: UserFeedback, doctor: Doctor, icon: string, onImgView: any }) {
-
+export default function FeedbackItem({ feedback, doctor, icon, onImgView }: { feedback: UserFeedback, doctor: Doctor, icon?: string, onImgView: any }) {
+  const isDoctor = feedback.status >= 2;
   return (
-    <View style={feedback.status >= 2 ? styles.alignRight : styles.alignLeft}>
-      {!!icon &&
-        <Avatar
-          containerStyle={styles.icon}
-          rounded
-          source={{ uri: icon }}
-        />
-      }
-      <View style={feedback.status >= 2 ? styles.sender : styles.to}>
+    <View style={isDoctor ? styles.alignRight : styles.alignLeft}>
+      <AvatarIcon icon={icon} isDoctor={isDoctor} />
+      <View style={isDoctor ? styles.sender : styles.to}>
 
         <View style={{ paddingBottom: 10, backgroundColor: 'transparent' }}>
           <TextAndEmoji data={feedback.name} />
@@ -55,10 +50,6 @@ export default function FeedbackItem({ feedback, doctor, icon, onImgView }: { fe
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    marginTop: 10,
-    marginHorizontal: 4,
-  },
   chatTimestamp: {
     color: 'gray',
     fontSize: 12,

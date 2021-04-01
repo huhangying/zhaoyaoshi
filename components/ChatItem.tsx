@@ -3,23 +3,18 @@ import { StyleSheet, Text } from 'react-native';
 import { View } from './Themed';
 import { Chat, ChatCommandTypeMap, ChatType } from '../models/io/chat.model';
 import { Doctor } from '../models/crm/doctor.model';
-import { Avatar, Image } from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import { imgPath, imgSource } from '../services/core/image.service';
 import TextAndEmoji from './shared/TextAndEmoji';
 import { getDateTimeFormat } from '../services/core/moment';
+import AvatarIcon from './shared/AvatarIcon';
 
-export default function ChatItem({ chat, doctor, icon, onImgView }: { chat: Chat, doctor: Doctor, icon: string, onImgView: any }) {
-
+export default function ChatItem({ chat, doctor, icon, onImgView }: { chat: Chat, doctor: Doctor, icon?: string, onImgView: any }) {
+  const isDoctor = chat.sender === doctor._id;
   return (
-    <View style={chat.sender === doctor._id ? styles.alignRight : styles.alignLeft}>
-      {!!icon &&
-        <Avatar
-          containerStyle={styles.icon}
-          rounded
-          source={{ uri: icon }}
-        />
-      }
-      <View style={chat.sender === doctor._id ? styles.sender : styles.to}>
+    <View style={isDoctor ? styles.alignRight : styles.alignLeft}>
+      <AvatarIcon icon={icon} isDoctor={isDoctor} />
+      <View style={isDoctor ? styles.sender : styles.to}>
         {(() => {
           switch (chat.type) {
             case ChatType.picture:
@@ -51,10 +46,6 @@ export default function ChatItem({ chat, doctor, icon, onImgView }: { chat: Chat
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    marginTop: 10,
-    marginHorizontal: 4,
-  },
   chatTimestamp: {
     color: 'gray',
     fontSize: 12,

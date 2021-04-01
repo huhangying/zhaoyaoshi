@@ -10,7 +10,6 @@ import { take, tap } from 'rxjs/operators';
 import ChatItem from '../../components/ChatItem';
 import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
-import { imgPath } from '../../services/core/image.service';
 import { UpdateHideBottomBar, updateNotiPage } from '../../services/core/app-store.actions';
 import { NotificationParams, NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
@@ -155,7 +154,7 @@ export default function ChatScreen() {
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
-              <ChatItem key={i} chat={chat} doctor={doctor} icon={imgPath(doctor.icon)} onImgView={openViewer} ></ChatItem>
+              <ChatItem key={i} chat={chat} doctor={doctor} icon={doctor.icon} onImgView={openViewer} ></ChatItem>
               :
               <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></ChatItem>
             ))

@@ -7,7 +7,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { take, tap } from 'rxjs/operators';
 import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
-import { imgPath } from '../../services/core/image.service';
 import { UpdateHideBottomBar, updateNotiPage } from '../../services/core/app-store.actions';
 import { NotificationParams, NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
@@ -15,9 +14,9 @@ import ImageZoomViewer from '../../components/shared/ImageZoomViewer';
 import ChatInputs from '../../components/shared/ChatInputs';
 import { Header } from 'react-native-elements';
 import ChatMenuActions from '../../components/ChatMenuActions';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { Consult } from '../../models/consult/consult.model';
-import { GetConsultsByDoctorIdAndUserId, GetConsultsByDoctorIdUserIdAndType, sendConsult } from '../../services/consult.service';
+import { getAllConsultsByGroup, sendConsult } from '../../services/consult.service';
 import ConsultItem from '../../components/ConsultItem';
 import ConsultReject from '../../components/ConsultReject';
 import { sendWechatMsg } from '../../services/weixin.service';
@@ -28,7 +27,7 @@ export default function ConsultScreen() {
   const dimensions = useWindowDimensions();
   const doctor = useSelector((state: AppState) => state.doctor);
   const ioService = useSelector((state: AppState) => state.ioService);
-  const [type, setType] = useState(NotificationType.chat);
+  const [type, setType] = useState(NotificationType.consultChat);
   const [pid, setPid] = useState('');
   const [consultId, setConsultId] = useState('')
   const [fromConsultPhone, setFromConsultPhone] = useState(false)
@@ -65,26 +64,28 @@ export default function ConsultScreen() {
       setFromConsultPhone(fromConsultPhone || false);
 
       // get history
-      if (type === NotificationType.consultChat) {
-        GetConsultsByDoctorIdAndUserId(doctor._id, pid).pipe(
-          take(1),
-          tap(_consults => {
-            setConsults(_consults);
-            if (id) {
-              setConsult(_consults.find(_ => _._id === id) || ({ user: '', doctor: '' } as Consult));
-            }
-            setLoading(false);
-          })
-        ).subscribe();
-      } else { // ?
-        GetConsultsByDoctorIdUserIdAndType(doctor._id, pid, type).pipe(
-          take(1),
-          tap(_consults => {
-            setConsults(_consults);
-            setLoading(false);
-          })
-        ).subscribe();
-      }
+      // consult：从 consult id 获取consult group history
+      getAllConsultsByGroup(id || '').pipe(
+        // if (type === NotificationType.consultChat) {
+        //   GetConsultsByDoctorIdAndUserId(doctor._id, pid).pipe(
+        take(1),
+        tap(_consults => {
+          setConsults(_consults);
+          if (id) {
+            setConsult(_consults.find(_ => _._id === id) || ({ user: '', doctor: '' } as Consult));
+          }
+          setLoading(false);
+        })
+      ).subscribe();
+      // } else { // ?
+      //   GetConsultsByDoctorIdUserIdAndType(doctor._id, pid, type).pipe(
+      //     take(1),
+      //     tap(_consults => {
+      //       setConsults(_consults);
+      //       setLoading(false);
+      //     })
+      //   ).subscribe();
+      // }
 
       getUserDetailsById(pid).pipe(
         take(1),
@@ -115,19 +116,23 @@ export default function ConsultScreen() {
     }
     const consult: Consult = isImg ? {
       // room: doctor._id,
-      doctor: doctor._id || '',
-      userName: '', // userName 有值是标识病患发起， 药师回复的消息 userName为空
+      parent: consultId,
       user: pid,
+      doctor: doctor._id || '',
+      // userName: '', // userName 有值是标识病患发起， 药师回复的消息 userName为空
       type: type,
       content: '请参阅图片',
       upload: data,
+      finished: true,
       status: 2,
     } : { // text
+      parent: consultId,
       user: pid,
       doctor: doctor._id,
-      userName: '',
+      // userName: '',
       type: type,
       content: data,
+      finished: true,
       status: 2,
     };
 
@@ -136,7 +141,7 @@ export default function ConsultScreen() {
         ioService?.sendConsult(doctor._id, result);
         // 发送微信消息
         const openid = user.link_id;
-        if (openid) {
+        if (openid && consultId) {
           sendWechatMsg(openid,
             `${doctor.name}${doctor.title}咨询回复`,
             result.content || '',
@@ -198,10 +203,10 @@ export default function ConsultScreen() {
           style={{ marginBottom: Platform.OS === "ios" ? 119 : 88, maxHeight: dimensions.height - 145 }}
           onContentSizeChange={scrollToEnd}>
           <View style={styles.item}>
-            {consults.map((consult, i) => (consult.status && consult.status >= 2 ?
-              <ConsultItem key={i} consult={consult} doctor={doctor} icon={imgPath(doctor.icon)} onImgView={openViewer} ></ConsultItem>
+            {consults.map((consult, i) => (!consult.userName ?
+              <ConsultItem key={'doctor' + i} consult={consult} doctor={doctor} icon={doctor?.icon} onImgView={openViewer} ></ConsultItem>
               :
-              <ConsultItem key={i} consult={consult} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></ConsultItem>
+              <ConsultItem key={'user' + i} consult={consult} doctor={doctor} icon={user.icon} onImgView={openViewer}></ConsultItem>
             ))
             }
           </View>

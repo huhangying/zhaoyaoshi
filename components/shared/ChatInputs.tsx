@@ -37,7 +37,8 @@ export default function ChatInputs({ pid, doctor, type, onSend, existsConsult, c
       }
     })();
 
-    if (doctor?._id && pid) {
+    // 免费咨询时检查 付费咨询 flag
+    if (doctor?._id && pid && type === NotificationType.chat) {
       // get 付费咨询 flag
       getPendingConsultByDoctorIdAndUserId(doctor._id, pid).pipe(
         tap(result => {
@@ -50,7 +51,7 @@ export default function ChatInputs({ pid, doctor, type, onSend, existsConsult, c
     return () => {
       // cleanup
     }
-  }, [doctor, pid])
+  }, [doctor, pid, type])
 
   const onShortcutSelected = useCallback((shortcut) => {
     if (shortcut) {

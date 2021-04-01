@@ -25,8 +25,8 @@ export function getConsultById(id: string) {
   return getApi<Consult>('consult/' + id);
 }
 
-export function GetConsultsByDoctorIdUserIdAndType(doctorId: string, userId: string, type: number) {
-  return getApi<Consult[]>(`consults/get-history/${doctorId}/${userId}/${type}`);
+export function getAllConsultsByGroup(consultId: string) {
+  return getApi<Consult[]>(`consults/get-group/${consultId}`);
 }
 
 export function GetConsultsByDoctorIdAndUserId(doctorId: string, userId: string) {
