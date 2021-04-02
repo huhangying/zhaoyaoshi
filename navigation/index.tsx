@@ -90,6 +90,10 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
       switch (noti.type) {
         case NotificationType.chat:
+          if (state.chatNotifications.findIndex((_: any) => _.created === noti.created && _.patientId === noti.patientId && _.type === noti.type) > -1) {
+            // skip duplicated
+            break;
+          }
           notifications = addNotiToExisted(state.chatNotifications, noti);
           dispatch(updateChatNotifications(notifications));
           if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
@@ -99,6 +103,10 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
         case NotificationType.adverseReaction:
         case NotificationType.doseCombination:
+          if (state.feedbackNotifications.findIndex((_: any) => _.created === noti.created && _.patientId === noti.patientId && _.type === noti.type) > -1) {
+            // skip duplicated
+            break;
+          }
           notifications = addNotiToExisted(state.feedbackNotifications, noti);
           dispatch(updateFeedbackNotifications(notifications));
           if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
@@ -107,6 +115,10 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
           break;
 
         case NotificationType.consultChat:
+          if (state.consultNotifications.findIndex((_: any) => _.created === noti.created && _.patientId === noti.patientId && _.type === noti.type) > -1) {
+            // skip duplicated
+            break;
+          }
           notifications = addNotiToExisted(state.consultNotifications, noti);
           dispatch(updateConsultNotifications(notifications));
           if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
@@ -114,6 +126,10 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
           }
           break;
         case NotificationType.consultPhone:
+          if (state.consultNotifications.findIndex((_: any) => _.created === noti.created && _.patientId === noti.patientId && _.type === noti.type) > -1) {
+            // skip duplicated
+            break;
+          }
           notifications = addNotiToExisted(state.consultNotifications, noti);
           dispatch(updateConsultNotifications(notifications));
           if (!notiPage?.patientId || (notiPage.patientId === noti.patientId && notiPage.type !== noti.type)) {
@@ -123,7 +139,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       }
     });
 
-  }, [dispatch, store]);
+  }, [dispatch, store, pushLocalNotification]);
 
   const handleAppStateChange = useCallback((nextAppState: AppStateStatus) => {
     if (currentState !== nextAppState) {

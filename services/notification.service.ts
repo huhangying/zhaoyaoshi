@@ -46,10 +46,6 @@ export function addNotiToExisted(storeNotifications: any[] = [], noti: Notificat
     notifications = [noti];
   } else {
     notifications = [...storeNotifications];
-    if (notifications.findIndex(_ => _.created === noti.created && _.patientId === noti.patientId && _.type === noti.type) > -1) {
-      // skip duplicated
-      return notifications;
-    }
     const index = notifications.findIndex(_ => _.patientId === noti.patientId && _.type === noti.type);
     // if new
     if (index === -1) {
