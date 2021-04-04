@@ -2,7 +2,7 @@
   "expo": {
     "name": "找药师",
     "slug": "zhaoyaoshi",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "zhaoyaoshi",
@@ -30,19 +30,19 @@
         "NOTIFICATIONS"
       ],
       "package": "com.zhaoyaoshi885",
-      "versionCode": 3
+      "versionCode": 4
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.zhaoyaoshi885.zhaoyaoshi",
-      "buildNumber": "1.0.3"
+      "buildNumber": "1.0.4"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
     "extra": {
       "id": "zhaoyaoshi",
-      "versionDate": "2021年1月13日",
+      "versionDate": "2021年3月31日",
       "company": "惠宏医药信息技术服务（上海）有限公司",
       "baseUrl": "http://www.zhaoyaoshi885.cn/api/",
       "imageServer": "http://www.zhaoyaoshi885.cn/images/",
