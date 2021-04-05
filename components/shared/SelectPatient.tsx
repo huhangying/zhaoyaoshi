@@ -7,6 +7,7 @@ import { GroupedRelationship, Relationship } from '../../models/crm/relationship
 import { tap } from 'rxjs/operators';
 import { Caption, List } from 'react-native-paper';
 import { DoctorGroup } from '../../models/crm/doctor-group.model';
+import { white } from 'react-native-paper/lib/typescript/styles/colors';
 
 export default function SelectPatient({ doctorId, onSelect }: { doctorId?: string, onSelect: any }) {
   const [groupedRelationships, setGroupedRelationships] = useState([]);
@@ -59,9 +60,6 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
     setRrelationshipList(loadData(group._id));
     scrollViewRef.current?.scrollTo({ x: 0, y: 0, animated: true });
   }
-  const test = (t: any) => {
-    alert(JSON.stringify(t))
-  }
 
   return (
     <>
@@ -72,6 +70,7 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
             style={styles.group}
             left={props => <List.Icon {...props} icon="account-group" color="azure" />}
             title={group.name}
+            titleStyle={{color: 'white'}}
             id={i} key={i}
             expanded={i === expandId}
             onPress={() => handlePress(i, group)}>
@@ -79,7 +78,8 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
             {relationshipList?.length ? (
               relationshipList.map((relationship: Relationship, k) => (
                 <View key={`${i}-${k}`} style={styles.item}>
-                  <List.Item key={`item${i}-${k}`} title={relationship.user?.name}
+                  <List.Item key={`item${i}-${k}`} 
+                    title={`${relationship.user?.name} ${relationship.user?.gender === 'M' ? '(男)' : (relationship.user?.gender === 'F' ? '(女)' : '')}`}
                     onPress={() => onSelect(relationship?.user)} />
                 </View>
               ))
@@ -105,13 +105,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   group: {
-    backgroundColor: 'lightskyblue',
+    backgroundColor: 'royalblue',
     marginVertical: 1,
     paddingVertical: 0,
     marginHorizontal: 6,
   },
   item: {
-    backgroundColor: 'ivory',
+    backgroundColor: 'azure',
     marginBottom: 1,
   }
 });
