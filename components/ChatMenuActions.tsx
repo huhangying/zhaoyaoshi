@@ -62,7 +62,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   const closeMenu = () => setMenuOpen(false);
 
   const goBackConsult = (forceToConsultPhone?: boolean, id?: string) => {
-    const type = !forceToConsultPhone ? existedConsult?.type : 1;
+    const type = !forceToConsultPhone ? existedConsult?.type : NotificationType.consultPhone;
     // 付费图文咨询 （共用chat）
     if (type === NotificationType.consultChat) {
       navigate('ConsultScreen', {
@@ -147,7 +147,15 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
 
   const consultReject = () => {
     closeMenu();
-    onConsultReject();
+    if (state.consultNotifications?.length) {
+      const notifications = state.consultNotifications.filter(_ => _.patientId !== pid || _.type !== NotificationType.consultPhone);
+      // save back
+      dispatch(updateConsultNotifications(notifications));
+
+
+      onConsultReject();
+    }
+
   }
 
 
@@ -184,7 +192,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
                   <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(true, id)} title="付费电话咨询" />
                 )}
 
-                {(type === NotificationType.consultChat) && (
+                {(!fromConsultPhone && type === NotificationType.consultChat) && (
                   <>
                     <Divider />
                     <Menu.Item icon="keyboard-backspace" onPress={consultReject} title="咨询拒绝" />
