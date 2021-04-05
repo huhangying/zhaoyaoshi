@@ -8,6 +8,14 @@ export const imgPath = (path?: string) => {
   return Constants.manifest.extra.imageServer + path;
 }
 
+export const iconPath = (path?: string) => {
+  if (!path) {
+    return '';
+  }
+
+  return Constants.manifest.extra.imageServer + path;
+}
+
 export const imgSource = (path?: string) => {
   if (!path) {
     return require('../../assets/images/noimage.jpg');

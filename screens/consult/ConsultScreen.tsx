@@ -20,6 +20,7 @@ import { getAllConsultsByGroup, sendConsult } from '../../services/consult.servi
 import ConsultItem from '../../components/ConsultItem';
 import ConsultReject from '../../components/ConsultReject';
 import { sendWechatMsg } from '../../services/weixin.service';
+import { iconPath } from '../../services/core/image.service';
 
 export default function ConsultScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -204,7 +205,7 @@ export default function ConsultScreen() {
           onContentSizeChange={scrollToEnd}>
           <View style={styles.item}>
             {consults.map((consult, i) => (!consult.userName ?
-              <ConsultItem key={'doctor' + i} consult={consult} doctor={doctor} icon={doctor?.icon} onImgView={openViewer} ></ConsultItem>
+              <ConsultItem key={'doctor' + i} consult={consult} doctor={doctor} icon={iconPath(doctor?.icon)} onImgView={openViewer} ></ConsultItem>
               :
               <ConsultItem key={'user' + i} consult={consult} doctor={doctor} icon={user.icon} onImgView={openViewer}></ConsultItem>
             ))

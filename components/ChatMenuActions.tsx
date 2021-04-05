@@ -62,13 +62,13 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   const closeMenu = () => setMenuOpen(false);
 
   const goBackConsult = (forceToConsultPhone?: boolean, id?: string) => {
-    const type = !forceToConsultPhone ? existedConsult?.type: 1;
+    const type = !forceToConsultPhone ? existedConsult?.type : 1;
     // 付费图文咨询 （共用chat）
     if (type === NotificationType.consultChat) {
       navigate('ConsultScreen', {
         pid: pid,
         type: NotificationType.consultChat,
-        title: userName + ' 付费图文咨询', 
+        title: userName + ' 付费图文咨询',
         id: existedConsult?.consultId,
       });
     } else if (type === NotificationType.consultPhone) {
@@ -76,7 +76,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
       navigate('ConsultPhoneScreen', {
         pid: pid,
         type: NotificationType.consultPhone,
-        title: userName + ' 付费电话咨询', 
+        title: userName + ' 付费电话咨询',
         id: id || existedConsult?.consultId,
       });
     }
@@ -179,10 +179,11 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
                 style={{ marginTop: 0, position: 'absolute', right: 0, left: 0, top: 40, zIndex: 99999, elevation: 9999 }}
               >
                 {!fromConsultPhone ? (
-                  <Menu.Item icon="check-circle" onPress={markDone} title="标识完成" />
+                  <Menu.Item icon="check-circle" onPress={markDone} title={type === NotificationType.consultChat ? '结束咨询' : '标识完成'} />
                 ) : (
-                    <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(true, id)} title="付费电话咨询" />
-                  )}
+                  <Menu.Item icon="keyboard-backspace" onPress={() => goBackConsult(true, id)} title="付费电话咨询" />
+                )}
+
                 {(type === NotificationType.consultChat) && (
                   <>
                     <Divider />
