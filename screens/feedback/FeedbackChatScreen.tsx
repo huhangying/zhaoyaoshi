@@ -7,7 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { take, tap } from 'rxjs/operators';
 import { getUserDetailsById } from '../../services/user.service';
 import { User } from '../../models/crm/user.model';
-import { imgPath } from '../../services/core/image.service';
+import { iconPath, imgPath } from '../../services/core/image.service';
 import { UpdateHideBottomBar, updateNotiPage } from '../../services/core/app-store.actions';
 import { NotificationParams, NotificationType } from '../../models/io/notification.model';
 import Spinner from '../../components/shared/Spinner';
@@ -149,7 +149,7 @@ export default function FeedbackChatScreen() {
           onContentSizeChange={scrollToEnd}>
           <View style={styles.feedbacks}>
             {feedbacks.map((feedback, i) => (feedback.status >= 2 ?
-              <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={doctor?.icon} onImgView={openViewer} ></FeedbackItem>
+              <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={iconPath(doctor?.icon)} onImgView={openViewer} ></FeedbackItem>
               :
               <FeedbackItem key={i} feedback={feedback} doctor={doctor} icon={user?.icon} onImgView={openViewer}></FeedbackItem>
             ))

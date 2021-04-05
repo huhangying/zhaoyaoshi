@@ -19,6 +19,7 @@ import { Header } from 'react-native-elements';
 import ChatMenuActions from '../../components/ChatMenuActions';
 import { checkConsultExistsByDoctorIdAndUserId } from '../../services/consult.service';
 import { ExistedConsult } from '../../models/consult/consult.model';
+import { iconPath } from '../../services/core/image.service';
 
 export default function ChatScreen() {
   const scrollViewRef = useRef<ScrollView>(null);
@@ -154,7 +155,7 @@ export default function ChatScreen() {
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
-              <ChatItem key={i} chat={chat} doctor={doctor} icon={doctor.icon} onImgView={openViewer} ></ChatItem>
+              <ChatItem key={i} chat={chat} doctor={doctor} icon={iconPath(doctor?.icon)} onImgView={openViewer} ></ChatItem>
               :
               <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></ChatItem>
             ))
