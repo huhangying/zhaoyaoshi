@@ -24,17 +24,16 @@ export default function ConsultDiseaseTypes({ doctorid, onClose }: { doctorid: s
     }
   }, [doctorid]);
 
-  const onListSave = useCallback(() => {
-    const newDiseaseTypes = diseaseTypes.join('|');
+  const onListSave = useCallback((newList) => {
+    const newDiseaseTypes = newList.join('|');
     if (doctorid) {
       updateDoctorConsult(doctorid, {doctor_id: doctorid, disease_types: newDiseaseTypes}).pipe(
         tap(rsp => {
-          // if (rsp?._id) {
-          // }
+          setDiseaseTypes(newList)
         })
       ).subscribe();
     }
-  }, [doctorid, diseaseTypes]);
+  }, [doctorid]);
 
   const onModalClose = useCallback(() => {
     onClose();

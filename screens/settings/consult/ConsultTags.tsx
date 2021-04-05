@@ -24,17 +24,18 @@ export default function ConsultTags({ doctorid, onClose }: { doctorid: string, o
     }
   }, [doctorid]);
 
-  const onListSave = useCallback(() => {
-    const newTags = tags.join('|');
+  const onListSave = useCallback((newList) => {
+    const newTags = newList.join('|');
     if (doctorid) {
       updateDoctorConsult(doctorid, {doctor_id: doctorid, tags: newTags}).pipe(
         tap(rsp => {
           // if (rsp?._id) {
           // }
+          setTags(newList);
         })
       ).subscribe();
     }
-  }, [doctorid, tags]);
+  }, [doctorid]);
 
   const onModalClose = useCallback(() => {
     onClose();

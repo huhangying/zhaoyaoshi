@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
-import { useCallback, useEffect } from 'react';
+import { Platform, StyleSheet, View, Text } from 'react-native';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import EditTextList from '../../components/EditTextList';
 import { updateDoctorShortcuts } from '../../services/doctor.service';
@@ -26,21 +26,24 @@ export default function ShortcutSettingsScreen() {
   }, [doctor?.shortcuts]);
 
   const onListSave = React.useCallback(newList => {
-    const newShortcuts = shortcuts.join('|');
+    const newShortcuts = newList.join('|');
     if (doctor) {
       updateDoctorShortcuts(doctor.user_id, newShortcuts).pipe(
         tap(rsp => {
           if (rsp?._id) {
             dispatch(updateDoctor({ ...doctor, shortcuts: newShortcuts }));
           }
+          setShortcuts(newList);
         })
       ).subscribe();
     }
-  }, [doctor, shortcuts, dispatch]);
+  }, [doctor, dispatch]);
 
   return (
     <View style={styles.container}>
-      <Caption style={styles.m3}>快捷回复列表</Caption>
+      <Caption style={styles.caption}>快捷回复列表</Caption>
+      <Text style={styles.textHint}>如果后台或药师端修改了快捷回复设置，请登出后重新登录更新信息。</Text>
+
       <EditTextList key="edit-shortcuts" list={shortcuts} onListSave={onListSave} onModalClose={goBack} />
     </View>
   );
@@ -61,8 +64,17 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
-  m3: {
+  caption: {
     margin: 16,
     marginVertical: 16,
+    color: 'black',
+    fontSize: 14,
   },
+  textHint: {
+    fontSize: 12,
+    color: 'gray',
+    fontStyle: 'italic',
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+  }
 });

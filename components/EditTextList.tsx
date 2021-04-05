@@ -11,6 +11,7 @@ export default function EditTextList({ list, onListSave, onModalClose }: { list:
   const [selectIndex, setSelectIndex] = useState(-1);
   const [visible, setVisible] = useState(false);
   const dimensions = useWindowDimensions();
+  list = list?.length ? list.filter(_ => _) : [''];
 
   const openSelect = (item: string, index = -1) => {
     setAction(index === -1 ? 'add' : 'edit');
@@ -32,7 +33,11 @@ export default function EditTextList({ list, onListSave, onModalClose }: { list:
   const saveItem = () => {
     switch (action) {
       case 'add':
-        list.push(selectItem);
+        if (selectItem) {
+          list.push(selectItem);
+        } else {
+          return; // do nothing
+        }
         break;
 
       case 'edit':
@@ -58,12 +63,12 @@ export default function EditTextList({ list, onListSave, onModalClose }: { list:
         <ScrollView style={{ height: Platform.OS === 'ios' ? dimensions.height - 160 : dimensions.height - 90 }}>
           {
             list.map((l, i) => (l ? (
-              <ListItem key={i} bottomDivider containerStyle={i === selectIndex ? styles.highlight : styles.normal}>
+              <ListItem key={'item-' + i} bottomDivider containerStyle={i === selectIndex ? styles.highlight : styles.normal}>
                 <ListItem.Content>
                   <ListItem.Title>{l}</ListItem.Title>
                 </ListItem.Content>
-                <ListItem.Chevron type='ionicon' name="ios-create" size={24} color="royalblue" style={styles.mr2} onPress={() => openSelect(l, i)} />
-                <ListItem.Chevron type='ionicon' name="ios-trash" size={24} color="tomato" style={styles.mr2} onPress={() => deleteConfirm(l, i)} />
+                <ListItem.Chevron key={'add-' + i} type='ionicon' name="ios-create" size={24} color="royalblue" style={styles.mr2} onPress={() => openSelect(l, i)} />
+                <ListItem.Chevron key={'remove-' + i} type='ionicon' name="ios-trash" size={24} color="tomato" style={styles.mr2} onPress={() => deleteConfirm(l, i)} />
               </ListItem>
             ) :
               (<Text key="nodata" style={{ paddingHorizontal: 20, paddingBottom: 10, color: 'gray' }}> 请点击 + 增加快捷回复。</Text>)
@@ -90,7 +95,7 @@ export default function EditTextList({ list, onListSave, onModalClose }: { list:
           <Button title="确定" buttonStyle={styles.button} onPress={saveItem} />
         </Dialog.Actions>
       </Dialog>
-      
+
       <FAB
         style={styles.fab}
         icon="plus"

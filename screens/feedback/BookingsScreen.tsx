@@ -74,7 +74,7 @@ export default function BookingsScreen() {
           />
           {filterBookings?.length ? (
             filterBookings.map((booking, i) => (
-              <List.Item key={i} style={{ borderBottomWidth: 1, borderBottomColor: 'lightgray' }}
+              <List.Item key={'booking-' + i} style={{ borderBottomWidth: 1, borderBottomColor: 'lightgray' }}
                 title={moment(booking.date).format('YYYY年MM月DD日') + ' ' + getPeriod(booking.schedule?.period)}
                 description={booking.user?.name + (booking.user?.gender === 'M' ? ' (男)' : (booking.user?.gender === 'F' ? ' (女)' : ''))}
                 right={() => <Text style={styles.status}>{getBookingStatus(booking.status)}</Text>}

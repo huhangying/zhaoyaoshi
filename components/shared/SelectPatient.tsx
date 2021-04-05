@@ -79,11 +79,12 @@ export default function SelectPatient({ doctorId, onSelect }: { doctorId?: strin
         <ScrollView ref={scrollViewRef}>
           {doctorGroups.map((group: DoctorGroup, i) => (
             <List.Accordion
+              id={i}
+              key={'dgroup-' + i}
               style={styles.group}
               left={props => <List.Icon {...props} icon="account-group" color="azure" />}
               title={group.name}
               titleStyle={{ color: 'white' }}
-              id={i} key={i}
               expanded={i === expandId}
               onPress={() => handlePress(i, group)}>
 

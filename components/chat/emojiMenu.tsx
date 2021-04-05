@@ -16,7 +16,7 @@ export default function EmojiMenu({ onSelect }: { onSelect: any }) {
     <View style={styles.container}>
       {qqfaces.map((code, i) => (
         i < 90 &&
-        <Image key={i} onPress={() => selectEmoji(code)}
+        <Image key={'qqc' + i} onPress={() => selectEmoji(code)}
           source={{ uri: getEmojiPathByCode(code) }}
           style={styles.icon}
         />

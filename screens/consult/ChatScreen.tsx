@@ -155,9 +155,9 @@ export default function ChatScreen() {
           onContentSizeChange={scrollToEnd}>
           <View style={styles.chats}>
             {chats.map((chat, i) => (chat.sender === doctor._id ?
-              <ChatItem key={i} chat={chat} doctor={doctor} icon={iconPath(doctor?.icon)} onImgView={openViewer} ></ChatItem>
+              <ChatItem key={'cid' + i} chat={chat} doctor={doctor} icon={iconPath(doctor?.icon)} onImgView={openViewer} ></ChatItem>
               :
-              <ChatItem key={i} chat={chat} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></ChatItem>
+              <ChatItem key={'ciu' + i} chat={chat} doctor={doctor} icon={user.icon || ''} onImgView={openViewer}></ChatItem>
             ))
             }
           </View>

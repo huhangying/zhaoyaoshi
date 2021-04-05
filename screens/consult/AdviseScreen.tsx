@@ -99,7 +99,7 @@ export default function AdviseScreen() {
   }
 
   const onQuestionsChange = useCallback((_questions: Question[]) => {
-    console.log(_questions);
+    // console.log(_questions);
 
     setQuestions(_questions)
     // trigger render
@@ -229,7 +229,7 @@ export default function AdviseScreen() {
         dispatch(updateSnackbar('结束线下咨询失败。请再试或联系管理员。', MessageType.error));
       })
     ).subscribe();
-    console.log(advise);
+    // console.log(advise);
 
   }
 

@@ -13,7 +13,7 @@ export default function ShortcutBottomMenu({ shortcuts, onSelect }: { shortcuts:
   }
 
   return (
-    <BottomSheet modalProps={{animationType: 'slide'}} isVisible={true}>
+    <BottomSheet modalProps={{ animationType: 'slide' }} isVisible={true}>
       {!shortcuts ? (
         <ListItem key="title" bottomDivider >
           <ListItem.Content>
@@ -21,21 +21,21 @@ export default function ShortcutBottomMenu({ shortcuts, onSelect }: { shortcuts:
           </ListItem.Content>
         </ListItem>
       ) : (
-          <>
-            <ListItem key="title" containerStyle={{ backgroundColor: '#0095ff' }} bottomDivider >
+        <>
+          <ListItem key="title" containerStyle={{ backgroundColor: '#0095ff' }} bottomDivider >
+            <ListItem.Content>
+              <ListItem.Title style={{ color: 'white' }}>请选择快捷回复</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+          {shortcuts.split('|').map((l, i) => (
+            <ListItem key={'shortcut-' + i} bottomDivider onPress={() => selectShortcut(l)}>
               <ListItem.Content>
-                <ListItem.Title style={{ color: 'white' }}>请选择快捷回复</ListItem.Title>
+                <ListItem.Title>{l}</ListItem.Title>
               </ListItem.Content>
             </ListItem>
-            {shortcuts.split('|').map((l, i) => (
-              <ListItem key={i} bottomDivider onPress={() => selectShortcut(l)}>
-                <ListItem.Content>
-                  <ListItem.Title>{l}</ListItem.Title>
-                </ListItem.Content>
-              </ListItem>
-            ))}
-          </>
-        )
+          ))}
+        </>
+      )
       }
 
       <ListItem key="cancel" onPress={cancelMenu}>
