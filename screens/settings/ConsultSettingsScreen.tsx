@@ -62,7 +62,7 @@ export default function ConsultSettingsScreen() {
                 description={`服务价格 ${textPrice.amount} 元/次`}
                 left={() => <List.Icon icon="chat-processing" color="steelblue" />} />
             ) : (
-                <Text style={{paddingLeft: 24}}>图文咨询未开通</Text>
+                <Text style={{paddingLeft: 24, paddingBottom: 12}}>图文咨询未开通</Text>
               )
             }
             {(phonePrice?.amount > -1) ? (
@@ -72,7 +72,7 @@ export default function ConsultSettingsScreen() {
                 description={`服务价格 ${phonePrice.amount} 元/${phonePrice.unit_count}分钟`}
                 left={() => <List.Icon icon="phone" color="teal" />} />
             ) : (
-                <Text style={{paddingLeft: 24}}>电话咨询未开通</Text>
+                <Text style={{paddingLeft: 24, paddingBottom: 12}}>电话咨询未开通</Text>
               )
             }
           </List.Section>
@@ -85,6 +85,7 @@ export default function ConsultSettingsScreen() {
             </>
           )
         }
+        <Text style={styles.textHint}>如果后台或药师端修改了付费咨询设置，请登出后重新登录更新信息。</Text>
       </Card>
 
       {(doctor?.prices?.length && doctor.prices.length > 0) ?
@@ -143,4 +144,9 @@ const styles = StyleSheet.create({
     margin: 16,
     marginVertical: 16,
   },
+  textHint: {
+    fontSize: 12,
+    color: 'gray',
+    fontStyle: 'italic',
+  }
 });
