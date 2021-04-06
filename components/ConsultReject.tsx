@@ -2,18 +2,19 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { Button, Divider, Icon } from 'react-native-elements';
 import { Dialog, TextInput } from 'react-native-paper';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { EMPTY } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { MessageType } from '../models/app-settings.model';
+import { AppState } from '../models/app-state.model';
 import { Consult } from '../models/consult/consult.model';
 import { Doctor } from '../models/crm/doctor.model';
-import { updateSnackbar } from '../services/core/app-store.actions';
+import { updateConsultNotifications, updateSnackbar } from '../services/core/app-store.actions';
 import { generateTranslationId, refundWxPay, sendWechatMsg } from '../services/weixin.service';
 
 export default function ConsultReject({ visible, type, consult, doctor, openid, onModalClose }:
   { visible: boolean, type: number, consult: Consult, doctor: Doctor, openid: string, onModalClose?: any }) {
-
+  const state = useSelector((state: AppState) => state);
   const [rejectReason, setRejectReason] = useState('')
   const dispatch = useDispatch()
 
@@ -23,7 +24,7 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
       closeModel();
       return;
     }
-    
+
     // wx refund
     const refundId = generateTranslationId(type);
     refundWxPay({
@@ -34,7 +35,7 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
     }).pipe(
       tap((rsp) => {
         if (rsp) {
-          dispatch(updateSnackbar('申请退款成功！', MessageType.success));
+
           // 发送药师拒绝消息
           sendWechatMsg(openid,
             `${doctor.name}${doctor.title}未完成本次咨询服务`,
@@ -46,7 +47,13 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
             consult.userName || ''
           ).subscribe();
 
-          dispatch(updateSnackbar('药师付费咨询已经完成！', MessageType.success));
+          dispatch(updateSnackbar('申请退款成功！', MessageType.success));
+          if (state.consultNotifications?.length) {
+            // 付费咨询：标记已读，并从提醒列表里去除
+            const notifications = state.consultNotifications.filter(_ => _.patientId !== consult.user || _.type !== type);// type=5 or 6
+            // save back
+            dispatch(updateConsultNotifications(notifications));
+          }
           closeModel();
         } else {
           dispatch(updateSnackbar('申请退款失败！', MessageType.error));
@@ -58,7 +65,7 @@ export default function ConsultReject({ visible, type, consult, doctor, openid, 
       })
     ).subscribe();
   }
-  
+
   const closeModel = () => {
     setRejectReason('');
     onModalClose();
