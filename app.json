@@ -34,6 +34,11 @@
     },
     "ios": {
       "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "使用相机拍照功能",
+        "NSPhotoLibraryAddUsageDescription": "使用本地相册来选择图片",
+        "NSPhotoLibraryUsageDescription": "使用本地相册来选择图片"
+      },
       "bundleIdentifier": "com.zhaoyaoshi885.zhaoyaoshi",
       "buildNumber": "1.0.6"
     },
