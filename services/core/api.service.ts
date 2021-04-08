@@ -1,9 +1,9 @@
 import { getToken } from "./local.store";
 import Constants from 'expo-constants';
 import Axios from "axios-observable";
-import { EMPTY, from } from "rxjs";
-import { catchError, map, switchMap } from "rxjs/operators";
-import { AxiosResponse, AxiosError } from "axios";
+import { from } from "rxjs";
+import { map, switchMap, take } from "rxjs/operators";
+import { AxiosResponse } from "axios";
 Axios.defaults.baseURL = Constants.manifest.extra.baseUrl;
 // const baseUrl = 'http://timebox.i234.me/api/';
 
@@ -58,6 +58,7 @@ export const getApi = <T>(path: string, params?: any) => {
     //   // throw error;
     //   return EMPTY;
     // })
+    take(1),
   );
 }
 
@@ -71,6 +72,7 @@ export const patchApi = <T>(path: string, data: any) => {
       });
     }),
     map((rsp: AxiosResponse<T>) => rsp.data),
+    take(1),
   );
 }
 
@@ -84,6 +86,7 @@ export const postApi = <T>(path: string, data: any) => {
       });
     }),
     map((rsp: AxiosResponse<T>) => rsp.data),
+    take(1),
   );
 }
 
@@ -97,5 +100,6 @@ export const deleteApi = <T>(path: string) => {
       });
     }),
     map((rsp: AxiosResponse<T>) => rsp.data),
+    take(1),
   );
 }

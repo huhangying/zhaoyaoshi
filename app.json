@@ -35,7 +35,7 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "使用相机拍照功能",
+        "NSCameraUsageDescription": "找药师可以使用相机拍照功能来获取图片",
         "NSPhotoLibraryAddUsageDescription": "使用本地相册来选择图片",
         "NSPhotoLibraryUsageDescription": "使用本地相册来选择图片"
       },

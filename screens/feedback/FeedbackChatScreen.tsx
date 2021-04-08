@@ -59,7 +59,6 @@ export default function FeedbackChatScreen() {
 
       // get history
       getByFeedbacksByUserIdDoctorId(doctor._id, pid, type).pipe(
-        take(1),
         tap(_feedbacks => {
           setFeedbacks(_feedbacks);
           setLoading(false);
@@ -67,7 +66,6 @@ export default function FeedbackChatScreen() {
       ).subscribe();
 
       getUserDetailsById(pid).pipe(
-        take(1),
         tap(_user => {
           setUser(_user);
         })

@@ -50,7 +50,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
   const ioService = useSelector((state: AppState) => state.ioService)
 
 
-  const pushLocalNotification = async (noti: Notification, path: string) => {
+  const pushLocalNotification = useCallback(async (noti: Notification, path: string) => {
     if (store.getState().appSettings?.disableNoti) return; // if 关闭消息提醒
     if (!noti) return;
     const notiName = getNotificationNameByType(noti.type || 0);
@@ -65,7 +65,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
       },
       trigger: { seconds: 2 },
     });
-  }
+  }, [store]);
 
   const getLatestNotis = useCallback((doctorid: string) => {
     // 更新消息
@@ -154,7 +154,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
           attachNotificationListeners(socketio);
           dispatch(UpdateIoService(socketio));
         })
-      } else if (nextAppState === 'background'){ // background or inactive
+      } else if (nextAppState === 'background') { // background or inactive
         ioService?.disconnect();
         dispatch(UpdateIoService());
       }

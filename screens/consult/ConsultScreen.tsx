@@ -69,7 +69,6 @@ export default function ConsultScreen() {
       getAllConsultsByGroup(id || '').pipe(
         // if (type === NotificationType.consultChat) {
         //   GetConsultsByDoctorIdAndUserId(doctor._id, pid).pipe(
-        take(1),
         tap(_consults => {
           setConsults(_consults);
           if (id) {

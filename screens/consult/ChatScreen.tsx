@@ -61,7 +61,6 @@ export default function ChatScreen() {
       setPid(pid);
 
       getChatHistory(doctor._id, pid).pipe(
-        take(1),
         tap(_chats => {
           setChats(_chats);
           setLoading(false);
@@ -69,7 +68,6 @@ export default function ChatScreen() {
       ).subscribe();
 
       getUserDetailsById(pid).pipe(
-        take(1),
         tap(_user => {
           setUser(_user);
         })
@@ -78,7 +76,6 @@ export default function ChatScreen() {
       if (doctor.prices && doctor.prices?.length > 0) {
         // 付费咨询正在进行中
         checkConsultExistsByDoctorIdAndUserId(doctor._id, pid).pipe(
-          take(1),
           tap((rsp: ExistedConsult) => {
             setExistedConsult(rsp);
           }),

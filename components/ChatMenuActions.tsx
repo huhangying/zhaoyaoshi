@@ -27,7 +27,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   const state = useSelector((state: AppState) => state);
   const [visible, setVisible] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false);
-  const { navigate } = useNavigation();
+  const navigation = useNavigation();
   const dispatch = useDispatch()
   const insets = useSafeAreaInsets();
 
@@ -62,10 +62,12 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
   const closeMenu = () => setMenuOpen(false);
 
   const goBackConsult = (forceToConsultPhone?: boolean, id?: string) => {
-    const type = !forceToConsultPhone ? existedConsult?.type : NotificationType.consultPhone;
+    const type = !forceToConsultPhone ?
+      (existedConsult?.type === 1 ? NotificationType.consultPhone : NotificationType.consultChat) :
+      NotificationType.consultPhone;
     // 付费图文咨询 （共用chat）
     if (type === NotificationType.consultChat) {
-      navigate('ConsultScreen', {
+      navigation.navigate('ConsultScreen', {
         pid: pid,
         type: NotificationType.consultChat,
         title: userName + ' 付费图文咨询',
@@ -73,7 +75,7 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
       });
     } else if (type === NotificationType.consultPhone) {
       // 付费电话咨询，到说明页面
-      navigate('ConsultPhoneScreen', {
+      navigation.navigate('ConsultPhoneScreen', {
         pid: pid,
         type: NotificationType.consultPhone,
         title: userName + ' 付费电话咨询',
@@ -135,6 +137,8 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
           dispatch(updateSnackbar('药师标记图文咨询已经完成', MessageType.success))
         }
         closeMenu();
+        // go back to main tab
+        navigation.goBack()
         return;
 
       default:
@@ -143,6 +147,8 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
 
     dispatch(updateSnackbar('药师标记消息已处理！', MessageType.success))
     closeMenu();
+    // go back to main tab
+    navigation.goBack()
   }
 
   const consultReject = () => {
@@ -151,7 +157,6 @@ export default function ChatMenuActions({ type, pid, doctorId, openid, id,
       const notifications = state.consultNotifications.filter(_ => _.patientId !== pid || _.type !== NotificationType.consultPhone);
       // save back
       dispatch(updateConsultNotifications(notifications));
-
 
       onConsultReject();
     }
