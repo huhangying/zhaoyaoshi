@@ -2,7 +2,7 @@
   "expo": {
     "name": "找药师",
     "slug": "zhaoyaoshi",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "zhaoyaoshi",
@@ -30,17 +30,17 @@
         "NOTIFICATIONS"
       ],
       "package": "com.zhaoyaoshi885",
-      "versionCode": 6
+      "versionCode": 7
     },
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "找药师可以使用相机拍照功能来获取图片",
-        "NSPhotoLibraryAddUsageDescription": "找药师使用本地相册来选择图片",
-        "NSPhotoLibraryUsageDescription": "找药师使用本地相册来选择图片"
+        "NSCameraUsageDescription": "您可以通过使用相机拍照功能来获取图片并发送给药师。",
+        "NSPhotoLibraryAddUsageDescription": "您可以使用本地相册来选择图片并发送给药师",
+        "NSPhotoLibraryUsageDescription": "您可以使用本地相册来选择图片并发送给药师"
       },
       "bundleIdentifier": "com.zhaoyaoshi885.zhaoyaoshi",
-      "buildNumber": "1.0.6"
+      "buildNumber": "1.0.7"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
